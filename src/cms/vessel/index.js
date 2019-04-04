@@ -39,6 +39,8 @@ function reset() {
 
 module.exports = {
   reset,
+  trim: () => trim,
+  list: () => list,
   updateTrimList,
   trimListCorrect,
 };
