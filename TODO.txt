@@ -1,0 +1,3 @@
+a) channel core
+b) alarm core
+c) radar sensor fault
