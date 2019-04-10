@@ -8,10 +8,11 @@ const util = require('util');
 //
 // module privates
 //
-const channels = {};
+const _channels = {};
 
 /**
  * channel constructor
+ * @paarm {number} number - channel number
  * @param {object} cfg - channel configuration object
  cfg: {
   name: 'XXX',
@@ -61,18 +62,19 @@ util.inherits(Channel, EventEmitter);
 
 /**
  * create a channel
+ * @param {number} number - channel number
  * @param {object} cfg - channel configuration object
  * @return {object} channel object
  */
 function createChannel(number, cfg) {
   const chnl = new Channel(number, cfg);
 
-  channels[number] = chnl;
+  _channels[number] = chnl;
 
   return chnl;
 }
 
 module.exports = {
   createChannel,
-  getChannel: chnlNum => channels[chnlNum],
+  getChannel: chnlNum => _channels[chnlNum],
 };
