@@ -316,7 +316,7 @@ Alarm.prototype = {
   },
   ack() {
     handleAlarmEvent(this, _alarmEventEnum.Ack);
-  }
+  },
 };
 
 //
