@@ -23,24 +23,188 @@ const _alarmEventEnum = {
   Ack: 2,
 };
 
+const _alarmDelayStateEnum = {
+  Idle: 0,
+  Occurring: 1,
+  Clearing: 2,
+};
+
 /**
- * alarm state machine main entry point
- * @paarm {object} alarm - alarm object
- * @paarm {enum} evt - _alarmEventEnum
+ * change alarm state
+ * @param {object} alarm - alarm object
+ * @param {_alarmEventEnum} newState - new state
  */
-function handleAlarmStateMachine(alarm, evt) {
+function changeAlarmState(alarm, newState) {
   const a = alarm;
 
-  // FIXME
-  switch (evt) {
-    case _alarmEventEnum.Clear:
-      a._state = _alarmStateEnum.Inactive;
-      break;
-    case _alarmEventEnum.Occur:
-      a._state = _alarmStateEnum.Active;
+  a._state = newState;
+}
+
+/**
+ * alarm state machine
+ * @paarm {object} alarm - alarm object
+ * @paarm {_alarmEventEnum} evt - alarm event
+ */
+function handleAlarmStateMachine(alarm, evt) {
+  switch (alarm._state) {
+    case _alarmStateEnum.Inactive:
+      switch (evt) {
+        case _alarmEventEnum.Occur:
+          changeAlarmState(alarm, _alarmStateEnum.Active_Pending);
+          break;
+
+        case _alarmEventEnum.Clear:
+          break;
+
+        case _alarmEventEnum.Ack:
+          break;
+
+        default:
+          break;
+      }
       break;
 
-    case _alarmEventEnum.Ack:
+    case _alarmStateEnum.Active_Pending:
+      switch (evt) {
+        case _alarmEventEnum.Occur:
+          break;
+
+        case _alarmEventEnum.Clear:
+          changeAlarmState(alarm, _alarmStateEnum.Inactive_Pending);
+          break;
+
+        case _alarmEventEnum.Ack:
+          changeAlarmState(alarm, _alarmStateEnum.Active);
+          break;
+
+        default:
+          break;
+      }
+      break;
+
+    case _alarmStateEnum.Inactive_Pending:
+      switch (evt) {
+        case _alarmEventEnum.Occur:
+          changeAlarmState(alarm, _alarmStateEnum.Active_Pending);
+          break;
+
+        case _alarmEventEnum.Clear:
+          break;
+
+        case _alarmEventEnum.Ack:
+          changeAlarmState(alarm, _alarmStateEnum.Inactive);
+          break;
+
+        default:
+          break;
+      }
+      break;
+
+    case _alarmStateEnum.Active:
+      switch (evt) {
+        case _alarmEventEnum.Occur:
+          break;
+
+        case _alarmEventEnum.Clear:
+          changeAlarmState(alarm, _alarmStateEnum.Inactive);
+          break;
+
+        case _alarmEventEnum.Ack:
+          break;
+
+        default:
+          break;
+      }
+      break;
+
+    default:
+      break;
+  }
+}
+
+/**
+ * set timer and action for alarm time delay
+ * @param {object} alarm - alarm object
+ * @param {_alarmEventEnum} evt - alarm event
+ */
+function setAlarmDelay(alarm, evt) {
+  const a = alarm;
+
+  a._delay_timer = setTimeout(() => {
+    a._delay_state = _alarmDelayStateEnum.Idle;
+    a._delay_timer = null;
+    handleAlarmStateMachine(a, evt);
+  }, a.cfg.delay);
+}
+
+/**
+ * handle alarm event and run alarm state machine
+ * @paarm {object} alarm - alarm object
+ * @paarm {_alarmEventEnum} evt - alarm event
+ */
+function handleAlarmEvent(alarm, evt) {
+  const a = alarm;
+
+  // ack is always handled without delay
+  // no delay configuration as well
+  if (a.cfg.delay === 0 || evt === _alarmEventEnum.Ack) {
+    handleAlarmStateMachine(a, evt);
+    return;
+  }
+
+  //
+  // time delay state machine
+  //
+  switch (a._delay_state) {
+    case _alarmDelayStateEnum.Idle:
+      switch (evt) {
+        case _alarmEventEnum.Clear:
+          a._delay_state = _alarmDelayStateEnum.Clearing;
+          setAlarmDelay(a, evt);
+          break;
+
+        case _alarmEventEnum.Occur:
+          a._delay_state = _alarmDelayStateEnum.Occurring;
+          setAlarmDelay(a, evt);
+          break;
+
+        default:
+          break;
+      }
+      break;
+
+    case _alarmDelayStateEnum.Occurring:
+      switch (evt) {
+        case _alarmEventEnum.Clear:
+          clearTimeout(a._delay_timer);
+          a._delay_state = _alarmDelayStateEnum.Clearing;
+          setAlarmDelay(a, evt);
+          break;
+
+        case _alarmEventEnum.Occur:
+          break;
+
+        default:
+          break;
+      }
+      break;
+
+    case _alarmDelayStateEnum.Clearing:
+      switch (evt) {
+        case _alarmEventEnum.Clear:
+          break;
+
+        case _alarmEventEnum.Occur:
+          clearTimeout(a._delay_timer);
+          a._delay_state = _alarmDelayStateEnum.Occurring;
+          setAlarmDelay(a, evt);
+          break;
+
+        default:
+          break;
+      }
+      break;
+
     default:
       break;
   }
@@ -54,9 +218,9 @@ function handleSensorFaultAlarm(alarm) {
   const chnl = alarm._channel;
 
   if (chnl.sensorFault === true) {
-    handleAlarmStateMachine(alarm, _alarmEventEnum.Occur);
+    handleAlarmEvent(alarm, _alarmEventEnum.Occur);
   } else {
-    handleAlarmStateMachine(alarm, _alarmEventEnum.Clear);
+    handleAlarmEvent(alarm, _alarmEventEnum.Clear);
   }
 }
 
@@ -68,9 +232,9 @@ function handleDigitalAlarm(alarm) {
   const chnl = alarm._channel;
 
   if (chnl.value === alarm.cfg.set) {
-    handleAlarmStateMachine(alarm, _alarmEventEnum.Occur);
+    handleAlarmEvent(alarm, _alarmEventEnum.Occur);
   } else {
-    handleAlarmStateMachine(alarm, _alarmEventEnum.Clear);
+    handleAlarmEvent(alarm, _alarmEventEnum.Clear);
   }
 }
 
@@ -84,17 +248,17 @@ function handleAnalogAlarm(alarm) {
   switch (alarm.cfg.type) {
     case 'high':
       if (chnl.value >= alarm.cfg.set) {
-        handleAlarmStateMachine(alarm, _alarmEventEnum.Occur);
+        handleAlarmEvent(alarm, _alarmEventEnum.Occur);
       } else {
-        handleAlarmStateMachine(alarm, _alarmEventEnum.Clear);
+        handleAlarmEvent(alarm, _alarmEventEnum.Clear);
       }
       break;
 
     case 'low':
       if (chnl.value <= alarm.cfg.set) {
-        handleAlarmStateMachine(alarm, _alarmEventEnum.Occur);
+        handleAlarmEvent(alarm, _alarmEventEnum.Occur);
       } else {
-        handleAlarmStateMachine(alarm, _alarmEventEnum.Clear);
+        handleAlarmEvent(alarm, _alarmEventEnum.Clear);
       }
       break;
 
@@ -125,6 +289,9 @@ function Alarm(number, cfg) {
   this._state = _alarmStateEnum.Inactive;
   this._channel = channel.getChannel(cfg.channel);
 
+  this._delay_state = _alarmDelayStateEnum.Idle;
+  this._delay_timer = null;
+
   const self = this;
 
   if (cfg.type === 'sensor_fault') {
@@ -147,6 +314,9 @@ Alarm.prototype = {
   get state() {
     return this._state;
   },
+  ack() {
+    handleAlarmEvent(this, _alarmEventEnum.Ack);
+  }
 };
 
 //
