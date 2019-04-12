@@ -173,7 +173,7 @@ describe('alarm', () => {
     }, 1001);
   });
 
-  it('time delay test2', (done) => {
+  it('time delay test3', (done) => {
     const chnl = channel.getChannel(10);
     const alm = alarm.getAlarm(2);
 
