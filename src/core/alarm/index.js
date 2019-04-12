@@ -53,12 +53,15 @@ function handleAlarmStateMachine(alarm, evt) {
           changeAlarmState(alarm, _alarmStateEnum.Active_Pending);
           break;
 
+        /* istanbul ignore next */
         case _alarmEventEnum.Clear:
           break;
 
+        /* istanbul ignore next */
         case _alarmEventEnum.Ack:
           break;
 
+        /* istanbul ignore next */
         default:
           break;
       }
@@ -66,6 +69,7 @@ function handleAlarmStateMachine(alarm, evt) {
 
     case _alarmStateEnum.Active_Pending:
       switch (evt) {
+        /* istanbul ignore next */
         case _alarmEventEnum.Occur:
           break;
 
@@ -77,6 +81,7 @@ function handleAlarmStateMachine(alarm, evt) {
           changeAlarmState(alarm, _alarmStateEnum.Active);
           break;
 
+        /* istanbul ignore next */
         default:
           break;
       }
@@ -88,6 +93,7 @@ function handleAlarmStateMachine(alarm, evt) {
           changeAlarmState(alarm, _alarmStateEnum.Active_Pending);
           break;
 
+        /* istanbul ignore next */
         case _alarmEventEnum.Clear:
           break;
 
@@ -95,6 +101,7 @@ function handleAlarmStateMachine(alarm, evt) {
           changeAlarmState(alarm, _alarmStateEnum.Inactive);
           break;
 
+        /* istanbul ignore next */
         default:
           break;
       }
@@ -102,6 +109,7 @@ function handleAlarmStateMachine(alarm, evt) {
 
     case _alarmStateEnum.Active:
       switch (evt) {
+        /* istanbul ignore next */
         case _alarmEventEnum.Occur:
           break;
 
@@ -109,14 +117,17 @@ function handleAlarmStateMachine(alarm, evt) {
           changeAlarmState(alarm, _alarmStateEnum.Inactive);
           break;
 
+        /* istanbul ignore next */
         case _alarmEventEnum.Ack:
           break;
 
+        /* istanbul ignore next */
         default:
           break;
       }
       break;
 
+    /* istanbul ignore next */
     default:
       break;
   }
@@ -168,6 +179,7 @@ function handleAlarmEvent(alarm, evt) {
           setAlarmDelay(a, evt);
           break;
 
+        /* istanbul ignore next */
         default:
           break;
       }
@@ -181,9 +193,11 @@ function handleAlarmEvent(alarm, evt) {
           setAlarmDelay(a, evt);
           break;
 
+        /* istanbul ignore next */
         case _alarmEventEnum.Occur:
           break;
 
+        /* istanbul ignore next */
         default:
           break;
       }
@@ -191,6 +205,7 @@ function handleAlarmEvent(alarm, evt) {
 
     case _alarmDelayStateEnum.Clearing:
       switch (evt) {
+        /* istanbul ignore next */
         case _alarmEventEnum.Clear:
           break;
 
@@ -200,11 +215,13 @@ function handleAlarmEvent(alarm, evt) {
           setAlarmDelay(a, evt);
           break;
 
+        /* istanbul ignore next */
         default:
           break;
       }
       break;
 
+    /* istanbul ignore next */
     default:
       break;
   }
@@ -262,6 +279,7 @@ function handleAnalogAlarm(alarm) {
       }
       break;
 
+    /* istanbul ignore next */
     default:
       break;
   }

@@ -1,5 +1,6 @@
 const assert = require('assert');
 const channel = require('../src/core/channel');
+const alarm = require('../src/core/alarm');
 
 const testChnlCfgs = {
   1: {
@@ -13,6 +14,7 @@ const testChnlCfgs = {
     type: 'analog',
   },
 };
+
 
 describe('channel', () => {
   // create channels
