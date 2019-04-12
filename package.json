@@ -2,11 +2,13 @@
   "name": "macron_cms",
   "version": "0.1.0",
   "description": "macron CMS project",
-  "main": "index.js",
+  "main": "src/index.js",
+  "bin": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
     "lint": "eslint ./src",
-    "test": "nyc mocha --recursive --exit"
+    "test": "nyc mocha --recursive --exit",
+    "build": "pkg -t node10-linux-armv7 ."
   },
   "author": "",
   "license": "ISC",
