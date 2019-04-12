@@ -38,6 +38,7 @@ function changeAlarmState(alarm, newState) {
   const a = alarm;
 
   a._state = newState;
+  a.emit('alarm', a);
 }
 
 /**

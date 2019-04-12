@@ -108,17 +108,21 @@ describe('alarm', () => {
     assert.equal(alm.state, alarm.alarmStateEnum.Inactive);
   });
 
-  it('basic low alarm', () => {
+  it('basic low alarm', (done) => {
     const chnl = channel.getChannel(11);
     const alm = alarm.getAlarm(3);
+
 
     assert.equal(alm.state, alarm.alarmStateEnum.Inactive);
     chnl.value = -11.0;
     assert.equal(alm.state, alarm.alarmStateEnum.Active_Pending);
     alm.ack();
     assert.equal(alm.state, alarm.alarmStateEnum.Active);
+    alm.on('alarm', () => {
+      assert.equal(alm.state, alarm.alarmStateEnum.Inactive);
+      done();
+    });
     chnl.value = 0;
-    assert.equal(alm.state, alarm.alarmStateEnum.Inactive);
   });
 
   it('basic high alarm', () => {
