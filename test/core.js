@@ -55,7 +55,7 @@ const testAlarmCfgs = {
 };
 
 describe('core', () => {
-  it('init', () => {
+  it('init', (done) => {
     core.init(testChnlCfgs, testAlarmCfgs);
 
     assert.notEqual(core.getChannel(100), undefined);
@@ -66,5 +66,15 @@ describe('core', () => {
     assert.notEqual(core.getAlarm(103), undefined);
     assert.notEqual(core.getAlarm(104), undefined);
     assert.notEqual(core.getAlarm(105), undefined);
+
+    core.listenOnChannelValue(100, (chnl) => {
+      assert.equal(core.getChannel(100).value, true);
+    });
+    core.listenOnChannelFault(100, (chnl) => {
+      assert.equal(core.getChannel(100).sensorFault, true);
+      done();
+    });
+    core.getChannel(100).value = true;
+    core.getChannel(100).sensorFault = true;
   });
 });

@@ -3,20 +3,72 @@
  * @module tank
  */
 const vessel = require('../vessel');
+const core = require('../../core');
+
+/**
+ * set ullage at ref
+ * @param {object} tank - tank object
+ * @param {number} v - ullage value
+ */
+function setUllageAtRef(tank, v) {
+  const t = tank;
+  const vFixed = parseFloat(v.toFixed(3));
+
+  t.ullageAtRef = vFixed;
+  core.getChannel(tank.cfg.level.ullageAtRef.channel).value = vFixed;
+}
+
+/**
+ * set level at ref
+ * @param {object} tank - tank object
+ * @param {number} v - level value
+ */
+function setLevelAtRef(tank, v) {
+  const t = tank;
+  const vFixed = parseFloat(v.toFixed(3));
+
+  t.levelAtRef = vFixed;
+  core.getChannel(tank.cfg.level.levelAtRef.channel).value = vFixed;
+}
+
+/**
+ * set ullage at floatation center
+ * @param {object} tank - tank object
+ * @param {number} v - ullage value
+ */
+function setUllageFC(tank, v) {
+  const t = tank;
+  const vFixed = parseFloat(v.toFixed(3));
+
+  t.ullageFC = vFixed;
+  core.getChannel(tank.cfg.level.ullageAtFC.channel).value = vFixed;
+}
+
+/**
+ * set level at floatation center
+ * @param {object} tank - tank object
+ * @param {number} v - level value
+ */
+function setLevelFC(tank, v) {
+  const t = tank;
+  const vFixed = parseFloat(v.toFixed(3));
+
+  t.levelFC = vFixed;
+  core.getChannel(tank.cfg.level.levelAtFC.channel).value = vFixed;
+}
 
 /**
  * update tank level
  * @param {number} ullageRadar - ullage from tank
  */
 function updateTankLevel(tank) {
-  const t = tank;
   let sumOfUllageAtRef = 0.0;
   let sumOfUllageFC = 0.0;
   let sumOfLevelAtRef = 0.0;
   let sumOfLevelFC = 0.0;
   let validRadarCount = 0;
 
-  t.radars.forEach((r) => {
+  tank.radars.forEach((r) => {
     if (r.sensorFault === true) {
       return;
     }
@@ -30,15 +82,15 @@ function updateTankLevel(tank) {
   });
 
   if (validRadarCount > 0) {
-    t.ullageAtRef = sumOfUllageAtRef / validRadarCount;
-    t.ullageFC = sumOfUllageFC / validRadarCount;
-    t.levelAtRef = sumOfLevelAtRef / validRadarCount;
-    t.levelFC = sumOfLevelFC / validRadarCount;
+    setUllageAtRef(tank, sumOfUllageAtRef / validRadarCount);
+    setUllageFC(tank, sumOfUllageFC / validRadarCount);
+    setLevelAtRef(tank, sumOfLevelAtRef / validRadarCount);
+    setLevelFC(tank, sumOfLevelFC / validRadarCount);
   } else {
-    t.ullageAtRef = 0.0;
-    t.ullageFC = 0.0;
-    t.levelAtRef = 0.0;
-    t.levelFC = 0.0;
+    setUllageAtRef(tank, 0.0);
+    setUllageFC(tank, 0.0);
+    setLevelAtRef(tank, 0.0);
+    setLevelFC(tank, 0.0);
   }
 }
 
@@ -50,7 +102,7 @@ function updateRadar(radar, ullageRadar) {
 
   r.ullageAtRef = ullageSensor - vessel.trimListCorrect(radarCfg.cfg.cDLR, radarCfg.cfg.cDTR);
   r.ullageFC = ullageSensor - vessel.trimListCorrect(radarCfg.cfg.cDLFC, radarCfg.cfg.cDTFC);
-  r.level = levelRadar;
+  r.level = levelRadar; // level at sensor point
   r.levelFC = levelRadar
     + vessel.trimListCorrect(radarCfg.cfg.cDLFC, radarCfg.cfg.cDTFC) - radarCfg.cfg.DBotManMsrPnt;
   r.levelAtRef = levelRadar
@@ -59,6 +111,12 @@ function updateRadar(radar, ullageRadar) {
   updateTankLevel(tank);
 }
 
+/**
+ * create tank randar instance and returns the array of radars
+ * @param {object} tank - tank object
+ * @param {object} cfg - tank configuration
+ * @return {array} array of tank radar instance
+ */
 function createTankRadarInstance(tank, cfg) {
   const radars = [];
   let radar;
@@ -77,6 +135,18 @@ function createTankRadarInstance(tank, cfg) {
 
     radar.radarCfg = radarCfg;
     radars.push(radar);
+
+    // listen on channel value event
+    core.listenOnChannelValue(radarCfg.channel, (chnl) => {
+      const ullageRadar = chnl.value;
+      updateRadar(radar, ullageRadar);
+    });
+
+    // listen on channel sensor event
+    core.listenOnChannelFault(radarCfg.channel, (chnl) => {
+      radar.sensorFault = chnl.sensorFault;
+      updateTankLevel(tank);
+    });
   });
   return radars;
 }
@@ -87,12 +157,12 @@ function createTankRadarInstance(tank, cfg) {
  cfg: {
   name: 'XXX',
   level: {
-    ullage: { // average ullage at reference point
+    ullageAtRef: { // average ullage at reference point
       channel: XXX,
       hiAlarm: XXX,
       loAlarm: XXX,
     },
-    level: { // average level at reference point
+    levelAtRef: { // average level at reference point
       channel: XXX,
       hiAlarm: XXX,
       loAlarm: XXX,
@@ -142,10 +212,11 @@ function createTank(cfg) {
 
   tank.radars = createTankRadarInstance(tank, cfg);
 
-  //
-  // FIXME
-  // connect level channels
-  //
+  setUllageAtRef(tank, 0.0);
+  setLevelAtRef(tank, 0.0);
+  setUllageFC(tank, 0.0);
+  setLevelFC(tank, 0.0);
+
   return tank;
 }
 
