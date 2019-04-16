@@ -16,10 +16,10 @@ const _channels = {};
  * @param {object} cfg - channel configuration object
  cfg: {
   name: 'XXX',
-  dir: 'in|out|virtual',
+  dir: 'in|out',
   type: 'analog|digital',
-  sensor: 'XXX' (optional, sensor type),
-  io: 'XXX' (optional, io location),
+  gain: 1.0,
+  offset: 0.0,
  }
  */
 function Channel(number, cfg) {
@@ -43,7 +43,11 @@ Channel.prototype = {
     return this._value;
   },
   set value(v) {
-    this._value = v;
+    if (this.cfg.type === 'digital') {
+      this._value = v;
+    } else {
+      this._value = this.cfg.gain * v + this.cfg.offset;
+    }
     this.emit('value', this);
   },
   get sensorFault() {

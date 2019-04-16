@@ -4,6 +4,7 @@
  */
 const vessel = require('../vessel');
 const core = require('../../core');
+const util = require('../../util');
 
 /**
  * set ullage at ref
@@ -12,7 +13,7 @@ const core = require('../../core');
  */
 function setUllageAtRef(tank, v) {
   const t = tank;
-  const vFixed = parseFloat(v.toFixed(3));
+  const vFixed = util.toFloat(v, 3);
 
   t.ullageAtRef = vFixed;
   core.getChannel(tank.cfg.level.ullageAtRef.channel).value = vFixed;
@@ -25,7 +26,7 @@ function setUllageAtRef(tank, v) {
  */
 function setLevelAtRef(tank, v) {
   const t = tank;
-  const vFixed = parseFloat(v.toFixed(3));
+  const vFixed = util.toFloat(v, 3);
 
   t.levelAtRef = vFixed;
   core.getChannel(tank.cfg.level.levelAtRef.channel).value = vFixed;
@@ -38,7 +39,7 @@ function setLevelAtRef(tank, v) {
  */
 function setUllageFC(tank, v) {
   const t = tank;
-  const vFixed = parseFloat(v.toFixed(3));
+  const vFixed = util.toFloat(v, 3);
 
   t.ullageFC = vFixed;
   core.getChannel(tank.cfg.level.ullageAtFC.channel).value = vFixed;
@@ -51,7 +52,7 @@ function setUllageFC(tank, v) {
  */
 function setLevelFC(tank, v) {
   const t = tank;
-  const vFixed = parseFloat(v.toFixed(3));
+  const vFixed = util.toFloat(v, 3);
 
   t.levelFC = vFixed;
   core.getChannel(tank.cfg.level.levelAtFC.channel).value = vFixed;
@@ -82,6 +83,11 @@ function updateTankLevel(tank) {
   });
 
   if (validRadarCount > 0) {
+    core.getChannel(tank.cfg.level.ullageAtRef.channel).sensorFault = false;
+    core.getChannel(tank.cfg.level.levelAtRef.channel).sensorFault = false;
+    core.getChannel(tank.cfg.level.ullageAtFC.channel).sensorFault = false;
+    core.getChannel(tank.cfg.level.levelAtFC.channel).sensorFault = false;
+
     setUllageAtRef(tank, sumOfUllageAtRef / validRadarCount);
     setUllageFC(tank, sumOfUllageFC / validRadarCount);
     setLevelAtRef(tank, sumOfLevelAtRef / validRadarCount);
@@ -91,6 +97,11 @@ function updateTankLevel(tank) {
     setUllageFC(tank, 0.0);
     setLevelAtRef(tank, 0.0);
     setLevelFC(tank, 0.0);
+
+    core.getChannel(tank.cfg.level.ullageAtRef.channel).sensorFault = true;
+    core.getChannel(tank.cfg.level.levelAtRef.channel).sensorFault = true;
+    core.getChannel(tank.cfg.level.ullageAtFC.channel).sensorFault = true;
+    core.getChannel(tank.cfg.level.levelAtFC.channel).sensorFault = true;
   }
 }
 

@@ -8,26 +8,36 @@ const sampleChannels = {
     name: 'ullage at ref',
     dir: 'out',
     type: 'analog',
+    gain: 1.0,
+    offset: 0.0,
   },
   2000: {
     name: 'level at ref',
     dir: 'out',
     type: 'analog',
+    gain: 1.0,
+    offset: 0.0,
   },
   3000: {
     name: 'ullage at fc',
     dir: 'out',
     type: 'analog',
+    gain: 1.0,
+    offset: 0.0,
   },
   4000: {
     name: 'level at fc',
     dir: 'out',
     type: 'analog',
+    gain: 1.0,
+    offset: 0.0,
   },
   10000: {
     name: 'radar input',
     dir: 'in',
     type: 'analog',
+    gain: 1.0,
+    offset: 0.0,
   },
 };
 

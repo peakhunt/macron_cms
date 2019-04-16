@@ -12,6 +12,8 @@ const testChnlCfgs = {
     name: 'Channel #1',
     dir: 'in',
     type: 'analog',
+    gain: 1.0,
+    offset: 0.0,
   },
 };
 
