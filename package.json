@@ -24,5 +24,8 @@
       "lcov",
       "text"
     ]
+  },
+  "dependencies": {
+    "modbus-serial": "^7.5.1"
   }
 }
