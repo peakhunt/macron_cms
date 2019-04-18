@@ -1,4 +1,5 @@
 const common = require('../../../common');
+const logger = require('../../../logger');
 
 const modbusRegisters = {
   coil: {
@@ -309,8 +310,26 @@ function ZBANA(master, cfg) {
   this.ioRegs = common.deepCopy(modbusRegisters);
 }
 
+function executeNext(zbana, modbus, resolve, reject) {
+  modbus.setID(zbana.cfg.address);
+  modbus.readInputRegisters(1000, 12).then((data) => {
+    logger.info(`zbana ${zbana.cfg.address} data ${data}`);
+    resolve();
+  }).catch((err) => {
+    logger.error(`zbana ${zbana.cfg.address} error ${err}`);
+    reject();
+  });
+}
+
 ZBANA.prototype = {
   constructor: ZBANA,
+  executeSchedule: (modbus) => {
+    const zbana = this;
+
+    return new Promise((resolve, reject) => {
+      executeNext(zbana, modbus, resolve, reject);
+    });
+  },
 };
 
 /**

@@ -3,9 +3,23 @@ const zbana = require('../zbana');
 const zbhart = require('../zbhart');
 const logger = require('../../../logger');
 
+function pollZBBoard(zbmaster) {
+  const board = zbmaster.boards[zbmaster.pollNdx];
+  const master = zbmaster;
+
+  board.executeSchedule(master.modbus).then(() => {
+    master.pollNdx = (master.pollNdx + 1) % master.boards.length;
+    pollZBBoard(master);
+  }).catch(() => {
+    master.pollNdx = (master.pollNdx + 1) % master.boards.length;
+    pollZBBoard(master);
+  });
+}
+
 function ZBMaster(cfg) {
   this.cfg = cfg;
   this.boards = [];
+  this.pollNdx = 0;
 
   cfg.boards.forEach((bCfg) => {
     switch (bCfg.type) {
@@ -25,18 +39,21 @@ function ZBMaster(cfg) {
   //
   // setup modbus master
   //
-  this.modbus = new ModbusRTU();
-  this.modbus.connectRTU(cfg.transport.serial.port, {
+  const self = this;
+
+  self.modbus = new ModbusRTU();
+  self.modbus.connectRTU(cfg.transport.serial.port, {
     baudRate: cfg.transport.serial.baud,
     dataBits: cfg.transport.serial.dataBit,
     stopBits: cfg.transport.serial.stopBit === '1' ? 1 : 2,
     parity: cfg.transport.serial.parity,
   }).then(() => {
-    //
-    // FIXME start client polling
-    //
+    self.modbus.setTimeout(cfg.poll.timeout);
+    pollZBBoard(self);
   }).catch((err) => {
+    //
     // error
+    //
     logger.error(`failed to start ZBMaster ${err}`);
   });
 }
