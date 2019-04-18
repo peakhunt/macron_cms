@@ -4,7 +4,7 @@
  */
 const vessel = require('../vessel');
 const core = require('../../core');
-const util = require('../../util');
+const common = require('../../common');
 
 /**
  * set ullage at ref
@@ -13,7 +13,7 @@ const util = require('../../util');
  */
 function setUllageAtRef(tank, v) {
   const t = tank;
-  const vFixed = util.toFloat(v, 3);
+  const vFixed = common.toFloat(v, 3);
 
   t.ullageAtRef = vFixed;
   core.getChannel(tank.cfg.level.ullageAtRef.channel).value = vFixed;
@@ -26,7 +26,7 @@ function setUllageAtRef(tank, v) {
  */
 function setLevelAtRef(tank, v) {
   const t = tank;
-  const vFixed = util.toFloat(v, 3);
+  const vFixed = common.toFloat(v, 3);
 
   t.levelAtRef = vFixed;
   core.getChannel(tank.cfg.level.levelAtRef.channel).value = vFixed;
@@ -39,7 +39,7 @@ function setLevelAtRef(tank, v) {
  */
 function setUllageFC(tank, v) {
   const t = tank;
-  const vFixed = util.toFloat(v, 3);
+  const vFixed = common.toFloat(v, 3);
 
   t.ullageFC = vFixed;
   core.getChannel(tank.cfg.level.ullageAtFC.channel).value = vFixed;
@@ -52,7 +52,7 @@ function setUllageFC(tank, v) {
  */
 function setLevelFC(tank, v) {
   const t = tank;
-  const vFixed = util.toFloat(v, 3);
+  const vFixed = common.toFloat(v, 3);
 
   t.levelFC = vFixed;
   core.getChannel(tank.cfg.level.levelAtFC.channel).value = vFixed;

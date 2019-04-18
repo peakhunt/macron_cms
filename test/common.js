@@ -1,5 +1,5 @@
 const assert = require('assert');
-const util = require('../src/util');
+const common = require('../src/common');
 
 describe('alarm', () => {
   it('deep copy', () => {
@@ -13,7 +13,7 @@ describe('alarm', () => {
       },
     };
 
-    const to2 = util.deepCopy(to1);
+    const to2 = common.deepCopy(to1);
 
     assert.equal(to1.name, to2.name);
     assert.equal(to1.value, to2.value);

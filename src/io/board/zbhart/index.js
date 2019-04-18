@@ -1,4 +1,4 @@
-const util = require('../../../util');
+const common = require('../../../common');
 
 const modbusRegisters = {
   coil: {
@@ -253,9 +253,10 @@ const modbusRegisters = {
   },
 };
 
-function ZBHART(cfg) {
+function ZBHART(master, cfg) {
+  this.master = master;
   this.cfg = cfg;
-  this.ioRegs = util.deepCopy(modbusRegisters);
+  this.ioRegs = common.deepCopy(modbusRegisters);
 }
 
 ZBHART.prototype = {
@@ -264,8 +265,10 @@ ZBHART.prototype = {
 
 /**
  * create ZBHART I/O board object.
+ * @param {object} master - ZBMaster instance
  * @param {object} cfg - ZBANA board configuration
  cfg: {
+   type: 'zbhart',
    address: XXX,
    commFault: XXX,
    ports: [
@@ -285,8 +288,8 @@ ZBHART.prototype = {
    ],
  }
  */
-function createBoard(cfg) {
-  const zbhart = new ZBHART(cfg);
+function createBoard(master, cfg) {
+  const zbhart = new ZBHART(master, cfg);
 
   return zbhart;
 }

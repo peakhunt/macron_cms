@@ -1,4 +1,4 @@
-const util = require('../../../util');
+const common = require('../../../common');
 
 const modbusRegisters = {
   coil: {
@@ -303,9 +303,10 @@ const modbusRegisters = {
   },
 };
 
-function ZBANA(cfg) {
+function ZBANA(master, cfg) {
+  this.master = master;
   this.cfg = cfg;
-  this.ioRegs = util.deepCopy(modbusRegisters);
+  this.ioRegs = common.deepCopy(modbusRegisters);
 }
 
 ZBANA.prototype = {
@@ -314,8 +315,10 @@ ZBANA.prototype = {
 
 /**
  * create ZBANA I/O board object.
+ * @param {object} master - ZBMaster instance
  * @param {object} cfg - ZBANA board configuration
  cfg: {
+   type: 'zbana',
    address: XXX,
    commFault: XXX,
    ports: [
@@ -335,8 +338,8 @@ ZBANA.prototype = {
    ],
  }
  */
-function createBoard(cfg) {
-  const zbana = new ZBANA(cfg);
+function createBoard(master, cfg) {
+  const zbana = new ZBANA(master, cfg);
 
   return zbana;
 }
