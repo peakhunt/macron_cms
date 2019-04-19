@@ -1,6 +1,7 @@
 const assert = require('assert');
 const channel = require('../src/core/channel');
 const alarm = require('../src/core/alarm');
+const sinon = require('sinon');
 
 const testChnlCfgs = {
   10: {
@@ -57,16 +58,21 @@ const testAlarmCfgs = {
   },
 };
 
-
 describe('alarm', () => {
-  // create channels
-  for (let chnlNum in testChnlCfgs) {
-    channel.createChannel(chnlNum, testChnlCfgs[chnlNum]);
-  }
+  var clock;
 
-  for (let alarmNum in testAlarmCfgs) {
-    alarm.createAlarm(alarmNum, testAlarmCfgs[alarmNum]);
-  }
+  before(function () {
+    clock = sinon.useFakeTimers();
+    // create channels
+    for (let chnlNum in testChnlCfgs) {
+      channel.createChannel(chnlNum, testChnlCfgs[chnlNum]);
+    }
+
+    for (let alarmNum in testAlarmCfgs) {
+      alarm.createAlarm(alarmNum, testAlarmCfgs[alarmNum]);
+    }
+  });
+  after(function () { clock.restore(); });
 
   // create alarms
   it('alarm creation', () => {
@@ -153,45 +159,38 @@ describe('alarm', () => {
     assert.equal(alm.state, alarm.alarmStateEnum.Inactive);
   });
 
-  it('time delay test1', (done) => {
+  it('time delay test1', () => {
     const chnl = channel.getChannel(10);
     const alm = alarm.getAlarm(2);
 
     chnl.value = true;
     assert.equal(alm.state, alarm.alarmStateEnum.Inactive);
-    setTimeout(() => {
-      assert.equal(alm.state, alarm.alarmStateEnum.Active_Pending);
-      alm.ack();
-      assert.equal(alm.state, alarm.alarmStateEnum.Active);
-      done();
-    }, 1001);
+    clock.tick(1001);
+    assert.equal(alm.state, alarm.alarmStateEnum.Active_Pending);
+    alm.ack();
+    assert.equal(alm.state, alarm.alarmStateEnum.Active);
   });
 
-  it('time delay test2', (done) => {
+  it('time delay test2', () => {
     const chnl = channel.getChannel(10);
     const alm = alarm.getAlarm(2);
 
     chnl.value = false;
     assert.equal(alm.state, alarm.alarmStateEnum.Active);
-    setTimeout(() => {
-      assert.equal(alm.state, alarm.alarmStateEnum.Inactive);
-      done();
-    }, 1001);
+    clock.tick(1001);
+    assert.equal(alm.state, alarm.alarmStateEnum.Inactive);
   });
 
-  it('time delay test3', (done) => {
+  it('time delay test3', () => {
     const chnl = channel.getChannel(10);
     const alm = alarm.getAlarm(2);
 
     chnl.value = true;
     assert.equal(alm.state, alarm.alarmStateEnum.Inactive);
-    setTimeout(() => {
-      chnl.value = false;
-      assert.equal(alm.state, alarm.alarmStateEnum.Inactive);
-      setTimeout(() => {
-        assert.equal(alm.state, alarm.alarmStateEnum.Inactive);
-        done();
-      }, 1005);
-    }, 20);
+    clock.tick(20);
+    chnl.value = false;
+    assert.equal(alm.state, alarm.alarmStateEnum.Inactive);
+    clock.tick(1005);
+    assert.equal(alm.state, alarm.alarmStateEnum.Inactive);
   });
 });
