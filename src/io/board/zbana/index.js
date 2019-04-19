@@ -310,24 +310,43 @@ function ZBANA(master, cfg) {
   this.ioRegs = common.deepCopy(modbusRegisters);
 }
 
-function executeNext(zbana, modbus, resolve, reject) {
-  modbus.setID(zbana.cfg.address);
-  modbus.readInputRegisters(1000, 12).then((data) => {
-    logger.info(`zbana ${zbana.cfg.address} data ${data}`);
+function read420mAInput(zbana, modbus, resolve, reject) {
+  modbus.readInputRegisters(1000, 12).then((b) => {
+    for (let i = 0; i < b.data.length; i += 1) {
+      const v = b.data[i];
+      const addr = 1000 + i;
+      const reg = zbana.ioRegs.input[addr];
+
+      reg.value = v;
+      //
+      // FIXME convert I/O raw value to channel value
+      // FIXME notify connected channel
+      //
+    }
     resolve();
   }).catch((err) => {
+    //
+    // FIXME
+    // a. communication failure
+    // b. sensor faults
+    //
     logger.error(`zbana ${zbana.cfg.address} error ${err}`);
     reject();
   });
 }
 
+function executeNext(zbana, modbus, resolve, reject) {
+  modbus.setID(zbana.cfg.address);
+  read420mAInput(zbana, modbus, resolve, reject);
+}
+
 ZBANA.prototype = {
   constructor: ZBANA,
-  executeSchedule: (modbus) => {
-    const zbana = this;
+  executeSchedule(modbus) {
+    const self = this;
 
     return new Promise((resolve, reject) => {
-      executeNext(zbana, modbus, resolve, reject);
+      executeNext(self, modbus, resolve, reject);
     });
   },
 };

@@ -6,7 +6,8 @@ const {
   printf,
 } = format;
 
-const level = process.env.NODE_ENV === 'dev' ? 'warn' : 'info';
+//const level = process.env.NODE_ENV === 'dev' ? 'warn' : 'info';
+const level = 'info';
 
 const myFormat = printf(info => `${info.timestamp} ${info.level}: ${info.message}`);
 
