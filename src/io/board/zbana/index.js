@@ -1,5 +1,6 @@
 const common = require('../../../common');
 const logger = require('../../../logger');
+const core = require('../../../core');
 
 const modbusRegisters = {
   coil: {
@@ -304,32 +305,56 @@ const modbusRegisters = {
   },
 };
 
+function setSensorFault(chnlNum, status) {
+  if (chnlNum === -1) {
+    return;
+  }
+
+  core.getChannel(chnlNum).sensorFault = status;
+}
+
+function setCommStatus(chnlNum, status) {
+  core.getChannel(chnlNum).sensorValue = status;
+}
+
 function ZBANA(master, cfg) {
   this.master = master;
   this.cfg = cfg;
   this.ioRegs = common.deepCopy(modbusRegisters);
+
+  cfg.ports.forEach((pcfg, ndx) => {
+    const addr = 1000 + ndx;
+
+    this.ioRegs.input[addr].channel = pcfg.channel;
+  });
 }
 
 function read420mAInput(zbana, modbus, resolve, reject) {
   modbus.readInputRegisters(1000, 12).then((b) => {
+    setCommStatus(zbana.cfg.commFault, true);
     for (let i = 0; i < b.data.length; i += 1) {
       const v = b.data[i];
       const addr = 1000 + i;
       const reg = zbana.ioRegs.input[addr];
 
-      reg.value = v;
-      //
-      // FIXME convert I/O raw value to channel value
-      // FIXME notify connected channel
-      //
+      // convert to mA value
+      reg.value = v / 1000.0;
+
+      if (reg.channel !== -1) {
+        setSensorFault(reg.channel, false);
+        core.getChannel(reg.channel).setSensorValue = reg.value;
+      }
     }
     resolve();
   }).catch((err) => {
-    //
-    // FIXME
     // a. communication failure
-    // b. sensor faults
-    //
+    setCommStatus(zbana.cfg.commFault, false);
+
+    // b. sensor fault
+    zbana.cfg.ports.forEach((pcfg) => {
+      setSensorFault(pcfg.channel, true);
+    });
+
     logger.error(`zbana ${zbana.cfg.address} error ${err}`);
     reject();
   });
