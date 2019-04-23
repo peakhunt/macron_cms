@@ -249,7 +249,7 @@ function handleSensorFaultAlarm(alarm) {
 function handleDigitalAlarm(alarm) {
   const chnl = alarm._channel;
 
-  if (chnl.value === alarm.cfg.set) {
+  if (chnl.engValue === alarm.cfg.set) {
     handleAlarmEvent(alarm, _alarmEventEnum.Occur);
   } else {
     handleAlarmEvent(alarm, _alarmEventEnum.Clear);
@@ -265,7 +265,7 @@ function handleAnalogAlarm(alarm) {
 
   switch (alarm.cfg.type) {
     case 'high':
-      if (chnl.value >= alarm.cfg.set) {
+      if (chnl.engValue >= alarm.cfg.set) {
         handleAlarmEvent(alarm, _alarmEventEnum.Occur);
       } else {
         handleAlarmEvent(alarm, _alarmEventEnum.Clear);
@@ -273,7 +273,7 @@ function handleAnalogAlarm(alarm) {
       break;
 
     case 'low':
-      if (chnl.value <= alarm.cfg.set) {
+      if (chnl.engValue <= alarm.cfg.set) {
         handleAlarmEvent(alarm, _alarmEventEnum.Occur);
       } else {
         handleAlarmEvent(alarm, _alarmEventEnum.Clear);

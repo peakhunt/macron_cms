@@ -87,30 +87,30 @@ describe('alarm', () => {
     const alm = alarm.getAlarm(1);
 
     assert.equal(alm.state, alarm.alarmStateEnum.Inactive);
-    chnl.value = true;
+    chnl.engValue = true;
     assert.equal(alm.state, alarm.alarmStateEnum.Active_Pending);
     alm.ack();
     assert.equal(alm.state, alarm.alarmStateEnum.Active);
-    chnl.value = false;
+    chnl.engValue = false;
     assert.equal(alm.state, alarm.alarmStateEnum.Inactive);
-    chnl.value = true;
+    chnl.engValue = true;
     assert.equal(alm.state, alarm.alarmStateEnum.Active_Pending);
-    chnl.value = false;
+    chnl.engValue = false;
     assert.equal(alm.state, alarm.alarmStateEnum.Inactive_Pending);
-    chnl.value = true;
+    chnl.engValue = true;
     assert.equal(alm.state, alarm.alarmStateEnum.Active_Pending);
-    chnl.value = false;
+    chnl.engValue = false;
     assert.equal(alm.state, alarm.alarmStateEnum.Inactive_Pending);
     alm.ack();
     assert.equal(alm.state, alarm.alarmStateEnum.Inactive);
 
-    chnl.value = true;
+    chnl.engValue = true;
     assert.equal(alm.state, alarm.alarmStateEnum.Active_Pending);
-    chnl.value = false;
+    chnl.engValue = false;
     assert.equal(alm.state, alarm.alarmStateEnum.Inactive_Pending);
-    chnl.value = true;
+    chnl.engValue = true;
     assert.equal(alm.state, alarm.alarmStateEnum.Active_Pending);
-    chnl.value = false;
+    chnl.engValue = false;
     assert.equal(alm.state, alarm.alarmStateEnum.Inactive_Pending);
     alm.ack();
     assert.equal(alm.state, alarm.alarmStateEnum.Inactive);
@@ -122,7 +122,7 @@ describe('alarm', () => {
 
 
     assert.equal(alm.state, alarm.alarmStateEnum.Inactive);
-    chnl.value = -11.0;
+    chnl.engValue = -11.0;
     assert.equal(alm.state, alarm.alarmStateEnum.Active_Pending);
     alm.ack();
     assert.equal(alm.state, alarm.alarmStateEnum.Active);
@@ -130,7 +130,7 @@ describe('alarm', () => {
       assert.equal(alm.state, alarm.alarmStateEnum.Inactive);
       done();
     });
-    chnl.value = 0;
+    chnl.engValue = 0;
   });
 
   it('basic high alarm', () => {
@@ -138,11 +138,11 @@ describe('alarm', () => {
     const alm = alarm.getAlarm(4);
 
     assert.equal(alm.state, alarm.alarmStateEnum.Inactive);
-    chnl.value = 11.0;
+    chnl.engValue = 11.0;
     assert.equal(alm.state, alarm.alarmStateEnum.Active_Pending);
     alm.ack();
     assert.equal(alm.state, alarm.alarmStateEnum.Active);
-    chnl.value = 0;
+    chnl.engValue = 0;
     assert.equal(alm.state, alarm.alarmStateEnum.Inactive);
   });
 
@@ -163,7 +163,7 @@ describe('alarm', () => {
     const chnl = channel.getChannel(10);
     const alm = alarm.getAlarm(2);
 
-    chnl.value = true;
+    chnl.engValue = true;
     assert.equal(alm.state, alarm.alarmStateEnum.Inactive);
     clock.tick(1001);
     assert.equal(alm.state, alarm.alarmStateEnum.Active_Pending);
@@ -175,7 +175,7 @@ describe('alarm', () => {
     const chnl = channel.getChannel(10);
     const alm = alarm.getAlarm(2);
 
-    chnl.value = false;
+    chnl.engValue = false;
     assert.equal(alm.state, alarm.alarmStateEnum.Active);
     clock.tick(1001);
     assert.equal(alm.state, alarm.alarmStateEnum.Inactive);
@@ -185,10 +185,10 @@ describe('alarm', () => {
     const chnl = channel.getChannel(10);
     const alm = alarm.getAlarm(2);
 
-    chnl.value = true;
+    chnl.engValue = true;
     assert.equal(alm.state, alarm.alarmStateEnum.Inactive);
     clock.tick(20);
-    chnl.value = false;
+    chnl.engValue = false;
     assert.equal(alm.state, alarm.alarmStateEnum.Inactive);
     clock.tick(1005);
     assert.equal(alm.state, alarm.alarmStateEnum.Inactive);

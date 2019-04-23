@@ -221,28 +221,28 @@ describe('tank', () => {
 
     vessel.reset();
 
-    core.getChannel(10000).value = 4.0;
+    core.getChannel(10000).engValue = 4.0;
     assert.equal(t.ullageAtRef, 4.0);
     assert.equal(t.ullageFC, 4.0);
     assert.equal(t.levelAtRef, 6.0);
     assert.equal(t.levelFC, 6.0);
 
-    assert.equal(core.getChannel(1000).value, 4.0);
-    assert.equal(core.getChannel(2000).value, 6.0);
-    assert.equal(core.getChannel(3000).value, 4.0);
-    assert.equal(core.getChannel(4000).value, 6.0);
+    assert.equal(core.getChannel(1000).engValue, 4.0);
+    assert.equal(core.getChannel(2000).engValue, 6.0);
+    assert.equal(core.getChannel(3000).engValue, 4.0);
+    assert.equal(core.getChannel(4000).engValue, 6.0);
 
     core.getChannel(10000).sensorFault = true;
-    assert.equal(core.getChannel(1000).value, 0.0);
-    assert.equal(core.getChannel(2000).value, 0.0);
-    assert.equal(core.getChannel(3000).value, 0.0);
-    assert.equal(core.getChannel(4000).value, 0.0);
+    assert.equal(core.getChannel(1000).engValue, 0.0);
+    assert.equal(core.getChannel(2000).engValue, 0.0);
+    assert.equal(core.getChannel(3000).engValue, 0.0);
+    assert.equal(core.getChannel(4000).engValue, 0.0);
 
     core.getChannel(10000).sensorFault = false;
-    core.getChannel(10000).value = 7.0;
-    assert.equal(core.getChannel(1000).value, 7.0);
-    assert.equal(core.getChannel(2000).value, 3.0);
-    assert.equal(core.getChannel(3000).value, 7.0);
-    assert.equal(core.getChannel(4000).value, 3.0);
+    core.getChannel(10000).engValue = 7.0;
+    assert.equal(core.getChannel(1000).engValue, 7.0);
+    assert.equal(core.getChannel(2000).engValue, 3.0);
+    assert.equal(core.getChannel(3000).engValue, 7.0);
+    assert.equal(core.getChannel(4000).engValue, 3.0);
   });
 });

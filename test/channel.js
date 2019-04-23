@@ -15,6 +15,13 @@ const testChnlCfgs = {
     gain: 1.0,
     offset: 0.0,
   },
+  3: {
+    name: 'Channel #3',
+    dir: 'in',
+    type: 'analog',
+    gain: 0.5,
+    offset: 10,
+  },
 };
 
 
@@ -31,25 +38,41 @@ describe('channel', () => {
     let chnl;
 
     chnl = channel.getChannel(1);
-    assert.equal(chnl.value, false);
+    assert.equal(chnl.engValue, false);
+    assert.equal(chnl.sensorValue, false);
     assert.equal(chnl.sensorFault, false);
 
+    chnl.sensorValue = true;
+    assert.equal(chnl.engValue, true);
+    assert.equal(chnl.sensorValue, true);
+
     chnl = channel.getChannel(2);
-    assert.equal(chnl.value, 0.0);
+    assert.equal(chnl.engValue, 0.0);
     assert.equal(chnl.sensorFault, false);
   });
 
   it('channel value event', (done) => {
     channel.getChannel(1).on('value', (chnl) => {
-      assert.equal(chnl.value, true);
+      assert.equal(chnl.engValue, true);
     });
     channel.getChannel(2).on('value', (chnl) => {
-      assert.equal(chnl.value, 2.0);
+      assert.equal(chnl.engValue, 2.0);
       done();
     });
 
-    channel.getChannel(1).value = true;
-    channel.getChannel(2).value = 2.0;
+    channel.getChannel(1).engValue = true;
+    channel.getChannel(2).engValue = 2.0;
+
+    //
+    // engVal = 0.5 * sensorVal + 10
+    //
+    // sensorVal = (engVal - 10) / 0.5
+    //
+    channel.getChannel(3).sensorValue = 100;
+    assert.equal(channel.getChannel(3).engValue, 60);
+
+    channel.getChannel(3).engValue = 30;
+    assert.equal(channel.getChannel(3).sensorValue, 40);
   });
 
   it('channel sensor fault event', (done) => {

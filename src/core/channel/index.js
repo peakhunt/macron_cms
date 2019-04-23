@@ -39,10 +39,20 @@ function Channel(number, cfg) {
 
 Channel.prototype = {
   constructor: Channel,
-  get value() {
+  get engValue() {
     return this._value;
   },
-  set value(v) {
+  set engValue(v) {
+    this._value = v;
+    this.emit('value', this);
+  },
+  get sensorValue() {
+    if (this.cfg.type === 'digital') {
+      return this._value;
+    }
+    return (this._value - this.cfg.offset) / this.cfg.gain;
+  },
+  set sensorValue(v) {
     if (this.cfg.type === 'digital') {
       this._value = v;
     } else {

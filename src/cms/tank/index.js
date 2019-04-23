@@ -16,7 +16,7 @@ function setUllageAtRef(tank, v) {
   const vFixed = common.toFloat(v, 3);
 
   t.ullageAtRef = vFixed;
-  core.getChannel(tank.cfg.level.ullageAtRef.channel).value = vFixed;
+  core.getChannel(tank.cfg.level.ullageAtRef.channel).engValue = vFixed;
 }
 
 /**
@@ -29,7 +29,7 @@ function setLevelAtRef(tank, v) {
   const vFixed = common.toFloat(v, 3);
 
   t.levelAtRef = vFixed;
-  core.getChannel(tank.cfg.level.levelAtRef.channel).value = vFixed;
+  core.getChannel(tank.cfg.level.levelAtRef.channel).engValue = vFixed;
 }
 
 /**
@@ -42,7 +42,7 @@ function setUllageFC(tank, v) {
   const vFixed = common.toFloat(v, 3);
 
   t.ullageFC = vFixed;
-  core.getChannel(tank.cfg.level.ullageAtFC.channel).value = vFixed;
+  core.getChannel(tank.cfg.level.ullageAtFC.channel).engValue = vFixed;
 }
 
 /**
@@ -55,7 +55,7 @@ function setLevelFC(tank, v) {
   const vFixed = common.toFloat(v, 3);
 
   t.levelFC = vFixed;
-  core.getChannel(tank.cfg.level.levelAtFC.channel).value = vFixed;
+  core.getChannel(tank.cfg.level.levelAtFC.channel).engValue = vFixed;
 }
 
 /**
@@ -149,7 +149,7 @@ function createTankRadarInstance(tank, cfg) {
 
     // listen on channel value event
     core.listenOnChannelValue(radarCfg.channel, (chnl) => {
-      const ullageRadar = chnl.value;
+      const ullageRadar = chnl.engValue;
       updateRadar(radar, ullageRadar);
     });
 
