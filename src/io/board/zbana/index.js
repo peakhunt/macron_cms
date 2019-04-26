@@ -331,7 +331,7 @@ function ZBANA(master, cfg) {
 
 function read420mAInput(zbana, modbus, resolve, reject) {
   modbus.readInputRegisters(1000, 12).then((b) => {
-    setCommStatus(zbana.cfg.commFault, true);
+    setCommStatus(zbana.cfg.commFault, false);
     for (let i = 0; i < b.data.length; i += 1) {
       const v = b.data[i];
       const addr = 1000 + i;
@@ -348,7 +348,7 @@ function read420mAInput(zbana, modbus, resolve, reject) {
     resolve();
   }).catch((err) => {
     // a. communication failure
-    setCommStatus(zbana.cfg.commFault, false);
+    setCommStatus(zbana.cfg.commFault, true);
 
     // b. sensor fault
     zbana.cfg.ports.forEach((pcfg) => {

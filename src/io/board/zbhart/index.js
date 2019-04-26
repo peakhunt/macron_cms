@@ -1,4 +1,6 @@
 const common = require('../../../common');
+const logger = require('../../../logger');
+const core = require('../../../core');
 
 const modbusRegisters = {
   coil: {
@@ -253,14 +255,100 @@ const modbusRegisters = {
   },
 };
 
+function setSensorFault(chnlNum, status) {
+  if (chnlNum === -1) {
+    return;
+  }
+
+  core.getChannel(chnlNum).sensorFault = status;
+}
+
+function setCommStatus(chnlNum, status) {
+  core.getChannel(chnlNum).sensorValue = status;
+}
+
 function ZBHART(master, cfg) {
   this.master = master;
   this.cfg = cfg;
   this.ioRegs = common.deepCopy(modbusRegisters);
+
+  cfg.ports.forEach((pcfg, ndx) => {
+    const addr = 1000 + ndx * 3;
+
+    this.ioRegs.input[addr].channel = pcfg.channel;
+  });
+}
+
+function readPortStatus(zbhart, modbus, resolve, reject) {
+  modbus.readDiscreteInputs(1000, 12).then((b) => {
+    setCommStatus(zbhart.cfg.commFault, false);
+
+    for (let i = 0; i < b.data.length; i += 1) {
+      const status = b.data[i];
+      const reg = zbhart.ioRegs.input[1000 + i];
+
+      setSensorFault(reg.channel, !status);
+    }
+    resolve();
+  }).catch((err) => {
+    // a. communication failure
+    setCommStatus(zbhart.cfg.commFault, true);
+    //
+    // b. sensor fault
+    zbhart.cfg.ports.forEach((pcfg) => {
+      setSensorFault(pcfg.channel, true);
+    });
+
+    logger.error(`zbhart readPortStatus ${zbhart.cfg.address} error ${err}`);
+    reject();
+  });
+}
+
+function readDistanceLevelFeedback(zbhart, modbus, resolve, reject) {
+  modbus.readInputRegisters(1000, 36).then((b) => {
+    setCommStatus(zbhart.cfg.commFault, false);
+    for (let i = 0; i < b.data.length; i += 3) {
+      const dist = b.data[i];
+      // const level = b.data[i + 1];
+      // const feed = b.data[i + 2];
+      const reg = zbhart.ioRegs.input[1000 + i];
+
+      reg.value = dist / 1000.0;
+
+      if (reg.channel !== -1) {
+        core.getChannel(reg.channel).setSensorValue = reg.value;
+      }
+    }
+
+    readPortStatus(zbhart, modbus, resolve, reject);
+  }).catch((err) => {
+    // a. communication failure
+    setCommStatus(zbhart.cfg.commFault, true);
+
+    // b. sensor fault
+    zbhart.cfg.ports.forEach((pcfg) => {
+      setSensorFault(pcfg.channel, true);
+    });
+
+    logger.error(`zbhart readDistanceLevelFeedback ${zbhart.cfg.address} error ${err}`);
+    reject();
+  });
+}
+
+function executeNext(zbhart, modbus, resolve, reject) {
+  modbus.setID(zbhart.cfg.address);
+  readDistanceLevelFeedback(zbhart, modbus, resolve, reject);
 }
 
 ZBHART.prototype = {
   constructor: ZBHART,
+  executeSchedule(modbus) {
+    const self = this;
+
+    return new Promise((resolve, reject) => {
+      executeNext(self, modbus, resolve, reject);
+    });
+  },
 };
 
 /**
