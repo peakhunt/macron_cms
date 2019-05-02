@@ -1,0 +1,268 @@
+{
+  "checksum": "xxxxxxxxx",
+  "project": {
+    "info": {
+      "title": "Blah Blah Blah Project",
+      "vessel": "star ship",
+      "revision": 11,
+      "last_update": "Feb/19/2019 11:23:31"
+    },
+    "configurator": {
+      "version": "0.1"
+    },
+    "io": {
+      "serial": [
+        {
+          "type": "zbSerialMaster",
+          "transport": {
+            "serial": {
+              "port": "/dev/ttyUSB0",
+              "baud": 38400,
+              "dataBit": 8,
+              "stopBit": "1",
+              "parity": "none"
+            }
+          },
+          "poll": {
+            "timeout": 1000
+          },
+          "boards": [
+            {
+              "type": "zbana",
+              "address": 8,
+              "commFault": 1,
+              "ports": [
+                {
+                  "channel": 1000,
+                  "sensorType": "pressure"
+                },
+                {
+                  "channel": 1001,
+                  "sensorType": "pressure"
+                }
+              ]
+            },
+            {
+              "type": "zbhart",
+              "address": 9,
+              "commFault": 2,
+              "ports": [
+                {
+                  "channel": 2000,
+                  "sensorType": "vegaXXX"
+                },
+                {
+                  "channel": 2001,
+                  "sensorType": "vegaXXX"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "net": [
+      ]
+    },
+    "tanks": [
+      {
+        "name": "XXX",
+        "level": {
+          "ullageAtRef": {
+            "channel": 10000,
+            "hiAlarm": 10000,
+            "loAlarm": 10001
+          },
+          "levelAtRef": {
+            "channel": 10001,
+            "hiAlarm": 10002,
+            "loAlarm": 10003
+          },
+          "ullageAtFC": {
+            "channel": 10002,
+            "hiAlarm": 10004,
+            "loAlarm": 10005
+          },
+          "levelAtFC": {
+            "channel": 10003,
+            "hiAlarm": 10006,
+            "loAlarm": 10007
+          },
+          "tankLevelCfg": {
+            "DVUllRefToUTI": 0,
+            "DBotUllRefPnt": 0
+          },
+          "radars": [
+            {
+              "channel": 10004,
+              "sensorAlarm": 1234,
+              "cfg": {
+                "cDLR": 0,
+                "cDTR": 0,
+                "cDLFC": 0,
+                "cDTFC": 0,
+                "distance": 10,
+                "DBotManMsrPnt": 0,
+                "DVManMsrPntToSns": 0
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "channels": {
+      "1": {
+        "name": "ZBANA Address-8 Comm Fault",
+        "dir": "in",
+        "type": "digital"
+      },
+      "2": {
+        "name": "ZBHART Address-9 Comm Fault",
+        "dir": "in",
+        "type": "digital"
+      },
+      "1000": {
+        "name": "ZBANA Address-8 Port-1 Pressure Input",
+        "dir": "in",
+        "type": "analog",
+        "gain": 1.0,
+        "offset": 0.0
+      },
+      "1001": {
+        "name": "ZBANA Address-8 Port-2 Pressure Input",
+        "dir": "in",
+        "type": "analog",
+        "gain": 1.0,
+        "offset": 0.0
+      },
+      "2000": {
+        "name": "ZBHART Address-9 Port-1 Level Input",
+        "dir": "in",
+        "type": "analog",
+        "gain": 1.0,
+        "offset": 0.0
+      },
+      "2001": {
+        "name": "ZBHART Address-9 Port-2 Level Input",
+        "dir": "in",
+        "type": "analog",
+        "gain": 1.0,
+        "offset": 0.0
+      },
+      "10000": {
+        "name": "tank-XXX ullage ref channel",
+        "dir": "out",
+        "type": "analog",
+        "gain": 1.0,
+        "offset": 0.0
+      },
+      "10001": {
+        "name": "tank-XXX level at ref channel",
+        "dir": "out",
+        "type": "analog",
+        "gain": 1.0,
+        "offset": 0.0
+      },
+      "10002": {
+        "name": "tank-XXX ullage at FC channel",
+        "dir": "out",
+        "type": "analog",
+        "gain": 1.0,
+        "offset": 0.0
+      },
+      "10003": {
+        "name": "tank-XXX level at FC channel",
+        "dir": "out",
+        "type": "analog",
+        "gain": 1.0,
+        "offset": 0.0
+      },
+      "10004": {
+        "name": "tank-XXX radar input 0",
+        "dir": "in",
+        "type": "analog",
+        "gain": 1.0,
+        "offset": 0.0
+      }
+    },
+    "alarms": {
+      "1": {
+        "severity": "major",
+        "name": "ZBANA Address-8 Comm Fault",
+        "set": true,
+        "delay": 0,
+        "channel": 1
+      },
+      "2": {
+        "severity": "major",
+        "name": "ZBHART Address-9 Comm Fault",
+        "set": true,
+        "delay": 0,
+        "channel": 2
+      },
+      "10000": {
+        "type": "high",
+        "severity": "major",
+        "name": "tank-XXX ullage at ref high alarm",
+        "set": 9.5,
+        "delay": 0,
+        "channel": 10000
+      },
+      "10001": {
+        "type": "low",
+        "severity": "major",
+        "name": "tank-XXX ullage at ref low alarm",
+        "set": 0.5,
+        "delay": 0,
+        "channel": 10000
+      },
+      "10002": {
+        "type": "high",
+        "severity": "major",
+        "name": "tank-XXX level at ref high alarm",
+        "set": 9.5,
+        "delay": 0,
+        "channel": 10001
+      },
+      "10003": {
+        "type": "low",
+        "severity": "major",
+        "name": "tank-XXX level at ref low alarm",
+        "set": 0.5,
+        "delay": 0,
+        "channel": 10001
+      },
+      "10004": {
+        "type": "high",
+        "severity": "major",
+        "name": "tank-XXX ullage at FC high alarm",
+        "set": 9.5,
+        "delay": 0,
+        "channel": 10002
+      },
+      "10005": {
+        "type": "low",
+        "severity": "major",
+        "name": "tank-XXX ullage at FC low alarm",
+        "set": 0.5,
+        "delay": 0,
+        "channel": 10002
+      },
+      "10006": {
+        "type": "high",
+        "severity": "major",
+        "name": "tank-XXX level at FC high alarm",
+        "set": 9.5,
+        "delay": 0,
+        "channel": 10003
+      },
+      "10007": {
+        "type": "low",
+        "severity": "major",
+        "name": "tank-XXX level at FC low alarm",
+        "set": 0.5,
+        "delay": 0,
+        "channel": 10003
+      }
+    }
+  }
+}

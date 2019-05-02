@@ -66,6 +66,7 @@ ZBMaster.prototype = {
  * create I/O board master.
  * @param {object} cfg - I/O board master configuration
   cfg: {
+    type: 'zbSerialMaster',
     transport: {
       serial: {
         port: '/dev/ttyXXX',
