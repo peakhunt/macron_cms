@@ -30,4 +30,5 @@ function initIO(cfg) {
 
 module.exports = {
   initIO,
+  zbMasters: zbmasterList,
 };

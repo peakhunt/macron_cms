@@ -22,4 +22,15 @@ function initCMS(cfg) {
 
 module.exports = {
   initCMS,
+  getTankList() {
+    return tankList;
+  },
+  getTankByName(name) {
+    for (let ndx = 0; ndx < tankList.length; ndx += 1) {
+      if (tankList[ndx].cfg.name === name) {
+        return tankList[ndx];
+      }
+    }
+    return undefined;
+  },
 };

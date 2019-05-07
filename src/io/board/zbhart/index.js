@@ -285,7 +285,10 @@ function readPortStatus(zbhart, modbus, resolve, reject) {
 
     for (let i = 0; i < b.data.length; i += 1) {
       const status = b.data[i];
+      const ioReg = zbhart.discrete[1000 + i];
       const reg = zbhart.ioRegs.input[1000 + i];
+
+      ioReg.value = status;
 
       setSensorFault(reg.channel, !status);
     }
@@ -347,6 +350,26 @@ ZBHART.prototype = {
 
     return new Promise((resolve, reject) => {
       executeNext(self, modbus, resolve, reject);
+    });
+  },
+  printIO(client) {
+    const board = this;
+
+    client.write(`type       - ${board.cfg.type}\r\n`);
+    client.write(`comm fault - ${core.getChannel(board.cfg.commFault).engValue}\r\n`);
+
+    Object.keys(board.ioRegs.input).forEach((regAddr, ndx) => {
+      if ((ndx % 3) === 0) {
+        const reg = board.ioRegs.input[regAddr];
+
+        client.write(`input reg   - ${regAddr}, ${reg.value}\r\n`);
+      }
+    });
+
+    Object.keys(board.ioRegs.discrete).forEach((regAddr) => {
+      const reg = board.ioRegs.discrete[regAddr];
+
+      client.write(`disc reg    - ${regAddr}, ${reg.value}\r\n`);
     });
   },
 };

@@ -374,6 +374,18 @@ ZBANA.prototype = {
       executeNext(self, modbus, resolve, reject);
     });
   },
+  printIO(client) {
+    const board = this;
+
+    client.write(`type        - ${board.cfg.type}\r\n`);
+    client.write(`comm fault  - ${core.getChannel(board.cfg.commFault).engValue}\r\n`);
+
+    Object.keys(board.ioRegs.input).forEach((regAddr) => {
+      const reg = board.ioRegs.input[regAddr];
+
+      client.write(`input reg   - ${regAddr}, ${reg.value}\r\n`);
+    });
+  },
 };
 
 /**
