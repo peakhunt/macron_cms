@@ -17,6 +17,13 @@ const _alarmStateEnum = {
   Active: 3,
 };
 
+const _alarmStateString = {
+  0: 'Inactive',
+  1: 'Active_Pending',
+  2: 'Inactive_Pending',
+  3: 'Active',
+};
+
 const _alarmEventEnum = {
   Clear: 0,
   Occur: 1,
@@ -27,6 +34,12 @@ const _alarmDelayStateEnum = {
   Idle: 0,
   Occurring: 1,
   Clearing: 2,
+};
+
+const _alarmDelayStateString = {
+  0: 'Idle',
+  1: 'Occurring',
+  2: 'Clearing',
 };
 
 /**
@@ -333,6 +346,9 @@ Alarm.prototype = {
   get state() {
     return this._state;
   },
+  get delayState() {
+    return this._delay_state;
+  },
   ack() {
     handleAlarmEvent(this, _alarmEventEnum.Ack);
   },
@@ -359,6 +375,8 @@ function createAlarm(number, cfg) {
 
 module.exports = {
   alarmStateEnum: _alarmStateEnum,
+  alarmStateString: _alarmStateString,
+  alarmDelayStateString: _alarmDelayStateString,
   createAlarm,
   getAlarm: alarmNum => _alarms[alarmNum],
 };
