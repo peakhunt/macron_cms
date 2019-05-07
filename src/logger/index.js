@@ -21,6 +21,7 @@ const logger = createLogger({
     new transports.File({
       filename: 'macron_cms.log',
       level,
+      maxsize: 1048576,
     }),
   ],
 });
