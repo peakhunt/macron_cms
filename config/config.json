@@ -93,8 +93,8 @@
           },
           "radars": [
             {
-              "channel": 10004,
-              "sensorAlarm": 1234,
+              "channel": 2000,
+              "sensorAlarm": 2000,
               "cfg": {
                 "cDLR": 0,
                 "cDTR": 0,
@@ -262,6 +262,14 @@
         "set": 0.5,
         "delay": 0,
         "channel": 10003
+      },
+      "2000": {
+        "severity": "minor",
+        "type": "sensorFault", 
+        "name": "Radar 1 sensor fault",
+        "set": true,
+        "delay": 0,
+        "channel": 2000
       }
     }
   }

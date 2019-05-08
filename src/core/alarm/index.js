@@ -326,7 +326,7 @@ function Alarm(number, cfg) {
 
   const self = this;
 
-  if (cfg.type === 'sensor_fault') {
+  if (cfg.type === 'sensorFault') {
     this._channel.on('sensorFault', () => {
       handleSensorFaultAlarm(self);
     });
