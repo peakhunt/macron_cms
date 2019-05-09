@@ -7,10 +7,11 @@ const modbusSerialDebug = require("debug")("modbus-serial");
 
 const UNIT_ID = 255;
 
-require("../utils/buffer_bit")();
-var crc16 = require("../utils/crc16");
 
 var handlers = require("./servertcp_handler");
+
+require("../utils/buffer_bit")();
+var crc16 = require("../utils/crc16");
 
 function _callbackFactory(unitID, functionCode, rtuWriter) {
   return function cb(err, responseBuffer) {
@@ -63,9 +64,10 @@ function _parseModbusBuffer(reqFrame, vector, serverUnitID, rtuWriter) {
   }
 
   if (serverUnitID !== 255 && serverUnitID !== unitID) {
+    console.log(` unit id check fail ${typeof serverUnitID} ${typeof unitID}`);
+    console.log(` unit id check fail ${serverUnitID} ${unitID}`);
     return;
   }
-
   cb = _callbackFactory(unitID, functionCode, rtuWriter);
 
   switch (parseInt(functionCode)) {
@@ -95,6 +97,7 @@ function _parseModbusBuffer(reqFrame, vector, serverUnitID, rtuWriter) {
       handlers.handleMEI(reqFrame, vector, unitID, cb);
       break;
     default:
+      console.log('##### error case ####');
       var errorCode = 0x01; // illegal function
 
       // set an error response
@@ -117,14 +120,14 @@ var ServerRTU = function(vector, path, options) {
   const serverUnitID = options.unitID || UNIT_ID;
 
   // create the SerialPort
-  this._client = new SerialPort(path, options);
-  this._t35 = null;
+  self._client = new SerialPort(path, options);
+  self._t35 = null;
 
-  this._client.on("data", function onData(data) {
+  self._client.on("data", function onData(data) {
     recvBuffer = Buffer.concat([recvBuffer, data], recvBuffer.length + data.length);
 
-    if (this._t35 !== null) {
-      clearTimeout(this._t15);
+    if (self._t35 !== null) {
+      clearTimeout(self._t15);
     }
 
     var rtuWriter = function(err, responseBuffer) {
@@ -134,31 +137,20 @@ var ServerRTU = function(vector, path, options) {
 
       // send data back
       if (responseBuffer) {
-        // remove crc and add mbap
-        // FIXME
-        var outRtu = Buffer.alloc(responseBuffer.length + 6 - 2);
-
-        outRtu.writeUInt16BE(transactionsId, 0);
-        outRtu.writeUInt16BE(0, 2);
-        outRtu.writeUInt16BE(responseBuffer.length - 2, 4);
-        responseBuffer.copy(outRtu, 6);
-        
-        // write to port
-        // FIXME
-        this._client.write(outRtu);
+        self._client.write(responseBuffer);
       }
     };
 
     // XXX 5ms timeout would be enough as T35 for most cases
-    this._t35 = setTimeout(() => {
-      const reqFrame = Buffer.from([]);
+    self._t35 = setTimeout(() => {
+      var reqFrame = Buffer.from([]);
 
       // copy contents and reset
-      reqFrame.copy(recvBuffer);
+      reqFrame = recvBuffer.slice();
       recvBuffer = Buffer.from([]);
 
       setTimeout(
-        _parseModbusBuffer.bind(this,
+        _parseModbusBuffer.bind(self,
           reqFrame,
           vector,
           serverUnitID,
@@ -166,13 +158,13 @@ var ServerRTU = function(vector, path, options) {
     }, 5);
   });
 
-  Object.defineProperty(this, "isOpen", {
+  Object.defineProperty(self, "isOpen", {
     enumerable: true,
     get: function() {
-      return this._client.isOpen;
+      return self._client.isOpen;
     }
   });
-  EventEmitter.call(this);
+  EventEmitter.call(self);
 };
 util.inherits(ServerRTU, EventEmitter);
 
