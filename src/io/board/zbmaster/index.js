@@ -42,7 +42,7 @@ function ZBMaster(cfg) {
   const self = this;
 
   self.modbus = new ModbusRTU();
-  self.modbus.connectRTU(cfg.transport.serial.port, {
+  self.modbus.connectRTUBuffered(cfg.transport.serial.port, {
     baudRate: cfg.transport.serial.baud,
     dataBits: cfg.transport.serial.dataBit,
     stopBits: cfg.transport.serial.stopBit === '1' ? 1 : 2,
