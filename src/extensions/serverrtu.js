@@ -11,6 +11,8 @@ require('modbus-serial/utils/buffer_bit')();
 
 const crc16 = require('modbus-serial/utils/crc16');
 
+const logger = require('../logger');
+
 function _callbackFactory(unitID, functionCode, rtuWriter) {
   let fc = functionCode;
 
@@ -50,6 +52,7 @@ function _callbackFactory(unitID, functionCode, rtuWriter) {
 
 function _parseModbusBuffer(reqFrame, vector, serverUnitID, rtuWriter) {
   if (reqFrame.length < 4) {
+    logger.error(`XXXXX reqFrame length error ${reqFrame.length}`);
     return;
   }
 
@@ -58,14 +61,12 @@ function _parseModbusBuffer(reqFrame, vector, serverUnitID, rtuWriter) {
   const crc = reqFrame[reqFrame.length - 2] + reqFrame[reqFrame.length - 1] * 0x100;
 
   if (crc !== crc16(reqFrame.slice(0, -2))) {
+    logger.error(`XXXXX reqFrame crc error ${crc}`);
     return;
   }
 
   if (serverUnitID !== 255 && serverUnitID !== unitID) {
-    /*
-    console.log(` unit id check fail ${typeof serverUnitID} ${typeof unitID}`);
-    console.log(` unit id check fail ${serverUnitID} ${unitID}`);
-    */
+    logger.error(`XXXXX reqFrame unitID error ${unitID}`);
     return;
   }
   const cb = _callbackFactory(unitID, functionCode, rtuWriter);
@@ -99,7 +100,7 @@ function _parseModbusBuffer(reqFrame, vector, serverUnitID, rtuWriter) {
       handlers.handleMEI(reqFrame, vector, unitID, cb);
       break;
     default:
-      // console.log('##### error case ####');
+      logger.error(`XXXXX reqFrame default error ${functionCode}`);
 
       // set an error response
       functionCode = parseInt(functionCode, 10) || 0x80;
@@ -120,18 +121,55 @@ const ServerRTU = function serverRTU(vector, path, options) {
 
   opt.autoOpen = false;
 
-  let recvBuffer = Buffer.from([]);
   const serverUnitID = opt.unitID || UNIT_ID;
 
   // create the SerialPort
   self._client = new SerialPort(path, opt);
-  self._t35 = null;
+  self._rxTimeout = null;
+  self._buffer = Buffer.alloc(0);
+  self._length = 0;
+  self._rxInProgress = false;
 
   self._client.on('data', (data) => {
-    recvBuffer = Buffer.concat([recvBuffer, data], recvBuffer.length + data.length);
+    self._buffer = Buffer.concat([self._buffer, data]);
 
-    if (self._t35 !== null) {
-      clearTimeout(self._t15);
+    if (self._rxInProgress === false) {
+      self._rxInProgress = true;
+
+      self._rxTimeout = setTimeout(() => {
+        // RX timeout occurred
+        logger.error(`XXXXX rxtimeout ${self._buffer.length} ${self._length}`);
+        self._rxInProgress = false;
+        self._length = 0;
+        self._buffer = Buffer.alloc(0);
+        self._rxTimeout = null;
+      }, 100);
+    }
+
+    if (self._buffer.length < 2) return;
+
+    if (self._length === 0) {
+      switch (self._buffer[1]) {
+        case 1: // read coil status
+        case 2: // read input status
+        case 3: // read holing registers
+        case 4: // read input registers
+        case 5: // force single coil
+        case 6: // preset single register
+          self._length = 8;
+          break;
+
+        case 15:
+        case 16:
+          if (self._buffer.length >= 7) {
+            const l = self._buffer[6] + 9;
+            self._length = l;
+          }
+          break;
+
+        default:
+          break;
+      }
     }
 
     const rtuWriter = (err, responseBuffer) => {
@@ -145,13 +183,17 @@ const ServerRTU = function serverRTU(vector, path, options) {
       }
     };
 
-    // XXX 5ms timeout would be enough as T35 for most cases
-    self._t35 = setTimeout(() => {
+    if (self._buffer.length === self._length) {
+      clearTimeout(self._rxTimeout);
+
       let reqFrame = Buffer.from([]);
 
-      // copy contents and reset
-      reqFrame = recvBuffer.slice();
-      recvBuffer = Buffer.from([]);
+      reqFrame = self._buffer.slice();
+
+      self._rxInProgress = false;
+      self._length = 0;
+      self._buffer = Buffer.alloc(0);
+      self._rxTimeout = null;
 
       setTimeout(
         _parseModbusBuffer.bind(self,
@@ -160,7 +202,7 @@ const ServerRTU = function serverRTU(vector, path, options) {
           serverUnitID,
           rtuWriter), 0,
       );
-    }, 5);
+    }
   });
 
   Object.defineProperty(self, 'isOpen', {
