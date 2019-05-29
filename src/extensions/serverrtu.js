@@ -169,13 +169,14 @@ const ServerRTU = function serverRTU(vector, path, options) {
   });
   EventEmitter.call(self);
 };
+
 util.inherits(ServerRTU, EventEmitter);
 
-ServerRTU.prototype.open = (callback) => {
+ServerRTU.prototype.open = function open(callback) {
   this._client.open(callback);
 };
 
-ServerRTU.prototype.close = (callback) => {
+ServerRTU.prototype.close = function close(callback) {
   this._client.close(callback);
 };
 

@@ -1,6 +1,8 @@
 const zbmaster = require('./board/zbmaster');
+const modbusRTUSlave = require('./modbusRTUSlave');
 
 const zbmasterList = [];
+const modbusRTUSlaveList = [];
 
 /**
  * initialize I/O subsystem
@@ -18,6 +20,10 @@ function initIO(cfg) {
     switch (scfg.type) {
       case 'zbSerialMaster':
         zbmasterList.push(zbmaster.createMaster(scfg));
+        break;
+
+      case 'modbusRTUSlave':
+        modbusRTUSlaveList.push(modbusRTUSlave.createModbusRTUSlave(scfg));
         break;
 
       default:

@@ -1,4 +1,5 @@
 const core = require('../../core');
+const logger = require('../../logger');
 const ModbusRTU = require('../../extensions/serverrtu');
 
 function ModbusRTUSlave(cfg) {
@@ -11,6 +12,7 @@ function ModbusRTUSlave(cfg) {
       const ioReg = self.cfg.registers.inputs[addr];
 
       if (ioReg === undefined) {
+        logger.error(`modbusRTUSlave read ${self.cfg.address} unknown input register ${addr}`);
         cb({ modbusErrorCode: 0x02 });
         return;
       }
@@ -42,6 +44,7 @@ function ModbusRTUSlave(cfg) {
       const ioReg = self.cfg.registers.holdings[addr];
 
       if (ioReg === undefined) {
+        logger.error(`modbusRTUSlave read ${self.cfg.address} unknown holding register ${addr}`);
         cb({ modbusErrorCode: 0x02 });
         return;
       }
@@ -73,6 +76,7 @@ function ModbusRTUSlave(cfg) {
       const ioReg = self.cfg.registers.coils[addr];
 
       if (ioReg === undefined) {
+        logger.error(`modbusRTUSlave read ${self.cfg.address} unknown coil register ${addr}`);
         cb({ modbusErrorCode: 0x02 });
         return;
       }
@@ -99,6 +103,7 @@ function ModbusRTUSlave(cfg) {
       const ioReg = self.cfg.registers.coils[addr];
 
       if (ioReg === undefined) {
+        logger.error(`modbusRTUSlave read ${self.cfg.address} unknown discrete register ${addr}`);
         cb({ modbusErrorCode: 0x02 });
         return;
       }
@@ -125,6 +130,7 @@ function ModbusRTUSlave(cfg) {
       const ioReg = self.cfg.registers.holdings[addr];
 
       if (ioReg === undefined) {
+        logger.error(`modbusRTUSlave write ${self.cfg.address} unknown holding register ${addr}`);
         cb({ modbusErrorCode: 0x02 });
         return;
       }
@@ -140,6 +146,7 @@ function ModbusRTUSlave(cfg) {
       const ioReg = self.cfg.registers.coils[addr];
 
       if (ioReg === undefined) {
+        logger.error(`modbusRTUSlave write ${self.cfg.address} unknown coil register ${addr}`);
         cb({ modbusErrorCode: 0x02 });
         return;
       }
@@ -153,7 +160,7 @@ function ModbusRTUSlave(cfg) {
     unitID: cfg.address,
     baudRate: cfg.transport.serial.baud,
     dataBits: cfg.transport.serial.dataBit,
-    stopBits: cfg.transport.serial.stopBit,
+    stopBits: cfg.transport.serial.stopBit === '1' ? 1 : 2,
     parity: cfg.transport.serial.parity,
   };
 

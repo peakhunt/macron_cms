@@ -64,14 +64,14 @@
           "address": 15,
           "transport": {
             "serial": {
-              "port": "/dev/tty.usbserial",
+              "port": "/dev/tty.usbserial42",
               "baud": 38400,
               "dataBit": 8,
               "stopBit": "1",
               "parity": "none"
             }
           },
-          "registers": [
+          "registers": {
             "discretes": {
               "1": {
                 "name": "ZBANA Address-8 Comm Fault",
@@ -138,7 +138,7 @@
             },
             "holdings": {
             }
-          ]
+          }
         }
       ],
       "net": [
