@@ -143,7 +143,7 @@ const ServerRTU = function serverRTU(vector, path, options) {
         self._length = 0;
         self._buffer = Buffer.alloc(0);
         self._rxTimeout = null;
-      }, 100);
+      }, opt.modbusRXTimeout);
     }
 
     if (self._buffer.length < 2) return;

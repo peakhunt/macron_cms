@@ -1,8 +1,8 @@
+const modbus = require('modbus-serial');
 const core = require('../../core');
 const logger = require('../../logger');
-const ModbusRTU = require('../../extensions/serverrtu');
 
-function ModbusRTUSlave(cfg) {
+function ModbusTCPSlave(cfg) {
   const self = this;
   self.cfg = cfg;
 
@@ -12,7 +12,7 @@ function ModbusRTUSlave(cfg) {
       const ioReg = self.cfg.registers.inputs[addr];
 
       if (ioReg === undefined) {
-        logger.error(`modbusRTUSlave read ${self.cfg.address} unknown input register ${addr}`);
+        logger.error(`modbusTCPSlave read ${self.cfg.address} unknown input register ${addr}`);
         cb({ modbusErrorCode: 0x02 });
         return;
       }
@@ -44,7 +44,7 @@ function ModbusRTUSlave(cfg) {
       const ioReg = self.cfg.registers.holdings[addr];
 
       if (ioReg === undefined) {
-        logger.error(`modbusRTUSlave read ${self.cfg.address} unknown holding register ${addr}`);
+        logger.error(`modbusTCPSlave read ${self.cfg.address} unknown holding register ${addr}`);
         cb({ modbusErrorCode: 0x02 });
         return;
       }
@@ -76,7 +76,7 @@ function ModbusRTUSlave(cfg) {
       const ioReg = self.cfg.registers.coils[addr];
 
       if (ioReg === undefined) {
-        logger.error(`modbusRTUSlave read ${self.cfg.address} unknown coil register ${addr}`);
+        logger.error(`modbusTCPSlave read ${self.cfg.address} unknown coil register ${addr}`);
         cb({ modbusErrorCode: 0x02 });
         return;
       }
@@ -103,7 +103,7 @@ function ModbusRTUSlave(cfg) {
       const ioReg = self.cfg.registers.coils[addr];
 
       if (ioReg === undefined) {
-        logger.error(`modbusRTUSlave read ${self.cfg.address} unknown discrete register ${addr}`);
+        logger.error(`modbusTCPSlave read ${self.cfg.address} unknown discrete register ${addr}`);
         cb({ modbusErrorCode: 0x02 });
         return;
       }
@@ -130,7 +130,7 @@ function ModbusRTUSlave(cfg) {
       const ioReg = self.cfg.registers.holdings[addr];
 
       if (ioReg === undefined) {
-        logger.error(`modbusRTUSlave write ${self.cfg.address} unknown holding register ${addr}`);
+        logger.error(`modbusTCPSlave write ${self.cfg.address} unknown holding register ${addr}`);
         cb({ modbusErrorCode: 0x02 });
         return;
       }
@@ -146,7 +146,7 @@ function ModbusRTUSlave(cfg) {
       const ioReg = self.cfg.registers.coils[addr];
 
       if (ioReg === undefined) {
-        logger.error(`modbusRTUSlave write ${self.cfg.address} unknown coil register ${addr}`);
+        logger.error(`modbusTCPSlave write ${self.cfg.address} unknown coil register ${addr}`);
         cb({ modbusErrorCode: 0x02 });
         return;
       }
@@ -156,29 +156,19 @@ function ModbusRTUSlave(cfg) {
     },
   };
 
-  const options = {
-    unitID: cfg.address,
-    baudRate: cfg.transport.serial.baud,
-    dataBits: cfg.transport.serial.dataBit,
-    stopBits: cfg.transport.serial.stopBit === '1' ? 1 : 2,
-    parity: cfg.transport.serial.parity,
-    modbusRXTimeout: cfg.transport.serial.rxTimeout,
-  };
-
-  self.modbus = new ModbusRTU(vector, cfg.transport.serial.port, options);
-  self.started = false;
-
-  self.modbus.open(() => {
-    self.started = true;
+  self.modbus = new modbus.ServerTCP(vector, {
+    host: self.cfg.transport.net.host,
+    port: self.cfg.transport.net.port,
+    unitID: self.cfg.address,
   });
 }
 
-function createModbusRTUSlave(cfg) {
-  const modbusRTUSlave = new ModbusRTUSlave(cfg);
+function createModbusTCPSlave(cfg) {
+  const modbusTCPSlave = new ModbusTCPSlave(cfg);
 
-  return modbusRTUSlave;
+  return modbusTCPSlave;
 }
 
 module.exports = {
-  createModbusRTUSlave,
+  createModbusTCPSlave,
 };

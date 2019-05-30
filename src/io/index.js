@@ -1,8 +1,10 @@
 const zbmaster = require('./board/zbmaster');
 const modbusRTUSlave = require('./modbusRTUSlave');
+const modbusTCPSlave = require('./modbusTCPSlave');
 
 const zbmasterList = [];
 const modbusRTUSlaveList = [];
+const modbusTCPSlaveList = [];
 
 /**
  * initialize I/O subsystem
@@ -31,7 +33,16 @@ function initIO(cfg) {
     }
   });
 
-  // net XXX none yet
+  cfg.net.forEach((ncfg) => {
+    switch (ncfg.type) {
+      case 'modbusTCPSlave':
+        modbusTCPSlaveList.push(modbusTCPSlave.createModbusTCPSlave(ncfg));
+        break;
+
+      default:
+        break;
+    }
+  });
 }
 
 module.exports = {
