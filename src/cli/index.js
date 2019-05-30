@@ -6,6 +6,7 @@ const alarmCLI = require('./alarmCLI');
 const ioCLI = require('./ioCLI');
 const tankCLI = require('./tankCLI');
 const loggerCLI = require('./loggerCLI');
+const modbusCLI = require('./modbusCLI');
 
 function cmdHandlerHelp(client) {
   // eslint-disable-next-line no-use-before-define
@@ -100,7 +101,8 @@ function initCLI() {
     alarmCLI.commands,
     ioCLI.commands,
     tankCLI.commands,
-    loggerCLI.commands);
+    loggerCLI.commands,
+    modbusCLI.commands);
   telnet.createServer(serverHandler).listen(10123);
 }
 

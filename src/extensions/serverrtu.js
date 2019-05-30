@@ -52,6 +52,7 @@ function _callbackFactory(unitID, functionCode, rtuWriter) {
 
 function _parseModbusBuffer(reqFrame, vector, serverUnitID, rtuWriter) {
   if (reqFrame.length < 4) {
+    this.numShortFrame += 1;
     logger.error(`XXXXX reqFrame length error ${reqFrame.length}`);
     return;
   }
@@ -61,11 +62,13 @@ function _parseModbusBuffer(reqFrame, vector, serverUnitID, rtuWriter) {
   const crc = reqFrame[reqFrame.length - 2] + reqFrame[reqFrame.length - 1] * 0x100;
 
   if (crc !== crc16(reqFrame.slice(0, -2))) {
+    this.numCRCError += 1;
     logger.error(`XXXXX reqFrame crc error ${crc}`);
     return;
   }
 
   if (serverUnitID !== 255 && serverUnitID !== unitID) {
+    this.numWrongUnitID += 1;
     logger.error(`XXXXX reqFrame unitID error ${unitID}`);
     return;
   }
@@ -100,6 +103,7 @@ function _parseModbusBuffer(reqFrame, vector, serverUnitID, rtuWriter) {
       handlers.handleMEI(reqFrame, vector, unitID, cb);
       break;
     default:
+      this.numIllegalFunc += 1;
       logger.error(`XXXXX reqFrame default error ${functionCode}`);
 
       // set an error response
@@ -130,6 +134,13 @@ const ServerRTU = function serverRTU(vector, path, options) {
   self._length = 0;
   self._rxInProgress = false;
 
+  self.numReq = 0;
+  self.numRxTimeout = 0;
+  self.numShortFrame = 0;
+  self.numCRCError = 0;
+  self.numWrongUnitID = 0;
+  self.numIllegalFunc = 0;
+
   self._client.on('data', (data) => {
     self._buffer = Buffer.concat([self._buffer, data]);
 
@@ -138,6 +149,8 @@ const ServerRTU = function serverRTU(vector, path, options) {
 
       self._rxTimeout = setTimeout(() => {
         // RX timeout occurred
+        self.numRxTimeout += 1;
+
         logger.error(`XXXXX rxtimeout ${self._buffer.length} ${self._length}`);
         self._rxInProgress = false;
         self._length = 0;
@@ -184,6 +197,7 @@ const ServerRTU = function serverRTU(vector, path, options) {
     };
 
     if (self._buffer.length === self._length) {
+      self.numReq += 1;
       clearTimeout(self._rxTimeout);
 
       let reqFrame = Buffer.from([]);

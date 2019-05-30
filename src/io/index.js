@@ -48,4 +48,6 @@ function initIO(cfg) {
 module.exports = {
   initIO,
   zbMasters: zbmasterList,
+  mbRTUSlaves: modbusRTUSlaveList,
+  mbTCPSlaves: modbusTCPSlaveList,
 };
