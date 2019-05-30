@@ -7,7 +7,7 @@ const {
 } = format;
 
 // const level = process.env.NODE_ENV === 'dev' ? 'warn' : 'info';
-const level = 'info';
+const level = 'error';
 
 const myFormat = printf(info => `${info.timestamp} ${info.level}: ${info.message}`);
 
@@ -25,5 +25,12 @@ const logger = createLogger({
     }),
   ],
 });
+
+logger.setLevel = (lvl) => {
+  logger.transports[0].level = lvl;
+  logger.transports[1].level = lvl;
+};
+
+logger.getLevel = () => logger.transports[1].level;
 
 module.exports = logger;

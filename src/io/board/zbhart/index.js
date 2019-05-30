@@ -302,7 +302,7 @@ function readPortStatus(zbhart, modbus, resolve, reject) {
       setSensorFault(pcfg.channel, true);
     });
 
-    logger.error(`zbhart readPortStatus ${zbhart.cfg.address} error ${err}`);
+    logger.info(`zbhart readPortStatus ${zbhart.cfg.address} error ${err}`);
     reject();
   });
 }
@@ -333,7 +333,7 @@ function readDistanceLevelFeedback(zbhart, modbus, resolve, reject) {
       setSensorFault(pcfg.channel, true);
     });
 
-    logger.error(`zbhart readDistanceLevelFeedback ${zbhart.cfg.address} error ${err}`);
+    logger.info(`zbhart readDistanceLevelFeedback ${zbhart.cfg.address} error ${err}`);
     reject();
   });
 }

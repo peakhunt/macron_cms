@@ -355,7 +355,7 @@ function read420mAInput(zbana, modbus, resolve, reject) {
       setSensorFault(pcfg.channel, true);
     });
 
-    logger.error(`zbana ${zbana.cfg.address} error ${err}`);
+    logger.info(`zbana ${zbana.cfg.address} error ${err}`);
     reject();
   });
 }

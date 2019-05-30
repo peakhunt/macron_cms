@@ -64,7 +64,7 @@
           "address": 15,
           "transport": {
             "serial": {
-              "port": "/dev/tty.usbserial2",
+              "port": "/dev/tty.wchusbserial1410",
               "baud": 38400,
               "dataBit": 8,
               "stopBit": "1",

@@ -5,6 +5,7 @@ const channelCLI = require('./channelCLI');
 const alarmCLI = require('./alarmCLI');
 const ioCLI = require('./ioCLI');
 const tankCLI = require('./tankCLI');
+const loggerCLI = require('./loggerCLI');
 
 function cmdHandlerHelp(client) {
   // eslint-disable-next-line no-use-before-define
@@ -98,7 +99,8 @@ function initCLI() {
     channelCLI.commands,
     alarmCLI.commands,
     ioCLI.commands,
-    tankCLI.commands);
+    tankCLI.commands,
+    loggerCLI.commands);
   telnet.createServer(serverHandler).listen(10123);
 }
 
