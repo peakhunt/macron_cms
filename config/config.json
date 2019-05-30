@@ -10,6 +10,9 @@
     "configurator": {
       "version": "0.1"
     },
+    "cli": {
+      "port": 10123
+    },
     "io": {
       "serial": [
         {

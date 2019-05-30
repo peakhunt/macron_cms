@@ -95,7 +95,7 @@ function serverHandler(client) {
   tClient._ext_cmd = '';
 }
 
-function initCLI() {
+function initCLI(cfg) {
   Object.assign(_commands,
     channelCLI.commands,
     alarmCLI.commands,
@@ -103,7 +103,7 @@ function initCLI() {
     tankCLI.commands,
     loggerCLI.commands,
     modbusCLI.commands);
-  telnet.createServer(serverHandler).listen(10123);
+  telnet.createServer(serverHandler).listen(cfg.port);
 }
 
 module.exports = {

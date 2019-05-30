@@ -11,4 +11,4 @@ core.init(config.data.project.channels, config.data.project.alarms);
 io.initIO(config.data.project.io);
 cms.initCMS(config.data.project);
 
-cli.initCLI();
+cli.initCLI(config.data.project.cli);
