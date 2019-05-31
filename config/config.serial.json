@@ -18,6 +18,135 @@
     },
     "io": {
       "serial": [
+        {
+          "type": "zbSerialMaster",
+          "transport": {
+            "serial": {
+              "port": "/dev/tty.usbserial",
+              "baud": 38400,
+              "dataBit": 8,
+              "stopBit": "1",
+              "parity": "none"
+            }
+          },
+          "poll": {
+            "timeout": 250
+          },
+          "boards": [
+            {
+              "type": "zbana",
+              "address": 8,
+              "commFault": 1,
+              "ports": [
+                {
+                  "channel": 1000,
+                  "sensorType": "pressure"
+                },
+                {
+                  "channel": 1001,
+                  "sensorType": "pressure"
+                }
+              ]
+            },
+            {
+              "type": "zbhart",
+              "address": 9,
+              "commFault": 2,
+              "ports": [
+                {
+                  "channel": 2000,
+                  "sensorType": "vegaXXX"
+                },
+                {
+                  "channel": 2001,
+                  "sensorType": "vegaXXX"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "modbusRTUSlave",
+          "address": 15,
+          "transport": {
+            "serial": {
+              "port": "/dev/tty.wchusbserial1410",
+              "baud": 38400,
+              "dataBit": 8,
+              "stopBit": "1",
+              "parity": "none",
+              "rxTimeout": 100
+            }
+          },
+          "registers": {
+            "discretes": {
+              "1": {
+                "name": "ZBANA Address-8 Comm Fault",
+                "channel": 1,
+                "value": "value"
+              },
+              "2": {
+                "name": "ZBHART Address-9 Comm Fault",
+                "channel": 2,
+                "value": "value"
+              },
+              "10000": {
+                "name": "tank-XXX ullage ref channel status",
+                "channel": 10000,
+                "value": "status"
+              },
+              "10001": {
+                "name": "tank-XXX level at ref channel status",
+                "channel": 10001,
+                "value": "status"
+              },
+              "10002": {
+                "name": "tank-XXX ullage at FC channel status",
+                "channel": 10002,
+                "value": "status"
+              },
+              "10003": {
+                "name": "tank-XXX level at FC channel status",
+                "channel": 10003,
+                "value": "status"
+              }
+            },
+            "coils": {
+            },
+            "inputs": {
+              "10000": {
+                "name": "tank-XXX ullage ref channel",
+                "channel": 10000,
+                "value": "value",
+                "gain": 1.0,
+                "offset": 0.0
+              },
+              "10001": {
+                "name": "tank-XXX level at ref channel",
+                "channel": 10001,
+                "value": "value",
+                "gain": 1.0,
+                "offset": 0.0
+              },
+              "10002": {
+                "name": "tank-XXX ullage at FC channel",
+                "channel": 10002,
+                "value": "value",
+                "gain": 1.0,
+                "offset": 0.0
+              },
+              "10003": {
+                "name": "tank-XXX level at FC channel",
+                "channel": 10003,
+                "value": "value",
+                "gain": 1.0,
+                "offset": 0.0
+              }
+            },
+            "holdings": {
+            }
+          }
+        }
       ],
       "net": [
         {

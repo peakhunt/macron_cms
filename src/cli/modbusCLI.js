@@ -23,9 +23,10 @@ function cmdHandlerMBTCPSlave(client) {
     client.write('=======================================\r\n');
     client.write(`server ${ts.cfg.transport.net.host}:${ts.cfg.transport.net.port}\r\n`);
     client.write(`unitID ${ts.cfg.address}\r\n`);
-    for (let sock of ts.modbus.socks.keys()) {
+    /* eslint-disable no-unused-vars */
+    ts.modbus.socks.forEach((v, sock) => {
       client.write(`connection ${sock.remoteAddress}:${sock.remotePort}\r\n`);
-    }
+    });
   });
   client.write('\r\n');
 }
