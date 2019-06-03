@@ -3,12 +3,14 @@
  * @module channel
  */
 const { EventEmitter } = require('events');
+const { BinarySearchTree } = require('binary-search-tree');
 const util = require('util');
 
 //
 // module privates
 //
 const _channels = {};
+const _bstChannels = new BinarySearchTree();
 
 /**
  * channel constructor
@@ -91,10 +93,15 @@ function createChannel(number, cfg) {
 
   _channels[number] = chnl;
 
+  _bstChannels.insert(parseInt(number, 10), chnl);
+
   return chnl;
 }
 
 module.exports = {
   createChannel,
   getChannel: chnlNum => _channels[chnlNum],
+  getChannelRange(start, end) {
+    return _bstChannels.betweenBounds({ $lte: end, $gte: start });
+  },
 };

@@ -3,6 +3,7 @@
  * @module alarm
  */
 const { EventEmitter } = require('events');
+const { BinarySearchTree } = require('binary-search-tree');
 const util = require('util');
 const channel = require('../channel');
 const common = require('../../common');
@@ -11,6 +12,7 @@ const common = require('../../common');
 // module privates
 //
 const _alarms = {};
+const _bstAlarms = new BinarySearchTree();
 const _alarmStateEnum = {
   Inactive: 0,
   Active_Pending: 1,
@@ -386,6 +388,8 @@ function createAlarm(number, cfg) {
 
   _alarms[number] = alm;
 
+  _bstAlarms.insert(parseInt(number, 10), alm);
+
   return alm;
 }
 
@@ -395,4 +399,7 @@ module.exports = {
   alarmDelayStateString: _alarmDelayStateString,
   createAlarm,
   getAlarm: alarmNum => _alarms[alarmNum],
+  getAlarmRange(start, end) {
+    return _bstAlarms.betweenBounds({ $lte: end, $gte: start });
+  },
 };
