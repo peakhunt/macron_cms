@@ -162,6 +162,45 @@ function createTankRadarInstance(tank, cfg) {
   return radars;
 }
 
+function getRadarStat(tank) {
+  const radarStat = {
+    radars: [],
+    validRadarCount: 0,
+  };
+
+  tank.radars.forEach((r) => {
+    if (r.sensorFault === false) {
+      radarStat.validRadarCount += 1;
+    }
+
+    radarStat.radars.push({
+      ullageAtRef: r.ullageAtRef,
+      ullageFC: r.ullageFC,
+      levelAtRef: r.levelAtRef,
+      levelFC: r.levelFC,
+      sensorFault: r.sensorFault,
+    });
+  });
+  return radarStat;
+}
+
+function getTankStatus() {
+  const tank = this;
+  const stat = {
+    name: tank.cfg.name,
+    level: {
+      ullageAtRef: tank.ullageAtRef,
+      ullageFC: tank.ullageFC,
+      levelAtRef: tank.levelAtRef,
+      levelFC: tank.levelFC,
+    },
+  };
+
+  stat.level.radarStat = getRadarStat(tank);
+
+  return stat;
+}
+
 /**
  * create tank object
  * @param {object} cfg - tank configuration object with the following structure
@@ -170,23 +209,19 @@ function createTankRadarInstance(tank, cfg) {
   level: {
     ullageAtRef: { // average ullage at reference point
       channel: XXX,
-      hiAlarm: XXX,
-      loAlarm: XXX,
+      alarms: [ XXX, XXX ]
     },
     levelAtRef: { // average level at reference point
       channel: XXX,
-      hiAlarm: XXX,
-      loAlarm: XXX,
+      alarms: [ XXX, XXX ]
     },
     ullageAtFC: { // average ullage at floatation center
       channel: XXX,
-      hiAlarm: XXX,
-      loAlarm: XXX,
+      alarms: [ XXX, XXX ]
     },
     levelAtFC: { // average level at floatation center
       channel: XXX,
-      hiAlarm: XXX,
-      loAlarm: XXX,
+      alarms: [ XXX, XXX ]
     },
     tankLevelCfg: {
       DVUllRefToUTI: XXX,
@@ -227,6 +262,8 @@ function createTank(cfg) {
   setLevelAtRef(tank, 0.0);
   setUllageFC(tank, 0.0);
   setLevelFC(tank, 0.0);
+
+  tank.getTankStatus = getTankStatus;
 
   return tank;
 }

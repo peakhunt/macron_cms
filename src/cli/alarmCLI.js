@@ -31,10 +31,36 @@ function cmdHandlerAlarm(client, cmd) {
   client.write('\r\n');
 }
 
+function cmdHandlerAlarmAck(client, cmd) {
+  if (cmd.length !== 2) {
+    client.write('invalid command\r\n');
+    client.write(`${cmd[0]} alarm-number\r\n`);
+    client.write('\r\n');
+    return;
+  }
+
+  const alarmNum = parseInt(cmd[1], 10);
+  const alm = core.getAlarm(alarmNum);
+
+  if (alm === undefined) {
+    client.write(`no alarm ${alarmNum}\r\n`);
+    client.write('\r\n');
+    return;
+  }
+
+  alm.ack();
+
+  client.write(`alarm ${alarmNum} acked\r\n`);
+}
+
 const _commands = {
   alarm: {
     desc: 'show alarm info',
     handler: cmdHandlerAlarm,
+  },
+  alarm_ack: {
+    desc: 'ack alarm',
+    handler: cmdHandlerAlarmAck,
   },
 };
 

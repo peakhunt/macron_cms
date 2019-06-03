@@ -1,6 +1,14 @@
+const cms = require('../../../cms');
 
-/* eslint-disable no-unused-vars */
 function getTankStatus(req, res) {
+  const tanks = [
+  ];
+
+  cms.getTankList().forEach((tank) => {
+    tanks.push(tank.getTankStatus());
+  });
+
+  res.json(tanks);
 }
 
 function tankStatusInit(router) {

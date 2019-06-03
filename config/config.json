@@ -106,23 +106,19 @@
         "level": {
           "ullageAtRef": {
             "channel": 10000,
-            "hiAlarm": 10000,
-            "loAlarm": 10001
+            "alarms": [ 10000, 10001 ]
           },
           "levelAtRef": {
             "channel": 10001,
-            "hiAlarm": 10002,
-            "loAlarm": 10003
+            "alarms": [ 10002, 10003 ]
           },
           "ullageAtFC": {
             "channel": 10002,
-            "hiAlarm": 10004,
-            "loAlarm": 10005
+            "alarms": [ 10004, 10005 ]
           },
           "levelAtFC": {
             "channel": 10003,
-            "hiAlarm": 10006,
-            "loAlarm": 10007
+            "alarms": [ 10006, 10007 ]
           },
           "tankLevelCfg": {
             "DVUllRefToUTI": 0,

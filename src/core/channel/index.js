@@ -67,6 +67,12 @@ Channel.prototype = {
     this._sensorFault = s;
     this.emit('sensorFault', this);
   },
+  getStatus() {
+    return {
+      value: this._value,
+      sensorFault: this._sensorFault,
+    };
+  },
 };
 
 //

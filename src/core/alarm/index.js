@@ -5,6 +5,7 @@
 const { EventEmitter } = require('events');
 const util = require('util');
 const channel = require('../channel');
+const common = require('../../common');
 
 //
 // module privates
@@ -54,6 +55,12 @@ function changeAlarmState(alarm, newState) {
   a.emit('alarm', a);
 }
 
+function setAlarmTimeToNow(alarm) {
+  const a = alarm;
+
+  a._alarm_time = common.getTimeMills();
+}
+
 /**
  * alarm state machine
  * @paarm {object} alarm - alarm object
@@ -64,6 +71,7 @@ function handleAlarmStateMachine(alarm, evt) {
     case _alarmStateEnum.Inactive:
       switch (evt) {
         case _alarmEventEnum.Occur:
+          setAlarmTimeToNow(alarm);
           changeAlarmState(alarm, _alarmStateEnum.Active_Pending);
           break;
 
@@ -324,6 +332,8 @@ function Alarm(number, cfg) {
   this._delay_state = _alarmDelayStateEnum.Idle;
   this._delay_timer = null;
 
+  this._alarm_time = common.getTimeMills();
+
   const self = this;
 
   if (cfg.type === 'sensorFault') {
@@ -351,6 +361,12 @@ Alarm.prototype = {
   },
   ack() {
     handleAlarmEvent(this, _alarmEventEnum.Ack);
+  },
+  getStatus() {
+    return {
+      state: this._state,
+      time: this._alarm_time,
+    };
   },
 };
 
