@@ -43,4 +43,10 @@ module.exports = {
   list: () => list,
   updateTrimList,
   trimListCorrect,
+  getStatus() {
+    return {
+      trim,
+      list,
+    };
+  },
 };

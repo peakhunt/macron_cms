@@ -1,5 +1,6 @@
 // const vessel = require('./vessel');
 const tank = require('./tank');
+const vessel = require('./vessel');
 
 const tankList = [];
 
@@ -15,6 +16,8 @@ const tankList = [];
  }
  */
 function initCMS(cfg) {
+  vessel.reset();
+
   cfg.tanks.forEach((tcfg) => {
     tankList.push(tank.createTank(tcfg));
   });
@@ -33,4 +36,5 @@ module.exports = {
     }
     return undefined;
   },
+  vessel,
 };
