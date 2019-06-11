@@ -285,10 +285,9 @@ function readPortStatus(zbhart, modbus, resolve, reject) {
 
     for (let i = 0; i < b.data.length; i += 1) {
       const status = b.data[i];
-      const ioReg = zbhart.discrete[1000 + i];
       const reg = zbhart.ioRegs.input[1000 + i];
 
-      ioReg.value = status;
+      reg.value = status;
 
       setSensorFault(reg.channel, !status);
     }
