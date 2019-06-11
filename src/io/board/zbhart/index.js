@@ -283,9 +283,9 @@ function readPortStatus(zbhart, modbus, resolve, reject) {
   modbus.readDiscreteInputs(1000, 12).then((b) => {
     setCommStatus(zbhart.cfg.commFault, false);
 
-    for (let i = 0; i < b.data.length; i += 1) {
+    for (let i = 0; i < 12; i += 1) {
       const status = b.data[i];
-      const reg = zbhart.ioRegs.input[1000 + i];
+      const reg = zbhart.ioRegs.discrete[1000 + i];
 
       reg.value = status;
 
