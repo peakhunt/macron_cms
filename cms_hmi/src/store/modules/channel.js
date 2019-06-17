@@ -42,6 +42,8 @@ const actions = {
     context.commit('CHANNELS_INIT', chnlsConfig);
   },
   channelsPollStart(context) {
+    const { web } = context.rootState.config.projectConfig.project;
+
     if (chnlPollTmr !== null) {
       return;
     }
@@ -54,14 +56,14 @@ const actions = {
 
       axios.get(url).then((response) => {
         context.commit('CHANNELS_UPDATE', response.data);
-        chnlPollTmr = setTimeout(() => { pollChannels(); }, 500);
+        chnlPollTmr = setTimeout(() => { pollChannels(); }, web.channels.poll);
       }, (err) => {
         console.log(`failed to get ${url} ${err}`);
-        chnlPollTmr = setTimeout(() => { pollChannels(); }, 500);
+        chnlPollTmr = setTimeout(() => { pollChannels(); }, web.channels.poll);
       });
     }
 
-    chnlPollTmr = setTimeout(() => { pollChannels(); }, 500);
+    chnlPollTmr = setTimeout(() => { pollChannels(); }, web.channels.poll);
   },
   channelsPollStop() {
     if (chnlPollTmr === null) {

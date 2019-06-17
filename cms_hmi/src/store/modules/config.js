@@ -23,19 +23,22 @@ const mutations = {
 const actions = {
   loadProjectConfig(context, cb) {
     context.commit('PROJECT_CONFIG_LOADING_SET', true);
+    context.dispatch('alarmsPollStop');
+    context.dispatch('channelsPollStop');
 
     axios.get('/api/public/config').then((response) => {
       const config = response.data;
 
+      context.commit('PROJECT_CONFIG_SET', config);
+
       context.dispatch('channelsInit', config.project.channels);
       context.dispatch('alarmsInit', config.project.alarms);
 
-      context.dispatch('alarmsPollStart');
-      context.dispatch('channelsPollStart');
-
-      context.commit('PROJECT_CONFIG_SET', config);
       context.commit('PROJECT_CONFIG_LOADING_SET', false);
       context.commit('PROJECT_CONFIG_LOADED_SET', true);
+
+      context.dispatch('alarmsPollStart');
+      context.dispatch('channelsPollStart');
       cb(undefined, response.data);
     }, (err) => {
       context.commit('PROJECT_CONFIG_LOADING_SET', false);

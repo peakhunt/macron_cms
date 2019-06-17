@@ -42,6 +42,8 @@ const actions = {
     context.commit('ALARMS_INIT', alarmsConfig);
   },
   alarmsPollStart(context) {
+    const { web } = context.rootState.config.projectConfig.project;
+
     if (alarmPollTmr !== null) {
       return;
     }
@@ -54,14 +56,14 @@ const actions = {
 
       axios.get(url).then((response) => {
         context.commit('ALARMS_UPDATE', response.data);
-        alarmPollTmr = setTimeout(() => { pollAlarms(); }, 500);
+        alarmPollTmr = setTimeout(() => { pollAlarms(); }, web.alarms.poll);
       }, (err) => {
         console.log(`failed to get ${url} ${err}`);
-        alarmPollTmr = setTimeout(() => { pollAlarms(); }, 500);
+        alarmPollTmr = setTimeout(() => { pollAlarms(); }, web.alarms.poll);
       });
     }
 
-    alarmPollTmr = setTimeout(() => { pollAlarms(); }, 500);
+    alarmPollTmr = setTimeout(() => { pollAlarms(); }, web.alarms.poll);
   },
   alarmsPollStop() {
     if (alarmPollTmr === null) {
@@ -69,6 +71,27 @@ const actions = {
     }
 
     clearTimeout(alarmPollTmr);
+  },
+  alarmAck(context, alarmNum, cb) {
+    const url = `/api/public/alarm_ack/${alarmNum}`;
+
+    axios.get(url).then((response) => {
+      const update = {
+      };
+
+      update[alarmNum] = response.data;
+
+      context.commit('ALARMS_UPDATE', update);
+
+      if (cb !== undefined) {
+        cb(undefined, response.data);
+      }
+    }, (err) => {
+      console.log(`failed to get ${url} ${err}`);
+      if (!cb !== undefined) {
+        cb(err);
+      }
+    });
   },
 };
 
