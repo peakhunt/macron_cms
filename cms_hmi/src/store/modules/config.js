@@ -25,7 +25,15 @@ const actions = {
     context.commit('PROJECT_CONFIG_LOADING_SET', true);
 
     axios.get('/api/public/config').then((response) => {
-      context.commit('PROJECT_CONFIG_SET', response.data);
+      const config = response.data;
+
+      context.dispatch('channelsInit', config.project.channels);
+      context.dispatch('alarmsInit', config.project.alarms);
+
+      context.dispatch('alarmsPollStart');
+      context.dispatch('channelsPollStart');
+
+      context.commit('PROJECT_CONFIG_SET', config);
       context.commit('PROJECT_CONFIG_LOADING_SET', false);
       context.commit('PROJECT_CONFIG_LOADED_SET', true);
       cb(undefined, response.data);
