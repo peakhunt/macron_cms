@@ -10,6 +10,9 @@ function webInit(cfg) {
 
   const app = express();
 
+  // to prevent 304
+  app.disable('etag');
+
   app.use(express.static('public'));
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));

@@ -16,10 +16,12 @@
     "web": {
       "port": 3000,
       "alarms": {
-        "poll": 500
+        "poll": 500,
+        "numPerPoll": 256
       },
       "channels": {
-        "poll": 500
+        "poll": 500,
+        "numPerPoll": 256
       }
     },
     "io": {

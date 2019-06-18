@@ -8,6 +8,7 @@ const state = {
 };
 
 let alarmPollTmr = null;
+let alarmPollNdx = 0;
 
 const mutations = {
   ALARMS_INIT(_, alarmsConfig) {
@@ -43,27 +44,39 @@ const actions = {
   },
   alarmsPollStart(context) {
     const { web } = context.rootState.config.projectConfig.project;
+    const { poll, numPerPoll } = web.alarms;
 
     if (alarmPollTmr !== null) {
       return;
     }
 
     function pollAlarms() {
-      const start = state.alarmList[0].alarmNum;
-      const end = state.alarmList[state.alarmList.length - 1].alarmNum;
+      let endNdx = alarmPollNdx + numPerPoll - 1;
+
+      if (endNdx >= state.alarmList.length) {
+        endNdx = state.alarmList.length - 1;
+      }
+
+      const start = state.alarmList[alarmPollNdx].alarmNum;
+      const end = state.alarmList[endNdx].alarmNum;
+
+      alarmPollNdx = endNdx + 1;
+      if (alarmPollNdx >= state.alarmList.length) {
+        alarmPollNdx = 0;
+      }
 
       const url = `/api/public/alarmRange/${start}/${end}`;
 
       axios.get(url).then((response) => {
         context.commit('ALARMS_UPDATE', response.data);
-        alarmPollTmr = setTimeout(() => { pollAlarms(); }, web.alarms.poll);
+        alarmPollTmr = setTimeout(() => { pollAlarms(); }, poll);
       }, (err) => {
         console.log(`failed to get ${url} ${err}`);
-        alarmPollTmr = setTimeout(() => { pollAlarms(); }, web.alarms.poll);
+        alarmPollTmr = setTimeout(() => { pollAlarms(); }, poll);
       });
     }
 
-    alarmPollTmr = setTimeout(() => { pollAlarms(); }, web.alarms.poll);
+    alarmPollTmr = setTimeout(() => { pollAlarms(); }, poll);
   },
   alarmsPollStop() {
     if (alarmPollTmr === null) {

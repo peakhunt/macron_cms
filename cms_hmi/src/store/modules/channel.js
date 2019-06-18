@@ -8,6 +8,7 @@ const state = {
 };
 
 let chnlPollTmr = null;
+let chnlPollNdx = 0;
 
 const mutations = {
   CHANNELS_INIT(_, chnlsConfig) {
@@ -43,27 +44,40 @@ const actions = {
   },
   channelsPollStart(context) {
     const { web } = context.rootState.config.projectConfig.project;
+    const { poll, numPerPoll } = web.channels;
 
     if (chnlPollTmr !== null) {
       return;
     }
 
     function pollChannels() {
-      const start = state.channelList[0].chnlNum;
-      const end = state.channelList[state.channelList.length - 1].chnlNum;
+      let endNdx = chnlPollNdx + numPerPoll - 1;
+
+      if (endNdx >= state.channelList.length) {
+        endNdx = state.channelList.length - 1;
+      }
+
+      const start = state.channelList[chnlPollNdx].chnlNum;
+      const end = state.channelList[endNdx].chnlNum;
+
+      chnlPollNdx = endNdx + 1;
+      if (chnlPollNdx >= state.channelList.length) {
+        chnlPollNdx = 0;
+      }
 
       const url = `/api/public/channelRange/${start}/${end}`;
 
+
       axios.get(url).then((response) => {
         context.commit('CHANNELS_UPDATE', response.data);
-        chnlPollTmr = setTimeout(() => { pollChannels(); }, web.channels.poll);
+        chnlPollTmr = setTimeout(() => { pollChannels(); }, poll);
       }, (err) => {
         console.log(`failed to get ${url} ${err}`);
-        chnlPollTmr = setTimeout(() => { pollChannels(); }, web.channels.poll);
+        chnlPollTmr = setTimeout(() => { pollChannels(); }, poll);
       });
     }
 
-    chnlPollTmr = setTimeout(() => { pollChannels(); }, web.channels.poll);
+    chnlPollTmr = setTimeout(() => { pollChannels(); }, poll);
   },
   channelsPollStop() {
     if (chnlPollTmr === null) {
