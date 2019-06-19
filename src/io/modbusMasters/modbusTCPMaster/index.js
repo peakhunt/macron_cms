@@ -1,73 +1,13 @@
 const modbus = require('modbus-serial');
-// const core = require('../../core');
-const logger = require('../../logger');
+const logger = require('../../../logger');
+const common = require('../common');
 
 const requestHandlers = {
   read: {
-    inputs: (master, sched) => {
-      const { addr, numRegs } = sched;
-      const { client } = master;
-
-      client.readInputRegisters(addr, numRegs)
-        .then(() => {
-          // FIXME handle data
-          // eslint-disable-next-line no-use-before-define
-          pollNext(master);
-        })
-        .err((e) => {
-          logger.error(`failed to read inputs ${e}, ${sched.slave}, ${addr}:${numRegs}`);
-          // eslint-disable-next-line no-use-before-define
-          restartMaster(master);
-        });
-    },
-    holdings: (master, sched) => {
-      const { addr, numRegs } = sched;
-      const { client } = master;
-
-      client.readHoldingRegisters(addr, numRegs)
-        .then(() => {
-          // FIXME handle data
-          // eslint-disable-next-line no-use-before-define
-          pollNext(master);
-        })
-        .err((e) => {
-          logger.error(`failed to read inputs ${e}, ${sched.slave}, ${addr}:${numRegs}`);
-          // eslint-disable-next-line no-use-before-define
-          restartMaster(master);
-        });
-    },
-    discretes: (master, sched) => {
-      const { addr, numRegs } = sched;
-      const { client } = master;
-
-      client.readDiscreteInputs(addr, numRegs)
-        .then(() => {
-          // FIXME handle data
-          // eslint-disable-next-line no-use-before-define
-          pollNext(master);
-        })
-        .err((e) => {
-          logger.error(`failed to read inputs ${e}, ${sched.slave}, ${addr}:${numRegs}`);
-          // eslint-disable-next-line no-use-before-define
-          restartMaster(master);
-        });
-    },
-    coils: (master, sched) => {
-      const { addr, numRegs } = sched;
-      const { client } = master;
-
-      client.readCoils(addr, numRegs)
-        .then(() => {
-          // FIXME handle data
-          // eslint-disable-next-line no-use-before-define
-          pollNext(master);
-        })
-        .err((e) => {
-          logger.error(`failed to read inputs ${e}, ${sched.slave}, ${addr}:${numRegs}`);
-          // eslint-disable-next-line no-use-before-define
-          restartMaster(master);
-        });
-    },
+    inputs: common.readInputs,
+    holdings: common.readHoldings,
+    discretes: common.readDiscretes,
+    coils: common.readCoils,
   },
   write: {
     inputs: () => {
@@ -94,7 +34,8 @@ function pollNext(master) {
 
   self.client.setID(sched.slave);
 
-  requestHandlers[sched.func][sched.register](master, sched);
+  // eslint-disable-next-line no-use-before-define
+  requestHandlers[sched.func][sched.register](master, sched, pollNext, restartMaster);
 }
 
 function startPolling(master) {
