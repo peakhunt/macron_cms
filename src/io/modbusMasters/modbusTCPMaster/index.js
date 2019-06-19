@@ -1,4 +1,5 @@
-const modbus = require('modbus-serial');
+const ModbusRTU = require('modbus-serial');
+const util = require('util');
 const logger = require('../../../logger');
 const common = require('../common');
 
@@ -10,32 +11,27 @@ const requestHandlers = {
     coils: common.readCoils,
   },
   write: {
-    inputs: () => {
-      // FIXME
-    },
-    holdings: () => {
-      // FIXME
-    },
-    discretes: () => {
-      // FIXME
-    },
-    coils: () => {
-      // FIXME
-    },
+    holdings: common.writeHoldings,
+    coils: common.writeCoils,
   },
 };
 
 function pollNext(master) {
   const self = master;
-  const sched = self.cfg.schedules[self.pollNext];
+  const { delay } = master.cfg.target;
+  const sched = self.cfg.schedules[self.pollNdx];
 
-  self.pollNext += 1;
-  self.pollNext %= self.cfg.schedules.length;
+  self.pollNdx += 1;
+  self.pollNdx %= self.cfg.schedules.length;
 
   self.client.setID(sched.slave);
 
-  // eslint-disable-next-line no-use-before-define
-  requestHandlers[sched.func][sched.register](master, sched, pollNext, restartMaster);
+  logger.info(`pollNext ${util.inspect(sched)}`);
+
+  self.delayTmr = setTimeout(() => {
+    // eslint-disable-next-line no-use-before-define
+    requestHandlers[sched.func][sched.register](master, sched, pollNext, restartMaster);
+  }, delay);
 }
 
 function startPolling(master) {
@@ -52,6 +48,11 @@ function startPolling(master) {
 function stopModbusMaster(master) {
   const self = master;
 
+  if (self.delayTmr !== null) {
+    clearTimeout(self.delayTmr);
+    self.delayTmr = null;
+  }
+
   if (self.client !== null) {
     self.client.close();
     self.client = null;
@@ -67,14 +68,16 @@ function startModbusMaster(master) {
   const self = master;
   const { host, port, reconnectTmr } = self.cfg.target;
 
-  self.client = new modbus.ModbusRTU();
+  self.pollNdx = 0;
+  self.client = new ModbusRTU();
 
   self.client.connectTCP(host, { port })
     .then(() => {
       logger.info(`connected to ${host}:${port}. start polling`);
       startPolling(self);
     })
-    .error((err) => {
+    .catch((err) => {
+      logger.error(`error ${err.stack}`);
       logger.error(`failed to connect to ${host}:${port} ${err}`);
       stopModbusMaster(self);
 
@@ -93,6 +96,7 @@ function ModbusTCPMaster(cfg) {
   self.cfg = cfg;
   self.client = null;
   self.reconnTmr = null;
+  self.delayTmr = null;
   self.pollNdx = 0;
 }
 

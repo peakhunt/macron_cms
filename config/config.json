@@ -109,10 +109,11 @@
         {
           "type": "modbusTCPMaster",
           "target": {
-            "host": "192.168.227.112",
-            "port": 11200,
+            "host": "192.168.227.211",
+            "port": 10123,
             "reconnectTmr": 500,
-            "timeout": 2000
+            "timeout": 2000,
+            "delay": 10
           },
           "slaves": {
             "8": {
