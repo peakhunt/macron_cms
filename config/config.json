@@ -26,6 +26,400 @@
     },
     "io": {
       "serial": [
+        {
+          "type": "modbusRTUMaster",
+          "transport": {
+            "serial": {
+              "port": "/dev/tty.wchusbserial1420",
+              "baud": 38400,
+              "dataBit": 8,
+              "stopBit": "1",
+              "parity": "none"
+            }
+          },
+          "timeout": 2000,
+          "delay": 50,
+          "slaves": {
+            "8": {
+              "registers": {
+                "discretes": {},
+                "coils": {},
+                "inputs": {
+                  "1000": {
+                    "name": "PORT-01 4-20mA Input",
+                    "channel": 30000,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1001": {
+                    "name": "PORT-02 4-20mA Input",
+                    "channel": 30001,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1002": {
+                    "name": "PORT-03 4-20mA Input",
+                    "channel": 30002,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1003": {
+                    "name": "PORT-04 4-20mA Input",
+                    "channel": 30003,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1004": {
+                    "name": "PORT-05 4-20mA Input",
+                    "channel": 30004,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1005": {
+                    "name": "PORT-06 4-20mA Input",
+                    "channel": 30005,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1006": {
+                    "name": "PORT-07 4-20mA Input",
+                    "channel": 30006,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1007": {
+                    "name": "PORT-08 4-20mA Input",
+                    "channel": 30007,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1008": {
+                    "name": "PORT-09 4-20mA Input",
+                    "channel": 30008,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1009": {
+                    "name": "PORT-10 4-20mA Input",
+                    "channel": 30009,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1010": {
+                    "name": "PORT-11 4-20mA Input",
+                    "channel": 30010,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1011": {
+                    "name": "PORT-12 4-20mA Input",
+                    "channel": 30011,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  }
+                },
+                "holdings": {}
+              }
+            },
+            "9": {
+              "registers": {
+                "coils": {},
+                "discretes": {
+                  "1000": {
+                    "name": "PORT-01 Status",
+                    "channel": 30100
+                  },
+                  "1001": {
+                    "name": "PORT-02 Status",
+                    "channel": 30101
+                  },
+                  "1002": {
+                    "name": "PORT-03 Status",
+                    "channel": 30102
+                  },
+                  "1003": {
+                    "name": "PORT-04 Status",
+                    "channel": 30103
+                  },
+                  "1004": {
+                    "name": "PORT-05 Status",
+                    "channel": 30104
+                  },
+                  "1005": {
+                    "name": "PORT-06 Status",
+                    "channel": 30105
+                  },
+                  "1006": {
+                    "name": "PORT-07 Status",
+                    "channel": 30106
+                  },
+                  "1007": {
+                    "name": "PORT-08 Status",
+                    "channel": 30107
+                  },
+                  "1008": {
+                    "name": "PORT-09 Status",
+                    "channel": 30108
+                  },
+                  "1009": {
+                    "name": "PORT-10 Status",
+                    "channel": 30109
+                  },
+                  "1010": {
+                    "name": "PORT-11 Status",
+                    "channel": 30110
+                  },
+                  "1011": {
+                    "name": "PORT-12 Status",
+                    "channel": 30111
+                  }
+                },
+                "inputs": {
+                  "1000": {
+                    "name": "PORT-1 distance",
+                    "channel": 30200,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1001": {
+                    "name": "PORT-1 level",
+                    "channel": 30201,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1002": {
+                    "name": "PORT-1 4-20mA current feedback",
+                    "channel": 30202,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1003": {
+                    "name": "PORT-2 distance",
+                    "channel": 30203,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1004": {
+                    "name": "PORT-2 level",
+                    "channel": 30204,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1005": {
+                    "name": "PORT-2 4-20mA current feedback",
+                    "channel": 30205,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1006": {
+                    "name": "PORT-3 distance",
+                    "channel": 30206,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1007": {
+                    "name": "PORT-3 level",
+                    "channel": 30207,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1008": {
+                    "name": "PORT-3 4-20mA current feedback",
+                    "channel": 30208,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1009": {
+                    "name": "PORT-4 distance",
+                    "channel": 30209,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1010": {
+                    "name": "PORT-4 level",
+                    "channel": 30210,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1011": {
+                    "name": "PORT-4 4-20mA current feedback",
+                    "channel": 30211,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1012": {
+                    "name": "PORT-5 distance",
+                    "channel": 30212,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1013": {
+                    "name": "PORT-5 level",
+                    "channel": 30213,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1014": {
+                    "name": "PORT-5 4-20mA current feedback",
+                    "channel": 30214,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1015": {
+                    "name": "PORT-6 distance",
+                    "channel": 30215,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1016": {
+                    "name": "PORT-6 level",
+                    "channel": 30216,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1017": {
+                    "name": "PORT-6 4-20mA current feedback",
+                    "channel": 30217,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1018": {
+                    "name": "PORT-7 distance",
+                    "channel": 30218,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1019": {
+                    "name": "PORT-7 level",
+                    "channel": 30219,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1020": {
+                    "name": "PORT-7 4-20mA current feedback",
+                    "channel": 30220,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1021": {
+                    "name": "PORT-8 distance",
+                    "channel": 30221,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1022": {
+                    "name": "PORT-8 level",
+                    "channel": 30222,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1023": {
+                    "name": "PORT-8 4-20mA current feedback",
+                    "channel": 30223,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1024": {
+                    "name": "PORT-9 distance",
+                    "channel": 30224,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1025": {
+                    "name": "PORT-9 level",
+                    "channel": 30225,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1026": {
+                    "name": "PORT-9 4-20mA current feedback",
+                    "channel": 30226,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1027": {
+                    "name": "PORT-10 distance",
+                    "channel": 30227,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1028": {
+                    "name": "PORT-10 level",
+                    "channel": 30228,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1029": {
+                    "name": "PORT-10 4-20mA current feedback",
+                    "channel": 30229,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1030": {
+                    "name": "PORT-11 distance",
+                    "channel": 30230,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1031": {
+                    "name": "PORT-11 level",
+                    "channel": 30231,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1032": {
+                    "name": "PORT-11 4-20mA current feedback",
+                    "channel": 30232,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1033": {
+                    "name": "PORT-12 distance",
+                    "channel": 30233,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1034": {
+                    "name": "PORT-12 level",
+                    "channel": 30234,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  },
+                  "1035": {
+                    "name": "PORT-12 4-20mA current feedback",
+                    "channel": 30235,
+                    "gain": 1.0,
+                    "offset": 0.0
+                  }
+                },
+                "holdings": {}
+              }
+            }
+          },
+          "schedules": [
+            {
+              "slave": 8,
+              "func": "read",
+              "register": "inputs",
+              "addr": 1000,
+              "numRegs": 12
+            },
+            {
+              "slave": 9,
+              "func": "read",
+              "register": "discretes",
+              "addr": 1000,
+              "numRegs": 12
+            },
+            {
+              "slave": 9,
+              "func": "read",
+              "register": "inputs",
+              "addr": 1000,
+              "numRegs": 36
+            }
+          ]
+        }
       ],
       "net": [
         {
@@ -110,11 +504,11 @@
           "type": "modbusTCPMaster",
           "target": {
             "host": "192.168.227.211",
-            "port": 10123,
-            "reconnectTmr": 500,
-            "timeout": 2000,
-            "delay": 10
+            "port": 10123
           },
+          "delay": 50,
+          "reconnectTmr": 500,
+          "timeout": 2000,
           "slaves": {
             "8": {
               "registers": {

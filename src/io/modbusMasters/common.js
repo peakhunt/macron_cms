@@ -7,11 +7,11 @@ function readInputs(master, sched, successBack, errorBack) {
   client.readInputRegisters(addr, numRegs)
     .then(() => {
       // FIXME handle data
-      successBack(master);
+      successBack(master, sched);
     })
     .catch((e) => {
       logger.error(`failed to read inputs ${e}, ${sched.slave}, ${addr}:${numRegs}`);
-      errorBack(master);
+      errorBack(master, sched);
     });
 }
 
@@ -22,11 +22,11 @@ function readHoldings(master, sched, successBack, errorBack) {
   client.readHoldingRegisters(addr, numRegs)
     .then(() => {
       // FIXME handle data
-      successBack(master);
+      successBack(master, sched);
     })
     .catch((e) => {
       logger.error(`failed to read inputs ${e}, ${sched.slave}, ${addr}:${numRegs}`);
-      errorBack(master);
+      errorBack(master, sched);
     });
 }
 
@@ -37,11 +37,11 @@ function readDiscretes(master, sched, successBack, errorBack) {
   client.readDiscreteInputs(addr, numRegs)
     .then(() => {
       // FIXME handle data
-      successBack(master);
+      successBack(master, sched);
     })
     .catch((e) => {
       logger.error(`failed to read inputs ${e}, ${sched.slave}, ${addr}:${numRegs}`);
-      errorBack(master);
+      errorBack(master, sched);
     });
 }
 
@@ -52,11 +52,11 @@ function readCoils(master, sched, successBack, errorBack) {
   client.readCoils(addr, numRegs)
     .then(() => {
       // FIXME handle data
-      successBack(master);
+      successBack(master, sched);
     })
     .catch((e) => {
       logger.error(`failed to read inputs ${e}, ${sched.slave}, ${addr}:${numRegs}`);
-      errorBack(master);
+      errorBack(master, sched);
     });
 }
 

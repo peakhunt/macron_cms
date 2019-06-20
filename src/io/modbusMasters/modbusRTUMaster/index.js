@@ -44,19 +44,34 @@ function pollSuccessBack(master, sched) {
 
 function pollErrorBack(master, sched) {
   logger.error(`pollErrorBack ${util.inspect(sched)}`);
-  // eslint-disable-next-line no-use-before-define
-  restartMaster(master);
+  pollNext(master);
 }
 
 function startPolling(master) {
   const self = master;
-  const { timeout } = self.cfg;
 
-  self.client.setTimeout(timeout);
-
+  self.client.setTimeout(self.cfg.timeout);
   self.pollNdx = 0;
 
   pollNext(master);
+}
+
+function startModbusMaster(master) {
+  const self = master;
+  const { serial } = self.cfg.transport;
+
+  self.client = new ModbusRTU();
+
+  self.client.connectRTUBuffered(serial.port, {
+    baudRate: serial.baud,
+    dataBits: serial.dataBit,
+    stopBits: serial.stopBit === '1' ? 1 : 2,
+    parity: serial.parity,
+  }).then(() => {
+    startPolling(self);
+  }).catch((err) => {
+    logger.error(`failed to start modbusRTUMaster ${serial.port} ${err}`);
+  });
 }
 
 function stopModbusMaster(master) {
@@ -71,64 +86,31 @@ function stopModbusMaster(master) {
     self.client.close();
     self.client = null;
   }
-
-  if (self.reconnTmr !== null) {
-    clearTimeout(self.reconnTmr);
-    self.reconnTmr = null;
-  }
 }
 
-function startModbusMaster(master) {
-  const self = master;
-  const { host, port } = self.cfg.target;
-  const { reconnectTmr } = self.cfg;
-
-  self.pollNdx = 0;
-  self.client = new ModbusRTU();
-
-  self.client.connectTCP(host, { port })
-    .then(() => {
-      logger.info(`connected to ${host}:${port}. start polling`);
-      startPolling(self);
-    })
-    .catch((err) => {
-      logger.error(`error ${err.stack}`);
-      logger.error(`failed to connect to ${host}:${port} ${err}`);
-      stopModbusMaster(self);
-
-      self.reconnTmr = setTimeout(() => { startModbusMaster(self); }, reconnectTmr);
-    });
-}
-
-function restartMaster(master) {
-  stopModbusMaster(master);
-  setTimeout(() => { startModbusMaster(master); }, 1000);
-}
-
-function ModbusTCPMaster(cfg) {
+function ModbusRTUMaster(cfg) {
   const self = this;
 
   self.cfg = cfg;
   self.client = null;
-  self.reconnTmr = null;
   self.delayTmr = null;
   self.pollNdx = 0;
 }
 
-ModbusTCPMaster.prototype.startMaster = function _startMaster() {
+ModbusRTUMaster.prototype.startMaster = function _startMaster() {
   startModbusMaster(this);
 };
 
-ModbusTCPMaster.prototype.stopMaster = function _stopMaster() {
+ModbusRTUMaster.prototype.stopMaster = function _stopMaster() {
   stopModbusMaster(this);
 };
 
-function createModbusTCPMaster(cfg) {
-  const modbusTCPMaster = new ModbusTCPMaster(cfg);
+function createModbusRTUMaster(cfg) {
+  const modbusRTUMaster = new ModbusRTUMaster(cfg);
 
-  return modbusTCPMaster;
+  return modbusRTUMaster;
 }
 
 module.exports = {
-  createModbusTCPMaster,
+  createModbusRTUMaster,
 };
