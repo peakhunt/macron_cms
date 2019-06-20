@@ -318,7 +318,7 @@ function readDistanceLevelFeedback(zbhart, modbus, resolve, reject) {
       reg.value = dist / 1000.0;
 
       if (reg.channel !== -1) {
-        core.getChannel(reg.channel).setSensorValue = reg.value;
+        core.getChannel(reg.channel).sensorValue = reg.value;
       }
     }
 

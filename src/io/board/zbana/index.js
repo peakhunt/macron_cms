@@ -342,7 +342,7 @@ function read420mAInput(zbana, modbus, resolve, reject) {
 
       if (reg.channel !== -1) {
         setSensorFault(reg.channel, false);
-        core.getChannel(reg.channel).setSensorValue = reg.value;
+        core.getChannel(reg.channel).sensorValue = reg.value;
       }
     }
     resolve();
