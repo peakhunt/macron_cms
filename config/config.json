@@ -308,7 +308,9 @@
             "8": {
               "registers": {
                 "discretes": {},
-                "coils": {},
+                "coils": {
+                  "2000": { "name": "test coil", "channel": 39000 }
+                },
                 "inputs": {
                   "1000": { "name": "PORT-01 4-20mA Input", "channel": 30000, "conv": { "a": 1.0, "b": 0.0 } },
                   "1001": { "name": "PORT-02 4-20mA Input", "channel": 30001, "conv": { "a": 1.0, "b": 0.0 } },
@@ -323,7 +325,9 @@
                   "1010": { "name": "PORT-11 4-20mA Input", "channel": 30010, "conv": { "a": 1.0, "b": 0.0 } },
                   "1011": { "name": "PORT-12 4-20mA Input", "channel": 30011, "conv": { "a": 1.0, "b": 0.0 } }
                 },
-                "holdings": {}
+                "holdings": {
+                  "2000": { "name": "test holding", "channel": 38000, "conv": { "a": 1.0, "b": 0.0 } }
+                }
               }
             },
             "9": {
@@ -388,7 +392,9 @@
           "schedules": [
             { "slave": 8, "func": "read", "register": "inputs", "addr": 1000, "numRegs": 12 },
             { "slave": 9, "func": "read", "register": "discretes", "addr": 1000, "numRegs": 12 },
-            { "slave": 9, "func": "read", "register": "inputs", "addr": 1000, "numRegs": 36 }
+            { "slave": 9, "func": "read", "register": "inputs", "addr": 1000, "numRegs": 36 },
+            { "slave": 8, "func": "write", "register": "holdings", "addr": 2000, "numRegs": 1 },
+            { "slave": 8, "func": "write", "register": "coils", "addr": 2000, "numRegs": 1 }
           ]
         }
       ]
@@ -1018,6 +1024,20 @@
           "a": 1.0,
           "b": 0.0
         }
+      },
+      "38000": {
+        "name": "test holding channel",
+        "dir": "out",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "39000": {
+        "name": "test coil channel",
+        "dir": "out",
+        "type": "digital"
       }
     },
     "alarms": {

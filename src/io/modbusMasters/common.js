@@ -59,7 +59,7 @@ function readHoldings(master, sched, successBack, errorBack) {
         const { conv } = reg;
         const v = r * conv.a + conv.b;
 
-        core.getChannel(reg.channel).setSensorValue = v;
+        core.getChannel(reg.channel).sensorValue = v;
       }
       successBack(master, sched);
     })
@@ -83,7 +83,7 @@ function readDiscretes(master, sched, successBack, errorBack) {
           logger.error(`no discrets register ${master.cfg.type} ${sched.slave} ${regAddr}`);
           return;
         }
-        core.getChannel(reg.channel).setSensorValue = v;
+        core.getChannel(reg.channel).sensorValue = v;
       }
       successBack(master, sched);
     })
@@ -108,7 +108,7 @@ function readCoils(master, sched, successBack, errorBack) {
           return;
         }
 
-        core.getChannel(reg.channel).setSensorValue = v;
+        core.getChannel(reg.channel).sensorValue = v;
       }
       successBack(master, sched);
     })
@@ -118,12 +118,62 @@ function readCoils(master, sched, successBack, errorBack) {
     });
 }
 
-function writeHoldings() {
-  // FIXME
+function writeHoldings(master, sched, successBack, errorBack) {
+  const { addr, numRegs } = sched;
+  const { client } = master;
+  const d = [];
+
+  for (let i = 0, regAddr = addr; i < numRegs; i += 1, regAddr += 1) {
+    const reg = getSlaveReg(master, sched.slave, regAddr, 'holdings');
+
+    if (reg === undefined) {
+      logger.error(`no holding register ${master.cfg.type} ${sched.slave} ${regAddr}`);
+      d.push(0);
+    } else {
+      const { conv } = reg;
+      const sv = core.getChannel(reg.channel).sensorValue;
+      const rv = (sv - conv.b) / conv.a;
+
+      d.push(rv);
+    }
+  }
+
+  client.writeRegisters(addr, d)
+    .then(() => {
+      successBack(master, sched);
+    })
+    .catch((e) => {
+      logger.error(`failed to write holdings ${e}, ${sched.slave}, ${addr}:${numRegs}`);
+      errorBack(master, sched);
+    });
 }
 
-function writeCoils() {
-  // FIXME
+function writeCoils(master, sched, successBack, errorBack) {
+  const { addr, numRegs } = sched;
+  const { client } = master;
+  const d = [];
+
+  for (let i = 0, regAddr = addr; i < numRegs; i += 1, regAddr += 1) {
+    const reg = getSlaveReg(master, sched.slave, regAddr, 'coils');
+
+    if (reg === undefined) {
+      logger.error(`no coil register ${master.cfg.type} ${sched.slave} ${regAddr}`);
+      d.push(false);
+    } else {
+      const v = core.getChannel(reg.channel).sensorValue;
+
+      d.push(v);
+    }
+  }
+
+  client.writeCoils(addr, d)
+    .then(() => {
+      successBack(master, sched);
+    })
+    .catch((e) => {
+      logger.error(`failed to write coils ${e}, ${sched.slave}, ${addr}:${numRegs}`);
+      errorBack(master, sched);
+    });
 }
 
 module.exports = {
