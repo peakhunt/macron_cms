@@ -13,85 +13,109 @@ const zbanaChnls = {
     name: 'ZBANA Port #1',
     dir: 'in',
     type: 'analog',
-    gain: 1,
-    offset: 0,
+    conv: {
+      a: 1,
+      b: 0,
+    }
   },
   5002: {
     name: 'ZBANA Port #2',
     dir: 'in',
     type: 'analog',
-    gain: 1,
-    offset: 0,
+    conv: {
+      a: 1,
+      b: 0,
+    }
   },
   5003: {
     name: 'ZBANA Port #3',
     dir: 'in',
     type: 'analog',
-    gain: 1,
-    offset: 0,
+    conv: {
+      a: 1,
+      b: 0,
+    }
   },
   5004: {
     name: 'ZBANA Port #4',
     dir: 'in',
     type: 'analog',
-    gain: 1,
-    offset: 0,
+    conv: {
+      a: 1,
+      b: 0,
+    }
   },
   5005: {
     name: 'ZBANA Port #5',
     dir: 'in',
     type: 'analog',
-    gain: 1,
-    offset: 0,
+    conv: {
+      a: 1,
+      b: 0,
+    }
   },
   5006: {
     name: 'ZBANA Port #6',
     dir: 'in',
     type: 'analog',
-    gain: 1,
-    offset: 0,
+    conv: {
+      a: 1,
+      b: 0,
+    }
   },
   5007: {
     name: 'ZBANA Port #7',
     dir: 'in',
     type: 'analog',
-    gain: 1,
-    offset: 0,
+    conv: {
+      a: 1,
+      b: 0,
+    }
   },
   5008: {
     name: 'ZBANA Port #8',
     dir: 'in',
     type: 'analog',
-    gain: 1,
-    offset: 0,
+    conv: {
+      a: 1,
+      b: 0,
+    }
   },
   5009: {
     name: 'ZBANA Port #9',
     dir: 'in',
     type: 'analog',
-    gain: 1,
-    offset: 0,
+    conv: {
+      a: 1,
+      b: 0,
+    }
   },
   5010: {
     name: 'ZBANA Port #10',
     dir: 'in',
     type: 'analog',
-    gain: 1,
-    offset: 0,
+    conv: {
+      a: 1,
+      b: 0,
+    }
   },
   5011: {
     name: 'ZBANA Port #11',
     dir: 'in',
     type: 'analog',
-    gain: 1,
-    offset: 0,
+    conv: {
+      a: 1,
+      b: 0,
+    }
   },
   5012: {
     name: 'ZBANA Port #12',
     dir: 'in',
     type: 'analog',
-    gain: 1,
-    offset: 0,
+    conv: {
+      a: 1,
+      b: 0,
+    }
   },
 };
 

@@ -12,15 +12,19 @@ const testChnlCfgs = {
     name: 'Channel #1',
     dir: 'in',
     type: 'analog',
-    gain: 1.0,
-    offset: 0.0,
+    conv: {
+      a: 1.0,
+      b: 0.0,
+    },
   },
   3: {
     name: 'Channel #3',
     dir: 'in',
     type: 'analog',
-    gain: 0.5,
-    offset: 10,
+    conv: {
+      a: 0.5,
+      b: 10,
+    },
   },
 };
 

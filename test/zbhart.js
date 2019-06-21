@@ -13,85 +13,109 @@ const zbhartChnls = {
     name: 'ZBHART Port #1',
     dir: 'in',
     type: 'analog',
-    gain: 1,
-    offset: 0,
+    conv: {
+      a: 1,
+      b: 0,
+    }
   },
   15002: {
     name: 'ZBHART Port #2',
     dir: 'in',
     type: 'analog',
-    gain: 1,
-    offset: 0,
+    conv: {
+      a: 1,
+      b: 0,
+    }
   },
   15003: {
     name: 'ZBHART Port #3',
     dir: 'in',
     type: 'analog',
-    gain: 1,
-    offset: 0,
+    conv: {
+      a: 1,
+      b: 0,
+    }
   },
   15004: {
     name: 'ZBHART Port #4',
     dir: 'in',
     type: 'analog',
-    gain: 1,
-    offset: 0,
+    conv: {
+      a: 1,
+      b: 0,
+    }
   },
   15005: {
     name: 'ZBHART Port #5',
     dir: 'in',
     type: 'analog',
-    gain: 1,
-    offset: 0,
+    conv: {
+      a: 1,
+      b: 0,
+    }
   },
   15006: {
     name: 'ZBHART Port #6',
     dir: 'in',
     type: 'analog',
-    gain: 1,
-    offset: 0,
+    conv: {
+      a: 1,
+      b: 0,
+    }
   },
   15007: {
     name: 'ZBHART Port #7',
     dir: 'in',
     type: 'analog',
-    gain: 1,
-    offset: 0,
+    conv: {
+      a: 1,
+      b: 0,
+    }
   },
   15008: {
     name: 'ZBHART Port #8',
     dir: 'in',
     type: 'analog',
-    gain: 1,
-    offset: 0,
+    conv: {
+      a: 1,
+      b: 0,
+    }
   },
   15009: {
     name: 'ZBHART Port #9',
     dir: 'in',
     type: 'analog',
-    gain: 1,
-    offset: 0,
+    conv: {
+      a: 1,
+      b: 0,
+    }
   },
   15010: {
     name: 'ZBHART Port #10',
     dir: 'in',
     type: 'analog',
-    gain: 1,
-    offset: 0,
+    conv: {
+      a: 1,
+      b: 0,
+    }
   },
   15011: {
     name: 'ZBHART Port #11',
     dir: 'in',
     type: 'analog',
-    gain: 1,
-    offset: 0,
+    conv: {
+      a: 1,
+      b: 0,
+    }
   },
   15012: {
     name: 'ZBHART Port #12',
     dir: 'in',
     type: 'analog',
-    gain: 1,
-    offset: 0,
+    conv: {
+      a: 1,
+      b: 0,
+    }
   },
 };
 

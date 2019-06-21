@@ -13,8 +13,10 @@ const testChnlCfgs = {
     name: 'Channel #1',
     dir: 'in',
     type: 'analog',
-    gain: 1.0,
-    offset: 0.0,
+    conv: {
+      a: 1.0,
+      b: 0.0,
+    },
   },
 };
 
@@ -50,7 +52,7 @@ const testAlarmCfgs = {
     channel: 11,
   },
   5: {
-    type: 'sensor_fault',
+    type: 'sensorFault',
     severity: 'minor',
     name: 'test sensor fault alarm on channel 11',
     delay: 0,
