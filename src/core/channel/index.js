@@ -20,8 +20,10 @@ const _bstChannels = new BinarySearchTree();
   name: 'XXX',
   dir: 'in|out',
   type: 'analog|digital',
-  gain: 1.0,
-  offset: 0.0,
+  conv: {
+    a: 1.0,
+    b: 0.0,
+  }
  }
  */
 function Channel(number, cfg) {
@@ -52,13 +54,13 @@ Channel.prototype = {
     if (this.cfg.type === 'digital') {
       return this._value;
     }
-    return (this._value - this.cfg.offset) / this.cfg.gain;
+    return (this._value - this.cfg.conv.b) / this.cfg.conv.a;
   },
   set sensorValue(v) {
     if (this.cfg.type === 'digital') {
       this._value = v;
     } else {
-      this._value = this.cfg.gain * v + this.cfg.offset;
+      this._value = this.cfg.conv.a * v + this.cfg.conv.b;
     }
     this.emit('value', this);
   },

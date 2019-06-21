@@ -18,11 +18,12 @@ function ModbusTCPSlave(cfg) {
       }
 
       let value;
+      const { conv } = ioReg;
 
       switch (ioReg.value) {
         case 'value':
           value = core.getChannel(ioReg.channel).sensorValue;
-          value = (value - ioReg.offset) / ioReg.gain;
+          value = (value - conv.b) / conv.a;
           break;
 
         case 'status':
@@ -50,11 +51,12 @@ function ModbusTCPSlave(cfg) {
       }
 
       let value;
+      const { conv } = ioReg;
 
       switch (ioReg.value) {
         case 'value':
           value = core.getChannel(ioReg.channel).sensorValue;
-          value = (value - ioReg.offset) / ioReg.gain;
+          value = (value - conv.b) / conv.a;
           break;
 
         case 'status':
@@ -135,7 +137,8 @@ function ModbusTCPSlave(cfg) {
         return;
       }
 
-      const v = value * ioReg.gain + ioReg.offset;
+      const { conv } = ioReg;
+      const v = value * conv.a + conv.b;
 
       core.getChannel(ioReg.channel).sensorValue = v;
 

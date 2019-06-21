@@ -17,12 +17,13 @@ function ModbusRTUSlave(cfg) {
         return;
       }
 
+      const { conv } = ioReg;
       let value;
 
       switch (ioReg.value) {
         case 'value':
           value = core.getChannel(ioReg.channel).sensorValue;
-          value = (value - ioReg.offset) / ioReg.gain;
+          value = (value - conv.b) / conv.a;
           break;
 
         case 'status':
@@ -49,12 +50,13 @@ function ModbusRTUSlave(cfg) {
         return;
       }
 
+      const { conv } = ioReg;
       let value;
 
       switch (ioReg.value) {
         case 'value':
           value = core.getChannel(ioReg.channel).sensorValue;
-          value = (value - ioReg.offset) / ioReg.gain;
+          value = (value - conv.b) / conv.a;
           break;
 
         case 'status':
@@ -135,7 +137,8 @@ function ModbusRTUSlave(cfg) {
         return;
       }
 
-      const v = value * ioReg.gain + ioReg.offset;
+      const { conv } = ioReg;
+      const v = value * conv.a + conv.b;
 
       core.getChannel(ioReg.channel).sensorValue = v;
 
@@ -168,7 +171,11 @@ function ModbusRTUSlave(cfg) {
   self.modbus = new ModbusRTU(vector, cfg.transport.serial.port, options);
   self.started = false;
 
-  self.modbus.open(() => {
+  self.modbus.open((err) => {
+    if (err) {
+      logger.error(`failed to start modbusRTUSlave ${err}`);
+      return;
+    }
     self.started = true;
   });
 }

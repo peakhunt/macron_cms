@@ -27,7 +27,8 @@ function readInputs(master, sched, successBack, errorBack) {
           return;
         }
 
-        const v = r * reg.gain + reg.offset;
+        const { conv } = reg;
+        const v = r * conv.a + conv.b;
 
         // logger.error(`setting input register for ${sched.slave} ${reg.channel} to ${v}`);
         core.getChannel(reg.channel).sensorValue = v;
@@ -55,7 +56,8 @@ function readHoldings(master, sched, successBack, errorBack) {
           return;
         }
 
-        const v = r * reg.gain + reg.offset;
+        const { conv } = reg;
+        const v = r * conv.a + conv.b;
 
         core.getChannel(reg.channel).setSensorValue = v;
       }
