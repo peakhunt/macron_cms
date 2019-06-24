@@ -19,6 +19,11 @@ export default new Router({
       component: () => import('./views/ChannelList.vue'),
     },
     {
+      path: '/AlarmList',
+      name: 'alarm list',
+      component: () => import('./views/AlarmList.vue'),
+    },
+    {
       path: '/about',
       name: 'about',
       // route level code-splitting

@@ -103,6 +103,10 @@ export default {
         text: 'channel-list',
         href: '/ChannelList',
       },
+      {
+        text: 'alarm-list',
+        href: '/AlarmList',
+      },
     ],
     ecosystem: [
       {
