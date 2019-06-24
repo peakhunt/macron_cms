@@ -41,7 +41,7 @@ export default {
 
           self.dialog = true;
         });
-      }, 2000);
+      }, 500);
     },
   },
   data() {

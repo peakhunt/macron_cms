@@ -16,7 +16,7 @@
     </v-toolbar>
 
     <v-content>
-      <HelloWorld v-if="projectConfigLoaded"/>
+      <router-view v-if="projectConfigLoaded"></router-view>
       <ProjectLoader v-if="!projectConfigLoaded"/>
     </v-content>
   </v-app>
@@ -24,13 +24,11 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import HelloWorld from './components/HelloWorld.vue';
 import ProjectLoader from './components/ProjectLoader.vue';
 
 export default {
   name: 'App',
   components: {
-    HelloWorld,
     ProjectLoader,
   },
   computed: {

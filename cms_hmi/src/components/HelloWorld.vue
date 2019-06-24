@@ -80,6 +80,17 @@
           </a>
         </v-layout>
       </v-flex>
+
+      <v-flex xs12 mb-5>
+        <h2 class="headline font-weight-bold mb-3">CMS Test Views</h2>
+
+        <v-layout justify-center>
+          <router-link class="subheading mx-3" v-for="(p, i) in cmsPages" :key="i" :to="p.href">
+            {{ p.text }}
+          </router-link>
+        </v-layout>
+      </v-flex>
+
     </v-layout>
   </v-container>
 </template>
@@ -87,6 +98,12 @@
 <script>
 export default {
   data: () => ({
+    cmsPages: [
+      {
+        text: 'channel-list',
+        href: '/ChannelList',
+      },
+    ],
     ecosystem: [
       {
         text: 'vuetify-loader',
