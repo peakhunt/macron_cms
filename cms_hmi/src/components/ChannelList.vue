@@ -22,29 +22,46 @@
          :search="search"
         >
           <template v-slot:items="props">
-            <td width="100px">{{props.item.chnlNum}}</td>
-            <td width="100px" class="text-xs-left">{{props.item.chnlCfg.dir}}</td>
-            <td width="100px" class="text-xs-left">{{props.item.chnlCfg.type}}</td>
-            <td class="text-xs-left">{{props.item.chnlCfg.name}}</td>
-            <td class="text-xs-left" width="180px">{{props.item.sensorFault}}</td>
-            <td class="text-xs-left" width="180px">{{props.item.value}}</td>
+            <tr v-on:click="onChnlSelect(props.item)">
+              <td width="100px">{{props.item.chnlNum}}</td>
+              <td width="100px" class="text-xs-left">{{props.item.chnlCfg.dir}}</td>
+              <td width="100px" class="text-xs-left">{{props.item.chnlCfg.type}}</td>
+              <td class="text-xs-left">{{props.item.chnlCfg.name}}</td>
+              <td class="text-xs-left" width="180px">{{props.item.sensorFault}}</td>
+              <td class="text-xs-left" width="180px">{{props.item.value}}</td>
+            </tr>
           </template>
         </v-data-table>
       </v-card>
     </v-flex>
   </v-layout>
+
+  <v-dialog v-model="chnlDialog.show" max-width="600px">
+    <Channel :chnl="chnlDialog.chnl" />
+  </v-dialog>
+
 </v-container>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
+import Channel from './Channel.vue';
 
 export default {
   name: 'ChannelList',
+  components: {
+    Channel,
+  },
   computed: {
     ...mapGetters([
       'channelList',
     ]),
+  },
+  methods: {
+    onChnlSelect(chnl) {
+      this.chnlDialog.chnl = chnl;
+      this.chnlDialog.show = true;
+    },
   },
   data() {
     return {
@@ -59,6 +76,10 @@ export default {
       ],
       items: [],
       itemKey: 'chnl_num',
+      chnlDialog: {
+        show: false,
+        chnl: null,
+      },
     };
   },
 };
