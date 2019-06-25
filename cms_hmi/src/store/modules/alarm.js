@@ -5,7 +5,38 @@ const state = {
   alarms: {
   },
   alarmList: [],
+  activeAlarmsHash: {
+  },
+  activeAlarmList: [],
 };
+
+function udpateActiveAlarms(alarm) {
+  let n;
+
+  if (alarm.state === 0) {
+    // alarm clear or no alarm at all
+    if (state.activeAlarmsHash[alarm.alarmNum] !== undefined) {
+      // delete alarm from active alarms
+      n = state.activeAlarmList[alarm];
+
+      delete state.activeAlarmsHash[alarm.alarmNum];
+      state.activeAlarmList.splice(n, 1);
+    }
+  } else {
+    // alarm occur
+    if (state.activeAlarmsHash[alarm.alarmNum] !== undefined) return;
+
+    state.activeAlarmsHash[alarm.alarmNum] = alarm;
+
+    // sort activeAlarmList by time
+    for (n = 0; n < state.activeAlarmList.length; n += 1) {
+      if (alarm.time > state.activeAlarmList[n].time) {
+        break;
+      }
+    }
+    state.activeAlarmList.splice(n, 0, alarm);
+  }
+}
 
 let alarmPollTmr = null;
 let alarmPollNdx = 0;
@@ -14,6 +45,8 @@ const mutations = {
   ALARMS_INIT(_, alarmsConfig) {
     state.alarms = {};
     state.alarmList = [];
+    state.activeAlarmsHash = {};
+    state.activeAlarmList = [];
 
     Object.keys(alarmsConfig).forEach((alarmNum) => {
       const alarmCfg = alarmsConfig[alarmNum];
@@ -34,6 +67,8 @@ const mutations = {
 
       salarm.state = ualarm.state;
       salarm.time = ualarm.time;
+
+      udpateActiveAlarms(salarm);
     });
   },
 };
@@ -116,6 +151,9 @@ const getters = {
     return state.alarmList;
   },
   alarmByNum: () => alarmNum => state.alarms[alarmNum],
+  activeAlarmList() {
+    return state.activeAlarmList;
+  },
 };
 
 export default {

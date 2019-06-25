@@ -107,6 +107,10 @@ export default {
         text: 'alarm-list',
         href: '/AlarmList',
       },
+      {
+        text: 'current-alarms',
+        href: '/CurrentAlarms',
+      },
     ],
     ecosystem: [
       {
