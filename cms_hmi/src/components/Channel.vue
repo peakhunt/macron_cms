@@ -62,17 +62,12 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-
 export default {
   name: 'Channel',
   props: {
     chnl: { type: Object, default: null },
   },
   computed: {
-    ...mapGetters([
-      'channelByNum',
-    ]),
     chnlNum: {
       get() {
         return this.chnl === null ? 0 : this.chnl.chnlNum;

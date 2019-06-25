@@ -22,30 +22,56 @@
          :search="search"
         >
           <template v-slot:items="props">
-            <td width="100px">{{props.item.alarmNum}}</td>
-            <td width="100px" class="text-xs-left">{{props.item.alarmCfg.severity}}</td>
-            <td width="100px" class="text-xs-left">{{props.item.alarmCfg.set}}</td>
-            <td width="100px" class="text-xs-left">{{props.item.alarmCfg.delay}}</td>
-            <td class="text-xs-left">{{props.item.alarmCfg.name}}</td>
-            <td class="text-xs-left" width="180px">{{props.item.time}}</td>
-            <td class="text-xs-left" width="180px">{{props.item.state}}</td>
+            <tr v-on:click="onAlarmSelected(props.item)">
+              <td width="100px">{{props.item.alarmNum}}</td>
+              <td width="100px" class="text-xs-left">{{props.item.alarmCfg.severity}}</td>
+              <td width="100px" class="text-xs-left">{{props.item.alarmCfg.set}}</td>
+              <td width="100px" class="text-xs-left">{{props.item.alarmCfg.delay}}</td>
+              <td class="text-xs-left">{{props.item.alarmCfg.name}}</td>
+              <td class="text-xs-left" width="180px">{{alarmTimeStr(props.item.time)}}</td>
+              <td class="text-xs-left" width="180px">
+                {{getAlarmState(props.item.state)}}
+              </td>
+            </tr>
           </template>
         </v-data-table>
       </v-card>
     </v-flex>
   </v-layout>
+
+  <v-dialog v-model="alarmDialog.show" max-width="600px">
+    <Alarm :alarm="alarmDialog.alarm" />
+  </v-dialog>
+
 </v-container>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
+import Alarm from './Alarm.vue';
+import util from '../util';
 
 export default {
   name: 'AlarmList',
+  components: {
+    Alarm,
+  },
   computed: {
     ...mapGetters([
       'alarmList',
     ]),
+  },
+  methods: {
+    onAlarmSelected(alarm) {
+      this.alarmDialog.alarm = alarm;
+      this.alarmDialog.show = true;
+    },
+    alarmTimeStr(atime) {
+      return util.getAlarmTime(atime);
+    },
+    getAlarmState(state) {
+      return util.getAlarmStateStr(state);
+    },
   },
   data() {
     return {
@@ -61,6 +87,10 @@ export default {
       ],
       items: [],
       itemKey: 'chnl_num',
+      alarmDialog: {
+        show: false,
+        alarm: null,
+      },
     };
   },
 };
