@@ -25,6 +25,7 @@ const actions = {
     context.commit('PROJECT_CONFIG_LOADING_SET', true);
     context.dispatch('alarmsPollStop');
     context.dispatch('channelsPollStop');
+    context.dispatch('timerServiceStop');
 
     axios.get('/api/public/config').then((response) => {
       const config = response.data;
@@ -39,6 +40,7 @@ const actions = {
 
       context.dispatch('alarmsPollStart');
       context.dispatch('channelsPollStart');
+      context.dispatch('timerServiceStart');
       cb(undefined, response.data);
     }, (err) => {
       context.commit('PROJECT_CONFIG_LOADING_SET', false);

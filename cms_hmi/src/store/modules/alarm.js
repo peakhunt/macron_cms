@@ -120,7 +120,8 @@ const actions = {
 
     clearTimeout(alarmPollTmr);
   },
-  alarmAck(context, alarmNum, cb) {
+  alarmAck(context, payload) {
+    const { alarmNum, cb } = payload;
     const url = `/api/public/alarm_ack/${alarmNum}`;
 
     axios.get(url).then((response) => {

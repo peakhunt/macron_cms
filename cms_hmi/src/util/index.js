@@ -19,7 +19,14 @@ function getAlarmTime(ts) {
   return dateformat(time, 'yyyy-mm-dd HH:MM:ss');
 }
 
+const alarmColors = {
+  minor: 'yellow',
+  major: 'orange',
+  critical: 'red',
+};
+
 module.exports = {
   getAlarmStateStr,
   getAlarmTime,
+  alarmColors,
 };
