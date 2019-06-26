@@ -23,17 +23,31 @@ function ackAlarm(req, res) {
 
   alarm.ack();
 
-  res.json(alarm.getStatus());
+  const ret = {
+    stat: core.alarm.getAlarmStat(),
+    alarms: {
+    },
+  };
+
+  ret.alarms[alarm.number] = alarm.getStatus();
+
+  res.json(ret);
 }
 
 function getAlarmStatusRange(req, res) {
   const start = parseInt(req.params.start, 10);
   const end = parseInt(req.params.end, 10);
   const list = core.alarm.getAlarmRange(start, end);
-  const ret = {};
+  const ret = {
+    stat: null,
+    alarms: {
+    },
+  };
+
+  ret.stat = core.alarm.getAlarmStat();
 
   list.forEach((alm) => {
-    ret[alm.number] = alm.getStatus();
+    ret.alarms[alm.number] = alm.getStatus();
   });
 
   res.json(ret);

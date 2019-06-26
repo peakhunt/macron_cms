@@ -45,6 +45,9 @@ const _alarmDelayStateString = {
   2: 'Clearing',
 };
 
+let numActiveAlarms = 0;
+let numUnackedAlarms = 0;
+
 /**
  * change alarm state
  * @param {object} alarm - alarm object
@@ -52,6 +55,38 @@ const _alarmDelayStateString = {
  */
 function changeAlarmState(alarm, newState) {
   const a = alarm;
+
+  if (a._state === newState) {
+    return;
+  }
+
+  switch (newState) {
+    case _alarmStateEnum.Inactive:
+      if (a._state === _alarmStateEnum.Active) {
+        numActiveAlarms -= 1;
+      } else if (a._state === _alarmStateEnum.Inactive_Pending) {
+        numActiveAlarms -= 1;
+        numUnackedAlarms -= 1;
+      }
+      break;
+
+    case _alarmStateEnum.Active_Pending:
+      if (a._state === _alarmStateEnum.Inactive) {
+        numActiveAlarms += 1;
+        numUnackedAlarms += 1;
+      }
+      break;
+
+    case _alarmStateEnum.Inactive_Pending:
+      break;
+
+    case _alarmStateEnum.Active:
+      numUnackedAlarms -= 1;
+      break;
+
+    default:
+      break;
+  }
 
   a._state = newState;
   a.emit('alarm', a);
@@ -401,5 +436,11 @@ module.exports = {
   getAlarm: alarmNum => _alarms[alarmNum],
   getAlarmRange(start, end) {
     return _bstAlarms.betweenBounds({ $lte: end, $gte: start });
+  },
+  getAlarmStat() {
+    return {
+      numActiveAlarms,
+      numUnackedAlarms,
+    };
   },
 };

@@ -6,6 +6,13 @@
         <span class="font-weight-light">MATERIAL DESIGN</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
+
+      <span>
+        {{numUnackedAlarms}}
+        /
+        {{numActiveAlarms}}
+      </span>
+
       <v-btn
         flat
         href="https://github.com/vuetifyjs/vuetify/releases/latest"
@@ -36,6 +43,8 @@ export default {
       'projectConfig',
       'projectConfigLoaded',
       'projectConfigLoading',
+      'numActiveAlarms',
+      'numUnackedAlarms',
     ]),
   },
   data() {

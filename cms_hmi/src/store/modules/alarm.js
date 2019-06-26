@@ -8,6 +8,10 @@ const state = {
   activeAlarmsHash: {
   },
   activeAlarmList: [],
+  stat: {
+    numActiveAlarms: 0,
+    numUnackedAlarms: 0,
+  },
 };
 
 function udpateActiveAlarms(alarm) {
@@ -48,6 +52,9 @@ const mutations = {
     state.activeAlarmsHash = {};
     state.activeAlarmList = [];
 
+    state.stat.numActiveAlarms = 0;
+    state.stat.numUnackedAlarms = 0;
+
     Object.keys(alarmsConfig).forEach((alarmNum) => {
       const alarmCfg = alarmsConfig[alarmNum];
       const alarm = {
@@ -60,16 +67,20 @@ const mutations = {
       state.alarmList.push(alarm);
     });
   },
-  ALARMS_UPDATE(_, alarmUpdates) {
-    Object.keys(alarmUpdates).forEach((alarmNum) => {
+  ALARMS_UPDATE(_, payload) {
+    const { stat, alarms } = payload;
+
+    Object.keys(alarms).forEach((alarmNum) => {
       const salarm = state.alarms[alarmNum];
-      const ualarm = alarmUpdates[alarmNum];
+      const ualarm = alarms[alarmNum];
 
       salarm.state = ualarm.state;
       salarm.time = ualarm.time;
 
       udpateActiveAlarms(salarm);
     });
+
+    state.stat = stat;
   },
 };
 
@@ -125,12 +136,7 @@ const actions = {
     const url = `/api/public/alarm_ack/${alarmNum}`;
 
     axios.get(url).then((response) => {
-      const update = {
-      };
-
-      update[alarmNum] = response.data;
-
-      context.commit('ALARMS_UPDATE', update);
+      context.commit('ALARMS_UPDATE', response.data);
 
       if (cb !== undefined) {
         cb(undefined, response.data);
@@ -154,6 +160,12 @@ const getters = {
   alarmByNum: () => alarmNum => state.alarms[alarmNum],
   activeAlarmList() {
     return state.activeAlarmList;
+  },
+  numActiveAlarms() {
+    return state.stat.numActiveAlarms;
+  },
+  numUnackedAlarms() {
+    return state.stat.numUnackedAlarms;
   },
 };
 
