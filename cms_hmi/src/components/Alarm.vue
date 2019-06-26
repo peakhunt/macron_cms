@@ -28,17 +28,40 @@
         <v-flex xs6>
           <v-text-field
            readonly
-           label="Set Point"
-           v-model="alarmSetpoint"/>
-        </v-flex>
-        <v-flex xs6>
-          <v-text-field
-           readonly
            label="Delay"
            v-model="alarmDelay"/>
         </v-flex>
+
         <v-flex xs6>
+          <v-text-field
+           readonly
+           label="Set Point"
+           v-model="alarmSetpoint"/>
         </v-flex>
+
+        <v-flex xs6>
+          <v-text-field
+           v-if="alarmType !== ''"
+           readonly
+           label="Alarm Type"
+           v-model="alarmType"/>
+        </v-flex>
+
+        <v-flex xs6>
+          <v-text-field
+           readonly
+           label="Channel"
+           v-model="channelNumber"/>
+        </v-flex>
+
+        <v-flex xs6>
+          <v-text-field
+           readonly
+           label="Channel Value"
+           v-model="channelValue"/>
+        </v-flex>
+
+
         <v-flex xs6>
           <v-text-field
            readonly
@@ -58,6 +81,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import util from '../util';
 
 export default {
@@ -66,6 +90,9 @@ export default {
     alarm: { type: Object, default: null },
   },
   computed: {
+    ...mapGetters([
+      'channelByNum',
+    ]),
     alarmNum: {
       get() {
         return this.alarm === null ? 0 : this.alarm.alarmNum;
@@ -101,6 +128,27 @@ export default {
         if (this.alarm === null) return '';
 
         return util.getAlarmTime(this.alarm.time);
+      },
+    },
+    alarmType: {
+      get() {
+        if (this.alarm === null || this.alarm.alarmCfg.type === undefined) {
+          return '';
+        }
+
+        return this.alarm.alarmCfg.type;
+      },
+    },
+    channelNumber: {
+      get() {
+        return this.alarm === null ? '' : this.alarm.alarmCfg.channel;
+      },
+    },
+    channelValue: {
+      get() {
+        if (this.alarm === null) return 0;
+
+        return this.channelByNum(this.alarm.alarmCfg.channel).value;
       },
     },
   },
