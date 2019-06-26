@@ -1,7 +1,8 @@
 <template>
 <v-list two-line>
   <template v-for="(item, index) in activeAlarmList">
-    <ActiveAlarm :alarm="item" :key="item.alarmNum + item.alarmCfg.name"
+    <ActiveAlarm :alarm="item"
+     :key="item.alarmNum + item.alarmCfg.name"
      @alarm-info="onAlarmInfo"
     />
     <v-divider v-if="index < (activeAlarmList.length - 1)" inset :key="index"/>
@@ -10,7 +11,6 @@
   <v-dialog v-model="alarmDialog.show" max-width="600px">
     <Alarm :alarm="alarmDialog.alarm" />
   </v-dialog>
-
 </v-list>
 </template>
 
