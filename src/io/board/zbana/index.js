@@ -323,9 +323,10 @@ function ZBANA(master, cfg) {
   this.ioRegs = common.deepCopy(modbusRegisters);
 
   cfg.ports.forEach((pcfg, ndx) => {
-    const addr = 1000 + ndx;
-
-    this.ioRegs.input[addr].channel = pcfg.channel;
+    if (pcfg.use === true) {
+      const addr = 1000 + ndx;
+      this.ioRegs.input[addr].channel = pcfg.channel;
+    }
   });
 }
 

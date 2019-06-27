@@ -273,9 +273,11 @@ function ZBHART(master, cfg) {
   this.ioRegs = common.deepCopy(modbusRegisters);
 
   cfg.ports.forEach((pcfg, ndx) => {
-    const addr = 1000 + ndx * 3;
+    if (pcfg.use === true) {
+      const addr = 1000 + ndx * 3;
 
-    this.ioRegs.input[addr].channel = pcfg.channel;
+      this.ioRegs.input[addr].channel = pcfg.channel;
+    }
   });
 }
 

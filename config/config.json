@@ -47,11 +47,63 @@
               "commFault": 1,
               "ports": [
                 {
+                  "use": true,
                   "channel": 1000,
                   "sensorType": "pressure"
                 },
                 {
+                  "use": true,
                   "channel": 1001,
+                  "sensorType": "pressure"
+                },
+                {
+                  "use": false,
+                  "channel": 0,
+                  "sensorType": "pressure"
+                },
+                {
+                  "use": false,
+                  "channel": 0,
+                  "sensorType": "pressure"
+                },
+                {
+                  "use": false,
+                  "channel": 0,
+                  "sensorType": "pressure"
+                },
+                {
+                  "use": false,
+                  "channel": 0,
+                  "sensorType": "pressure"
+                },
+                {
+                  "use": false,
+                  "channel": 0,
+                  "sensorType": "pressure"
+                },
+                {
+                  "use": false,
+                  "channel": 0,
+                  "sensorType": "pressure"
+                },
+                {
+                  "use": false,
+                  "channel": 0,
+                  "sensorType": "pressure"
+                },
+                {
+                  "use": false,
+                  "channel": 0,
+                  "sensorType": "pressure"
+                },
+                {
+                  "use": false,
+                  "channel": 0,
+                  "sensorType": "pressure"
+                },
+                {
+                  "use": false,
+                  "channel": 0,
                   "sensorType": "pressure"
                 }
               ]
@@ -62,12 +114,176 @@
               "commFault": 2,
               "ports": [
                 {
+                  "use": true,
                   "channel": 2000,
                   "sensorType": "vegaXXX"
                 },
                 {
+                  "use": true,
                   "channel": 2001,
                   "sensorType": "vegaXXX"
+                },
+                {
+                  "use": false,
+                  "channel": 0,
+                  "sensorType": "vegaXXX"
+                },
+                {
+                  "use": false,
+                  "channel": 0,
+                  "sensorType": "vegaXXX"
+                },
+                {
+                  "use": false,
+                  "channel": 0,
+                  "sensorType": "vegaXXX"
+                },
+                {
+                  "use": false,
+                  "channel": 0,
+                  "sensorType": "vegaXXX"
+                },
+                {
+                  "use": false,
+                  "channel": 0,
+                  "sensorType": "vegaXXX"
+                },
+                {
+                  "use": false,
+                  "channel": 0,
+                  "sensorType": "vegaXXX"
+                },
+                {
+                  "use": false,
+                  "channel": 0,
+                  "sensorType": "vegaXXX"
+                },
+                {
+                  "use": false,
+                  "channel": 0,
+                  "sensorType": "vegaXXX"
+                },
+                {
+                  "use": false,
+                  "channel": 0,
+                  "sensorType": "vegaXXX"
+                },
+                {
+                  "use": false,
+                  "channel": 0,
+                  "sensorType": "vegaXXX"
+                }
+              ]
+            },
+            {
+              "type": "zb485",
+              "address": 10,
+              "commFault": 3,
+              "ports": [
+                {
+                  "use": true,
+                  "type": "ansgcnv",
+                  "commFault": 4,
+                  "channels": [
+                    {
+                      "use": true,
+                      "channel": 20000
+                    },
+                    {
+                      "use": true,
+                      "channel": 20001
+                    },
+                    {
+                      "use": true,
+                      "channel": 20002
+                    },
+                    {
+                      "use": true,
+                      "channel": 20003
+                    },
+                    {
+                      "use": true,
+                      "channel": 20004
+                    },
+                    {
+                      "use": false,
+                      "channel": 0
+                    },
+                    {
+                      "use": false,
+                      "channel": 0
+                    },
+                    {
+                      "use": false,
+                      "channel": 0
+                    },
+                    {
+                      "use": false,
+                      "channel": 0
+                    },
+                    {
+                      "use": false,
+                      "channel": 0
+                    },
+                    {
+                      "use": false,
+                      "channel": 0
+                    },
+                    {
+                      "use": false,
+                      "channel": 0
+                    },
+                    {
+                      "use": false,
+                      "channel": 0
+                    },
+                    {
+                      "use": false,
+                      "channel": 0
+                    }
+                  ]
+                },
+                {
+                  "use": false,
+                  "type": "ansgcnv",
+                  "commFault": 0,
+                  "channels": []
+                },
+                {
+                  "use": false,
+                  "type": "ansgcnv",
+                  "commFault": 0,
+                  "channels": []
+                },
+                {
+                  "use": false,
+                  "type": "ansgcnv",
+                  "commFault": 0,
+                  "channels": []
+                },
+                {
+                  "use": false,
+                  "type": "ansgcnv",
+                  "commFault": 0,
+                  "channels": []
+                },
+                {
+                  "use": false,
+                  "type": "ansgcnv",
+                  "commFault": 0,
+                  "channels": []
+                },
+                {
+                  "use": false,
+                  "type": "ansgcnv",
+                  "commFault": 0,
+                  "channels": []
+                },
+                {
+                  "use": false,
+                  "type": "ansgcnv",
+                  "commFault": 0,
+                  "channels": []
                 }
               ]
             }
@@ -449,6 +665,16 @@
       },
       "2": {
         "name": "ZBHART Address-9 Comm Fault",
+        "dir": "in",
+        "type": "digital"
+      },
+      "3": {
+        "name": "ZB485 Address-10 Comm Fault",
+        "dir": "in",
+        "type": "digital"
+      },
+      "4": {
+        "name": "ZB485 Address-10 Port-1 Comm Fault",
         "dir": "in",
         "type": "digital"
       },
@@ -1038,6 +1264,51 @@
         "name": "test coil channel",
         "dir": "out",
         "type": "digital"
+      },
+      "20000": {
+        "name": "temperature input 1",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "20001": {
+        "name": "temperature input 2",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "20002": {
+        "name": "temperature input 3",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "20003": {
+        "name": "temperature input 4",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "20004": {
+        "name": "temperature input 5",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
       }
     },
     "alarms": {
