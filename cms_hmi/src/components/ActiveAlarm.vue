@@ -1,5 +1,5 @@
 <template>
-<v-list-tile @click="clickHandler">
+<v-list-tile @click="onDummy()" @dblclick="onAlarmAck">
   <v-list-tile-avatar>
     <v-icon large :color="alarmColor">{{alarmIcon}}</v-icon>
   </v-list-tile-avatar>
@@ -12,6 +12,12 @@
       {{ alarm.alarmCfg.severity }}
     </v-list-tile-sub-title>
   </v-list-tile-content>
+
+  <v-list-tile-action>
+    <v-btn icon ripple @click="onAlarmInfo">
+      <v-icon large color="grey lighten-1">help</v-icon>
+    </v-btn>
+  </v-list-tile-action>
 </v-list-tile>
 </template>
 
@@ -31,7 +37,7 @@ export default {
     ]),
     alarmIcon() {
       if (this.alarm.state === 3) {
-        return 'check';
+        return 'check_circle';
       }
       return 'error';
     },
@@ -54,6 +60,7 @@ export default {
     };
   },
   methods: {
+    /*
     clickHandler(e) {
       e.preventDefault();
       this.clickCount += 1;
@@ -70,12 +77,17 @@ export default {
         // 'double-click'
         this.onAlarmAck();
       }
-    },
+    }, */
     getAlarmStr(ts) {
       return util.getAlarmTime(ts);
     },
+    onDummy() {
+    },
     onAlarmAck() {
       this.$store.dispatch('alarmAck', { alarmNum: this.alarm.alarmNum });
+    },
+    onAlarmInfo() {
+      this.$emit('alarm-info', this.alarm);
     },
   },
 };
