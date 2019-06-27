@@ -128,50 +128,62 @@ const zbhartCfg = {
   commFault: 15000,
   ports: [
     {
+      use: true,
       channel: 15001,
       sensorType: 'vega',
     },
     {
+      use: true,
       channel: 15002,
       sensorType: 'vega',
     },
     {
+      use: true,
       channel: 15003,
       sensorType: 'vega',
     },
     {
+      use: true,
       channel: 15004,
       sensorType: 'vega',
     },
     {
+      use: true,
       channel: 15005,
       sensorType: 'vega',
     },
     {
+      use: true,
       channel: 15006,
       sensorType: 'vega',
     },
     {
+      use: true,
       channel: 15007,
       sensorType: 'vega',
     },
     {
+      use: true,
       channel: 15008,
       sensorType: 'vega',
     },
     {
+      use: true,
       channel: 15009,
       sensorType: 'vega',
     },
     {
+      use: true,
       channel: 15010,
       sensorType: 'vega',
     },
     {
+      use: true,
       channel: 15011,
       sensorType: 'vega',
     },
     {
+      use: false,
       channel: -1,
       sensorType: 'pressureXXX',
     },

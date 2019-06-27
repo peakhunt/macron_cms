@@ -128,50 +128,62 @@ const zbanaCfg = {
   commFault: 5000,
   ports: [
     {
+      use: true,
       channel: 5001,
       sensorType: 'pressureXXX',
     },
     {
+      use: true,
       channel: 5002,
       sensorType: 'pressureXXX',
     },
     {
+      use: true,
       channel: 5003,
       sensorType: 'pressureXXX',
     },
     {
+      use: true,
       channel: 5004,
       sensorType: 'pressureXXX',
     },
     {
+      use: true,
       channel: 5005,
       sensorType: 'pressureXXX',
     },
     {
+      use: true,
       channel: 5006,
       sensorType: 'pressureXXX',
     },
     {
+      use: true,
       channel: 5007,
       sensorType: 'pressureXXX',
     },
     {
+      use: true,
       channel: 5008,
       sensorType: 'pressureXXX',
     },
     {
+      use: true,
       channel: 5009,
       sensorType: 'pressureXXX',
     },
     {
+      use: true,
       channel: 5010,
       sensorType: 'pressureXXX',
     },
     {
+      use: true,
       channel: 5011,
       sensorType: 'pressureXXX',
     },
     {
+      use: false,
       channel: -1,
       sensorType: 'pressureXXX',
     },
