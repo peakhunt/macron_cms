@@ -300,7 +300,9 @@ function readPortStatus(zbhart, modbus, resolve, reject) {
     //
     // b. sensor fault
     zbhart.cfg.ports.forEach((pcfg) => {
-      setSensorFault(pcfg.channel, true);
+      if (pcfg.use === true) {
+        setSensorFault(pcfg.channel, true);
+      }
     });
 
     logger.info(`zbhart readPortStatus ${zbhart.cfg.address} error ${err}`);
@@ -331,7 +333,9 @@ function readDistanceLevelFeedback(zbhart, modbus, resolve, reject) {
 
     // b. sensor fault
     zbhart.cfg.ports.forEach((pcfg) => {
-      setSensorFault(pcfg.channel, true);
+      if (pcfg.use === true) {
+        setSensorFault(pcfg.channel, true);
+      }
     });
 
     logger.info(`zbhart readDistanceLevelFeedback ${zbhart.cfg.address} error ${err}`);

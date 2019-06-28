@@ -1,3 +1,6 @@
+const logger = require('../../../logger');
+const core = require('../../../core');
+
 const ZB485StateEnum = {
   Init: 0,
   SensorTypeSetup: 1,
@@ -9,7 +12,8 @@ const ZB485StateEnum = {
 const ANSGCNVStateEnum = {
   Init: 0,
   ChannelSetup: 1,
-  ReadStatusInput: 2,
+  ChannelSetupCommit: 2,
+  ReadStatusInput: 3,
 };
 
 function ZB485(master, cfg) {
@@ -19,20 +23,240 @@ function ZB485(master, cfg) {
   self.cfg = cfg;
   self.slaves = [];
   self.state = ZB485StateEnum.Init;
+  self.next_slave_ndx = 0;
 
   cfg.ports.forEach((pcfg, ndx) => {
-    if (pcfg.use === true) {
-      const slave = {
-      };
+    const slave = {
+      cfg: pcfg,
+      port: ndx + 1,
+      state: ANSGCNVStateEnum.Init,
+      commStatus: false,
+    };
 
-      slave.cfg = pcfg;
-      slave.port = (ndx + 1);
-      slave.state = ANSGCNVStateEnum.Init;
-
-      self.slaves.push(slave);
-    }
+    self.slaves.push(slave);
   });
 }
+
+function pickNextSlave(zb485) {
+  const self = zb485;
+  let slave = null;
+
+  for (let i = 0; i < 8; i += 1) {
+    const ndx = (self.next_slave_ndx + i) % 8;
+
+    if (self.slaves[ndx].cfg.use && self.slaves[ndx].commStatus === true) {
+      slave = self.slaves[ndx];
+      self.next_slave_ndx = (ndx + 1) % 8;
+      break;
+    }
+  }
+  return slave;
+}
+
+function ansgcnvChannelSetup(zb485, slave, modbus, resolve, reject) {
+  const s = slave;
+  const addr = s.port * 1000 + 350;
+  const regs = [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]; // all temperature
+
+  modbus.writeRegisters(addr, regs)
+    .then(() => {
+      s.state = ANSGCNVStateEnum.ChannelSetupCommit;
+      resolve();
+    })
+    .catch((e) => {
+      logger.info(`zb485 ansgcnvChannelSetup ${zb485.cfg.address} ${s.port} error ${e}`);
+      s.state = ANSGCNVStateEnum.Init;
+      reject();
+    });
+}
+
+function ansgcnvChannelSetupCommit(zb485, slave, modbus, resolve, reject) {
+  const s = slave;
+  const addr = s.port * 1000 + 370;
+  const regs = [1]; // commit
+
+  //
+  // hack.
+  // this can take a very long time
+  //
+  modbus.setTimeout(3000);
+
+  modbus.writeRegisters(addr, regs)
+    .then(() => {
+      s.state = ANSGCNVStateEnum.ReadStatusInput;
+      resolve();
+    })
+    .catch((e) => {
+      logger.info(`zb485 ansgcnvChannelSetupCommit ${zb485.cfg.address} ${s.port} error ${e}`);
+      s.state = ANSGCNVStateEnum.Init;
+      reject();
+    });
+}
+
+function ansgcnvReadStatusAndInput(zb485, slave, modbus, resolve, reject) {
+  const self = zb485;
+  const s = slave;
+  const addr = s.port * 1000 + 0;
+
+  modbus.readInputRegisters(addr, 28)
+    .then((d) => {
+      for (let i = 0; i < 14; i += 1) {
+        const chnlCfg = slave.cfg.channels[i];
+
+        if (chnlCfg.use === true) {
+          const stat = d[i * 2 + 0];
+          const data = d[i * 2 + 1];
+          const chnl = core.getChannel(chnlCfg.channel);
+
+          /* eslint-disable no-bitwise */
+          if ((stat & 0x01) !== 0) {
+            chnl.sensorFault = true; // conversion fail
+          } else {
+            chnl.sensorFault = false; // conversion ok
+          }
+          chnl.sensorValue = data / 100.0;
+        }
+      }
+      resolve();
+    })
+    .catch((e) => {
+      logger.info(`zb485 ansgcnvReadStatusAndInput ${zb485.cfg.address} ${s.port} error ${e}`);
+      self.state = ZB485StateEnum.Init;
+      s.state = ANSGCNVStateEnum.Init;
+      reject();
+    });
+}
+
+function executeANSGCNV(zb485, modbus, resolve, reject) {
+  const self = zb485;
+  const slave = pickNextSlave(self);
+
+  if (slave === null) {
+    process.nextTick(() => resolve());
+    return;
+  }
+
+  if (slave.state === ANSGCNVStateEnum.Init) {
+    slave.state = ANSGCNVStateEnum.ChannelSetup;
+  }
+
+  switch (slave.state) {
+    case ANSGCNVStateEnum.ChannelSetup:
+      ansgcnvChannelSetup(self, slave, modbus, resolve, reject);
+      break;
+
+    case ANSGCNVStateEnum.ChannelSetupCommit:
+      ansgcnvChannelSetupCommit(self, slave, modbus, resolve, reject);
+      break;
+
+    case ANSGCNVStateEnum.ReadStatusInput:
+      ansgcnvReadStatusAndInput(self, slave, modbus, resolve, reject);
+      break;
+
+    default:
+      break;
+  }
+}
+
+function setupSensorType(zb485, modbus, resolve, reject) {
+  const self = zb485;
+  const regs = [0, 0, 0, 0, 0, 0, 0, 0]; // everything to AN-SGCNV
+
+  modbus.writeRegisters(10000, regs)
+    .then(() => {
+      self.state = ZB485StateEnum.PowerSetup;
+      resolve();
+    })
+    .catch((e) => {
+      logger.info(`zb485 setupSensorType ${zb485.cfg.address} error ${e}`);
+      self.state = ZB485StateEnum.Init;
+      reject();
+    });
+}
+
+function setupPower(zb485, modbus, resolve, reject) {
+  const self = zb485;
+  const regs = [];
+
+  // build coil registers for power setup
+  self.cfg.ports.forEach((pcfg) => {
+    regs.push(pcfg.use);
+  });
+
+  modbus.writeCoils(10000, regs)
+    .then(() => {
+      self.state = ZB485StateEnum.ReadCommStatus;
+      resolve();
+    })
+    .catch((e) => {
+      logger.info(`zb485 setupPower ${zb485.cfg.address} error ${e}`);
+      self.state = ZB485StateEnum.Init;
+      reject();
+    });
+}
+
+function readCommStatus(zb485, modbus, resolve, reject) {
+  const self = zb485;
+
+  modbus.readDiscreteInputs(10000, 8)
+    .then((d) => {
+      for (let i = 0; i < 8; i += 1) {
+        self.slaves[i].commStatus = d[i];
+      }
+      self.state = ZB485StateEnum.ExecuteANSGCNV;
+      resolve();
+    })
+    .catch((e) => {
+      logger.info(`zb485 readCommStatus ${zb485.cfg.address} error ${e}`);
+      self.state = ZB485StateEnum.Init;
+      reject();
+    });
+}
+
+function executeStateMachine(zb485, modbus, resolve, reject) {
+  const self = zb485;
+
+  modbus.setID(self.cfg.address);
+
+  if (self.state === ZB485StateEnum.Init) {
+    self.state = ZB485StateEnum.SensorTypeSetup;
+  }
+
+  switch (self.state) {
+    case ZB485StateEnum.SensorTypeSetup:
+      setupSensorType(self, modbus, resolve, reject);
+      break;
+
+    case ZB485StateEnum.PowerSetup:
+      setupPower(self, modbus, resolve, reject);
+      break;
+
+    case ZB485StateEnum.ReadCommStatus:
+      readCommStatus(self, modbus, resolve, reject);
+      break;
+
+    case ZB485StateEnum.ExecuteANSGCNV:
+      executeANSGCNV(zb485, modbus, resolve, reject);
+      break;
+
+    default:
+      break;
+  }
+}
+
+ZB485.prototype = {
+  constructor: ZB485,
+  executeSchedule(modbus) {
+    const self = this;
+
+    return new Promise((resolve, reject) => {
+      executeStateMachine(self, modbus, resolve, reject);
+    });
+  },
+  printIO(client) {
+    client.write('FIXME\r\n');
+  },
+};
 
 function createBoard(master, cfg) {
   const zb485 = new ZB485(master, cfg);

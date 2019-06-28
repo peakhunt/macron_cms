@@ -1,11 +1,14 @@
 const ModbusRTU = require('modbus-serial');
 const zbana = require('../zbana');
 const zbhart = require('../zbhart');
+const zb485 = require('../zb485');
 const logger = require('../../../logger');
 
 function pollZBBoard(zbmaster) {
   const board = zbmaster.boards[zbmaster.pollNdx];
   const master = zbmaster;
+
+  master.modbus.setTimeout(board.cfg.timeout);
 
   board.executeSchedule(master.modbus).then(() => {
     master.pollNdx = (master.pollNdx + 1) % master.boards.length;
@@ -31,6 +34,10 @@ function ZBMaster(cfg) {
         this.boards.push(zbhart.createBoard(this, bCfg));
         break;
 
+      case 'zb485':
+        this.boards.push(zb485.createBoard(this, bCfg));
+        break;
+
       default:
         break;
     }
@@ -48,7 +55,6 @@ function ZBMaster(cfg) {
     stopBits: cfg.transport.serial.stopBit === '1' ? 1 : 2,
     parity: cfg.transport.serial.parity,
   }).then(() => {
-    self.modbus.setTimeout(cfg.poll.timeout);
     pollZBBoard(self);
   }).catch((err) => {
     //

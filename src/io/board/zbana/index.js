@@ -353,7 +353,9 @@ function read420mAInput(zbana, modbus, resolve, reject) {
 
     // b. sensor fault
     zbana.cfg.ports.forEach((pcfg) => {
-      setSensorFault(pcfg.channel, true);
+      if (pcfg.use === true) {
+        setSensorFault(pcfg.channel, true);
+      }
     });
 
     logger.info(`zbana ${zbana.cfg.address} error ${err}`);
