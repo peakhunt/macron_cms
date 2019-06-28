@@ -25,7 +25,7 @@ function pollNext(master) {
 
   self.client.setID(sched.slave);
 
-  logger.info(`pollNext ${util.inspect(sched)}`);
+  logger.debug(`pollNext ${util.inspect(sched)}`);
 
   // eslint-disable-next-line no-use-before-define
   requestHandlers[sched.func][sched.register](master, sched, pollSuccessBack, pollErrorBack);
@@ -35,7 +35,7 @@ function pollSuccessBack(master, sched) {
   const self = master;
   const { delay } = self.cfg;
 
-  logger.info(`pollSuccessBack ${util.inspect(sched)}`);
+  logger.debug(`pollSuccessBack ${util.inspect(sched)}`);
 
   self.delayTmr = setTimeout(() => {
     pollNext(master);
@@ -88,7 +88,7 @@ function startModbusMaster(master) {
 
   self.client.connectTCP(host, { port })
     .then(() => {
-      logger.info(`connected to ${host}:${port}. start polling`);
+      logger.debug(`connected to ${host}:${port}. start polling`);
       startPolling(self);
     })
     .catch((err) => {
