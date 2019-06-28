@@ -37,6 +37,38 @@ function ZB485(master, cfg) {
   });
 }
 
+function setZB456State(zb485, state) {
+  const self = zb485;
+
+  self.state = state;
+
+  if (self.state >= ZB485StateEnum.SensorTypeSetup) {
+    // communication ok
+    core.getChannel(self.cfg.commFault).sensorValue = true;
+  } else {
+    // communication fail
+    logger.info(`zb485 comm fault ${self.cfg.address}`);
+    core.getChannel(self.cfg.commFault).sensorValue = false;
+
+    // FIXME make all slaves comm fault???
+  }
+}
+
+function setSlaveState(zb485, slave, state) {
+  const s = slave;
+
+  s.state = state;
+
+  if (s.state >= ANSGCNVStateEnum.ChannelSetup) {
+    // communication ok
+    core.getChannel(s.cfg.commFault).sensorValue = true;
+  } else {
+    // communication fail
+    logger.info(`zb485 slave comm fault ${zb485.cfg.address}:${slave.port}`);
+    core.getChannel(s.cfg.commFault).sensorValue = false;
+  }
+}
+
 function pickNextSlave(zb485) {
   const self = zb485;
   let slave = null;
@@ -60,12 +92,12 @@ function ansgcnvChannelSetup(zb485, slave, modbus, resolve, reject) {
 
   modbus.writeRegisters(addr, regs)
     .then(() => {
-      s.state = ANSGCNVStateEnum.ChannelSetupCommit;
+      setSlaveState(zb485, s, ANSGCNVStateEnum.ChannelSetupCommit);
       resolve();
     })
     .catch((e) => {
       logger.info(`zb485 ansgcnvChannelSetup ${zb485.cfg.address} ${s.port} error ${e}`);
-      s.state = ANSGCNVStateEnum.Init;
+      setSlaveState(zb485, s, ANSGCNVStateEnum.Init);
       reject();
     });
 }
@@ -83,12 +115,12 @@ function ansgcnvChannelSetupCommit(zb485, slave, modbus, resolve, reject) {
 
   modbus.writeRegisters(addr, regs)
     .then(() => {
-      s.state = ANSGCNVStateEnum.ReadStatusInput;
+      setSlaveState(zb485, s, ANSGCNVStateEnum.ReadStatusInput);
       resolve();
     })
     .catch((e) => {
       logger.info(`zb485 ansgcnvChannelSetupCommit ${zb485.cfg.address} ${s.port} error ${e}`);
-      s.state = ANSGCNVStateEnum.Init;
+      setSlaveState(zb485, s, ANSGCNVStateEnum.Init);
       reject();
     });
 }
@@ -121,8 +153,8 @@ function ansgcnvReadStatusAndInput(zb485, slave, modbus, resolve, reject) {
     })
     .catch((e) => {
       logger.info(`zb485 ansgcnvReadStatusAndInput ${zb485.cfg.address} ${s.port} error ${e}`);
-      self.state = ZB485StateEnum.Init;
-      s.state = ANSGCNVStateEnum.Init;
+      setZB456State(self, ZB485StateEnum.Init);
+      setSlaveState(zb485, s, ANSGCNVStateEnum.Init);
       reject();
     });
 }
@@ -164,12 +196,12 @@ function setupSensorType(zb485, modbus, resolve, reject) {
 
   modbus.writeRegisters(10000, regs)
     .then(() => {
-      self.state = ZB485StateEnum.PowerSetup;
+      setZB456State(self, ZB485StateEnum.PowerSetup);
       resolve();
     })
     .catch((e) => {
       logger.info(`zb485 setupSensorType ${zb485.cfg.address} error ${e}`);
-      self.state = ZB485StateEnum.Init;
+      setZB456State(self, ZB485StateEnum.Init);
       reject();
     });
 }
@@ -185,12 +217,12 @@ function setupPower(zb485, modbus, resolve, reject) {
 
   modbus.writeCoils(10000, regs)
     .then(() => {
-      self.state = ZB485StateEnum.ReadCommStatus;
+      setZB456State(self, ZB485StateEnum.ReadCommStatus);
       resolve();
     })
     .catch((e) => {
       logger.info(`zb485 setupPower ${zb485.cfg.address} error ${e}`);
-      self.state = ZB485StateEnum.Init;
+      setZB456State(self, ZB485StateEnum.Init);
       reject();
     });
 }
@@ -203,12 +235,12 @@ function readCommStatus(zb485, modbus, resolve, reject) {
       for (let i = 0; i < 8; i += 1) {
         self.slaves[i].commStatus = d[i];
       }
-      self.state = ZB485StateEnum.ExecuteANSGCNV;
+      setZB456State(self, ZB485StateEnum.ExecuteANSGCNV);
       resolve();
     })
     .catch((e) => {
       logger.info(`zb485 readCommStatus ${zb485.cfg.address} error ${e}`);
-      self.state = ZB485StateEnum.Init;
+      setZB456State(self, ZB485StateEnum.Init);
       reject();
     });
 }
@@ -219,7 +251,7 @@ function executeStateMachine(zb485, modbus, resolve, reject) {
   modbus.setID(self.cfg.address);
 
   if (self.state === ZB485StateEnum.Init) {
-    self.state = ZB485StateEnum.SensorTypeSetup;
+    setZB456State(self, ZB485StateEnum.SensorTypeSetup);
   }
 
   switch (self.state) {
