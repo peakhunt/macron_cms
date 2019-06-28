@@ -31,6 +31,22 @@ function ZB485(master, cfg) {
       port: ndx + 1,
       state: ANSGCNVStateEnum.Init,
       commStatus: false,
+      channels: [
+        { stat: 0, value: 0 },
+        { stat: 0, value: 0 },
+        { stat: 0, value: 0 },
+        { stat: 0, value: 0 },
+        { stat: 0, value: 0 },
+        { stat: 0, value: 0 },
+        { stat: 0, value: 0 },
+        { stat: 0, value: 0 },
+        { stat: 0, value: 0 },
+        { stat: 0, value: 0 },
+        { stat: 0, value: 0 },
+        { stat: 0, value: 0 },
+        { stat: 0, value: 0 },
+        { stat: 0, value: 0 },
+      ],
     };
 
     self.slaves.push(slave);
@@ -42,13 +58,13 @@ function setZB456State(zb485, state) {
 
   self.state = state;
 
-  if (self.state >= ZB485StateEnum.SensorTypeSetup) {
+  if (self.state >= ZB485StateEnum.PowerSetup) {
     // communication ok
-    core.getChannel(self.cfg.commFault).sensorValue = true;
+    core.getChannel(self.cfg.commFault).sensorValue = false;
   } else {
     // communication fail
-    logger.info(`zb485 comm fault ${self.cfg.address}`);
-    core.getChannel(self.cfg.commFault).sensorValue = false;
+    logger.info(`zb485 comm fault ${self.cfg.address} ${self.cfg.commFault}`);
+    core.getChannel(self.cfg.commFault).sensorValue = true;
 
     // FIXME make all slaves comm fault???
   }
@@ -59,13 +75,13 @@ function setSlaveState(zb485, slave, state) {
 
   s.state = state;
 
-  if (s.state >= ANSGCNVStateEnum.ChannelSetup) {
+  if (s.state >= ANSGCNVStateEnum.ChannelSetupCommit) {
     // communication ok
-    core.getChannel(s.cfg.commFault).sensorValue = true;
+    core.getChannel(s.cfg.commFault).sensorValue = false;
   } else {
     // communication fail
     logger.info(`zb485 slave comm fault ${zb485.cfg.address}:${slave.port}`);
-    core.getChannel(s.cfg.commFault).sensorValue = false;
+    core.getChannel(s.cfg.commFault).sensorValue = true;
   }
 }
 
@@ -146,6 +162,10 @@ function ansgcnvReadStatusAndInput(zb485, slave, modbus, resolve, reject) {
           } else {
             chnl.sensorFault = false; // conversion ok
           }
+
+          s.channels[i].stat = stat;
+          s.channels[i].value = data;
+
           chnl.sensorValue = data / 100.0;
         }
       }
@@ -286,7 +306,19 @@ ZB485.prototype = {
     });
   },
   printIO(client) {
-    client.write('FIXME\r\n');
+    const board = this;
+
+    client.write(`type        - ${board.cfg.type}\r\n`);
+    client.write(`comm fault  - ${core.getChannel(board.cfg.commFault).engValue}\r\n`);
+    board.slaves.forEach((slave, ndx) => {
+      client.write(`port-${ndx + 1} use: ${slave.cfg.use}\r\n`);
+      if (slave.cfg.use === true) {
+        client.write(`    comm fault - ${core.getChannel(slave.cfg.commFault).engValue}\r\n`);
+        slave.channels.forEach((c, cndx) => {
+          client.write(`    ch-${cndx} stat: ${c.stat} value: ${c.value}\r\n`);
+        });
+      }
+    });
   },
 };
 
