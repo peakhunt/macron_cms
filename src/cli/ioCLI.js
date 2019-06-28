@@ -9,7 +9,6 @@ function printZBMaster(client, zbmaster, ndx) {
   client.write(`dataBit \t - ${zbmaster.cfg.transport.serial.dataBit}\r\n`);
   client.write(`stopBit \t - ${zbmaster.cfg.transport.serial.stopBit}\r\n`);
   client.write(`parity  \t - ${zbmaster.cfg.transport.serial.parity}\r\n`);
-  client.write(`timeout \t - ${zbmaster.cfg.poll.timeout}\r\n`);
 
   client.write('\r\n');
   zbmaster.boards.forEach((board) => {
