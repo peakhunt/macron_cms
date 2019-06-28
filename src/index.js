@@ -1,5 +1,8 @@
 const config = require('./core/config');
 const logger = require('./logger');
+
+logger.setLevel(config.data.project.logger.level);
+
 const core = require('./core');
 const io = require('./io');
 const cms = require('./cms');

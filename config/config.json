@@ -13,6 +13,9 @@
     "cli": {
       "port": 10123
     },
+    "logger": {
+      "level": "error"
+    },
     "web": {
       "port": 3000,
       "alarms": {
@@ -30,21 +33,19 @@
           "type": "zbSerialMaster",
           "transport": {
             "serial": {
-              "port": "/dev/tty.usbserial",
+              "port": "/dev/tty.wchusbserial1420",
               "baud": 38400,
               "dataBit": 8,
               "stopBit": "1",
               "parity": "none"
             }
           },
-          "poll": {
-            "timeout": 250
-          },
           "boards": [
             {
               "type": "zbana",
               "address": 8,
               "commFault": 1,
+              "timeout": 500,
               "ports": [
                 {
                   "use": true,
@@ -112,6 +113,7 @@
               "type": "zbhart",
               "address": 9,
               "commFault": 2,
+              "timeout": 500,
               "ports": [
                 {
                   "use": true,
@@ -179,6 +181,7 @@
               "type": "zb485",
               "address": 10,
               "commFault": 3,
+              "timeout": 500,
               "ports": [
                 {
                   "use": true,
@@ -383,7 +386,7 @@
           "type": "modbusRTUMaster",
           "transport": {
             "serial": {
-              "port": "/dev/tty.wchusbserial1420",
+              "port": "/dev/tty.wchusbserial1430",
               "baud": 38400,
               "dataBit": 8,
               "stopBit": "1",
