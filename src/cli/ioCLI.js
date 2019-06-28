@@ -12,7 +12,7 @@ function printZBMaster(client, zbmaster, ndx) {
 
   client.write('\r\n');
   zbmaster.boards.forEach((board) => {
-    client.write(`board type - ${board.cfg.type},\taddress ${board.cfg.address}\r\n`);
+    client.write(`board type - ${board.cfg.type},\taddress ${board.cfg.address},\ttimeout ${board.cfg.timeout}\r\n`);
   });
 }
 
