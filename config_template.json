@@ -10,34 +10,101 @@
     "configurator": {
       "version": "0.1"
     },
+    "cli": {
+      "port": 10123
+    },
+    "logger": {
+      "level": "error"
+    },
+    "web": {
+      "port": 3000,
+      "alarms": {
+        "poll": 500,
+        "numPerPoll": 256
+      },
+      "channels": {
+        "poll": 500,
+        "numPerPoll": 256
+      }
+    },
     "io": {
       "serial": [
         {
           "type": "zbSerialMaster",
           "transport": {
             "serial": {
-              "port": "/dev/ttyUSB0",
+              "port": "/dev/tty.wchusbserial1420",
               "baud": 38400,
               "dataBit": 8,
               "stopBit": "1",
               "parity": "none"
             }
           },
-          "poll": {
-            "timeout": 1000
-          },
           "boards": [
             {
               "type": "zbana",
               "address": 8,
               "commFault": 1,
+              "timeout": 500,
               "ports": [
                 {
+                  "use": true,
                   "channel": 1000,
                   "sensorType": "pressure"
                 },
                 {
+                  "use": true,
                   "channel": 1001,
+                  "sensorType": "pressure"
+                },
+                {
+                  "use": false,
+                  "channel": 0,
+                  "sensorType": "pressure"
+                },
+                {
+                  "use": false,
+                  "channel": 0,
+                  "sensorType": "pressure"
+                },
+                {
+                  "use": false,
+                  "channel": 0,
+                  "sensorType": "pressure"
+                },
+                {
+                  "use": false,
+                  "channel": 0,
+                  "sensorType": "pressure"
+                },
+                {
+                  "use": false,
+                  "channel": 0,
+                  "sensorType": "pressure"
+                },
+                {
+                  "use": false,
+                  "channel": 0,
+                  "sensorType": "pressure"
+                },
+                {
+                  "use": false,
+                  "channel": 0,
+                  "sensorType": "pressure"
+                },
+                {
+                  "use": false,
+                  "channel": 0,
+                  "sensorType": "pressure"
+                },
+                {
+                  "use": false,
+                  "channel": 0,
+                  "sensorType": "pressure"
+                },
+                {
+                  "use": false,
+                  "channel": 0,
                   "sensorType": "pressure"
                 }
               ]
@@ -46,21 +113,509 @@
               "type": "zbhart",
               "address": 9,
               "commFault": 2,
+              "timeout": 500,
               "ports": [
                 {
+                  "use": true,
                   "channel": 2000,
                   "sensorType": "vegaXXX"
                 },
                 {
+                  "use": true,
                   "channel": 2001,
                   "sensorType": "vegaXXX"
+                },
+                {
+                  "use": false,
+                  "channel": 0,
+                  "sensorType": "vegaXXX"
+                },
+                {
+                  "use": false,
+                  "channel": 0,
+                  "sensorType": "vegaXXX"
+                },
+                {
+                  "use": false,
+                  "channel": 0,
+                  "sensorType": "vegaXXX"
+                },
+                {
+                  "use": false,
+                  "channel": 0,
+                  "sensorType": "vegaXXX"
+                },
+                {
+                  "use": false,
+                  "channel": 0,
+                  "sensorType": "vegaXXX"
+                },
+                {
+                  "use": false,
+                  "channel": 0,
+                  "sensorType": "vegaXXX"
+                },
+                {
+                  "use": false,
+                  "channel": 0,
+                  "sensorType": "vegaXXX"
+                },
+                {
+                  "use": false,
+                  "channel": 0,
+                  "sensorType": "vegaXXX"
+                },
+                {
+                  "use": false,
+                  "channel": 0,
+                  "sensorType": "vegaXXX"
+                },
+                {
+                  "use": false,
+                  "channel": 0,
+                  "sensorType": "vegaXXX"
+                }
+              ]
+            },
+            {
+              "type": "zb485",
+              "address": 10,
+              "commFault": 3,
+              "timeout": 500,
+              "ports": [
+                {
+                  "use": true,
+                  "type": "ansgcnv",
+                  "commFault": 4,
+                  "channels": [
+                    {
+                      "use": true,
+                      "channel": 20000
+                    },
+                    {
+                      "use": true,
+                      "channel": 20001
+                    },
+                    {
+                      "use": true,
+                      "channel": 20002
+                    },
+                    {
+                      "use": true,
+                      "channel": 20003
+                    },
+                    {
+                      "use": true,
+                      "channel": 20004
+                    },
+                    {
+                      "use": false,
+                      "channel": 0
+                    },
+                    {
+                      "use": false,
+                      "channel": 0
+                    },
+                    {
+                      "use": false,
+                      "channel": 0
+                    },
+                    {
+                      "use": false,
+                      "channel": 0
+                    },
+                    {
+                      "use": false,
+                      "channel": 0
+                    },
+                    {
+                      "use": false,
+                      "channel": 0
+                    },
+                    {
+                      "use": false,
+                      "channel": 0
+                    },
+                    {
+                      "use": false,
+                      "channel": 0
+                    },
+                    {
+                      "use": false,
+                      "channel": 0
+                    }
+                  ]
+                },
+                {
+                  "use": false,
+                  "type": "ansgcnv",
+                  "commFault": 0,
+                  "channels": []
+                },
+                {
+                  "use": false,
+                  "type": "ansgcnv",
+                  "commFault": 0,
+                  "channels": []
+                },
+                {
+                  "use": false,
+                  "type": "ansgcnv",
+                  "commFault": 0,
+                  "channels": []
+                },
+                {
+                  "use": false,
+                  "type": "ansgcnv",
+                  "commFault": 0,
+                  "channels": []
+                },
+                {
+                  "use": false,
+                  "type": "ansgcnv",
+                  "commFault": 0,
+                  "channels": []
+                },
+                {
+                  "use": false,
+                  "type": "ansgcnv",
+                  "commFault": 0,
+                  "channels": []
+                },
+                {
+                  "use": false,
+                  "type": "ansgcnv",
+                  "commFault": 0,
+                  "channels": []
                 }
               ]
             }
           ]
+        },
+        {
+          "type": "modbusRTUSlave",
+          "address": 15,
+          "transport": {
+            "serial": {
+              "port": "/dev/tty.wchusbserial1410",
+              "baud": 38400,
+              "dataBit": 8,
+              "stopBit": "1",
+              "parity": "none",
+              "rxTimeout": 100
+            }
+          },
+          "registers": {
+            "discretes": {
+              "1": {
+                "name": "ZBANA Address-8 Comm Fault",
+                "channel": 1,
+                "value": "value"
+              },
+              "2": {
+                "name": "ZBHART Address-9 Comm Fault",
+                "channel": 2,
+                "value": "value"
+              },
+              "10000": {
+                "name": "tank-XXX ullage ref channel status",
+                "channel": 10000,
+                "value": "status"
+              },
+              "10001": {
+                "name": "tank-XXX level at ref channel status",
+                "channel": 10001,
+                "value": "status"
+              },
+              "10002": {
+                "name": "tank-XXX ullage at FC channel status",
+                "channel": 10002,
+                "value": "status"
+              },
+              "10003": {
+                "name": "tank-XXX level at FC channel status",
+                "channel": 10003,
+                "value": "status"
+              }
+            },
+            "coils": {
+            },
+            "inputs": {
+              "10000": {
+                "name": "tank-XXX ullage ref channel",
+                "channel": 10000,
+                "value": "value",
+                "conv": {
+                  "a": 1.0,
+                  "b": 0.0
+                }
+              },
+              "10001": {
+                "name": "tank-XXX level at ref channel",
+                "channel": 10001,
+                "value": "value",
+                "conv": {
+                  "a": 1.0,
+                  "b": 0.0
+                }
+              },
+              "10002": {
+                "name": "tank-XXX ullage at FC channel",
+                "channel": 10002,
+                "value": "value",
+                "conv": {
+                  "a": 1.0,
+                  "b": 0.0
+                }
+              },
+              "10003": {
+                "name": "tank-XXX level at FC channel",
+                "channel": 10003,
+                "value": "value",
+                "conv": {
+                  "a": 1.0,
+                  "b": 0.0
+                }
+              }
+            },
+            "holdings": {
+            }
+          }
+        },
+        {
+          "type": "modbusRTUMaster",
+          "transport": {
+            "serial": {
+              "port": "/dev/tty.wchusbserial1430",
+              "baud": 38400,
+              "dataBit": 8,
+              "stopBit": "1",
+              "parity": "none"
+            }
+          },
+          "timeout": 2000,
+          "delay": 50,
+          "slaves": {
+            "8": {
+              "registers": {
+                "discretes": {},
+                "coils": {},
+                "inputs": {
+                  "1000": { "name": "PORT-01 4-20mA Input", "channel": 30000, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1001": { "name": "PORT-02 4-20mA Input", "channel": 30001, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1002": { "name": "PORT-03 4-20mA Input", "channel": 30002, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1003": { "name": "PORT-04 4-20mA Input", "channel": 30003, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1004": { "name": "PORT-05 4-20mA Input", "channel": 30004, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1005": { "name": "PORT-06 4-20mA Input", "channel": 30005, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1006": { "name": "PORT-07 4-20mA Input", "channel": 30006, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1007": { "name": "PORT-08 4-20mA Input", "channel": 30007, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1008": { "name": "PORT-09 4-20mA Input", "channel": 30008, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1009": { "name": "PORT-10 4-20mA Input", "channel": 30009, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1010": { "name": "PORT-11 4-20mA Input", "channel": 30010, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1011": { "name": "PORT-12 4-20mA Input", "channel": 30011, "conv": { "a": 1.0, "b": 0.0 } }
+                },
+                "holdings": {}
+              }
+            },
+            "9": {
+              "registers": {
+                "coils": {},
+                "discretes": {
+                  "1000": { "name": "PORT-01 Status", "channel": 30100 },
+                  "1001": { "name": "PORT-02 Status", "channel": 30101 },
+                  "1002": { "name": "PORT-03 Status", "channel": 30102 },
+                  "1003": { "name": "PORT-04 Status", "channel": 30103 },
+                  "1004": { "name": "PORT-05 Status", "channel": 30104 },
+                  "1005": { "name": "PORT-06 Status", "channel": 30105 },
+                  "1006": { "name": "PORT-07 Status", "channel": 30106 },
+                  "1007": { "name": "PORT-08 Status", "channel": 30107 },
+                  "1008": { "name": "PORT-09 Status", "channel": 30108 },
+                  "1009": { "name": "PORT-10 Status", "channel": 30109 },
+                  "1010": { "name": "PORT-11 Status", "channel": 30110 },
+                  "1011": { "name": "PORT-12 Status", "channel": 30111 }
+                },
+                "inputs": {
+                  "1000": { "name": "PORT-1 distance", "channel": 30200, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1001": { "name": "PORT-1 level", "channel": 30201, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1002": { "name": "PORT-1 4-20mA current feedback", "channel": 30202, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1003": { "name": "PORT-2 distance", "channel": 30203, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1004": { "name": "PORT-2 level", "channel": 30204, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1005": { "name": "PORT-2 4-20mA current feedback", "channel": 30205, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1006": { "name": "PORT-3 distance", "channel": 30206, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1007": { "name": "PORT-3 level", "channel": 30207, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1008": { "name": "PORT-3 4-20mA current feedback", "channel": 30208, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1009": { "name": "PORT-4 distance", "channel": 30209, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1010": { "name": "PORT-4 level", "channel": 30210, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1011": { "name": "PORT-4 4-20mA current feedback", "channel": 30211, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1012": { "name": "PORT-5 distance", "channel": 30212, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1013": { "name": "PORT-5 level", "channel": 30213, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1014": { "name": "PORT-5 4-20mA current feedback", "channel": 30214, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1015": { "name": "PORT-6 distance", "channel": 30215, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1016": { "name": "PORT-6 level", "channel": 30216, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1017": { "name": "PORT-6 4-20mA current feedback", "channel": 30217, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1018": { "name": "PORT-7 distance", "channel": 30218, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1019": { "name": "PORT-7 level", "channel": 30219, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1020": { "name": "PORT-7 4-20mA current feedback", "channel": 30220, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1021": { "name": "PORT-8 distance", "channel": 30221, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1022": { "name": "PORT-8 level", "channel": 30222, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1023": { "name": "PORT-8 4-20mA current feedback", "channel": 30223, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1024": { "name": "PORT-9 distance", "channel": 30224, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1025": { "name": "PORT-9 level", "channel": 30225, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1026": { "name": "PORT-9 4-20mA current feedback", "channel": 30226, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1027": { "name": "PORT-10 distance", "channel": 30227, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1028": { "name": "PORT-10 level", "channel": 30228, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1029": { "name": "PORT-10 4-20mA current feedback", "channel": 30229, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1030": { "name": "PORT-11 distance", "channel": 30230, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1031": { "name": "PORT-11 level", "channel": 30231, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1032": { "name": "PORT-11 4-20mA current feedback", "channel": 30232, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1033": { "name": "PORT-12 distance", "channel": 30233, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1034": { "name": "PORT-12 level", "channel": 30234, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1035": { "name": "PORT-12 4-20mA current feedback", "channel": 30235, "conv": { "a": 1.0, "b": 0.0 } }
+                },
+                "holdings": {}
+              }
+            }
+          },
+          "schedules": [
+            { "slave": 8, "func": "read", "register": "inputs", "addr": 1000, "numRegs": 12 },
+            { "slave": 9, "func": "read", "register": "discretes", "addr": 1000, "numRegs": 12 },
+            { "slave": 9, "func": "read", "register": "inputs", "addr": 1000, "numRegs": 36 }
+          ]
         }
       ],
       "net": [
+        {
+          "type": "modbusTCPSlave",
+          "address": 16,
+          "transport": {
+            "net": {
+              "host": "0.0.0.0",
+              "port": 9999
+            }
+          },
+          "registers": {
+            "discretes": {
+              "1": { "name": "ZBANA Address-8 Comm Fault", "channel": 1, "value": "value" },
+              "2": { "name": "ZBHART Address-9 Comm Fault", "channel": 2, "value": "value" },
+              "10000": { "name": "tank-XXX ullage ref channel status", "channel": 10000, "value": "status" },
+              "10001": { "name": "tank-XXX level at ref channel status", "channel": 10001, "value": "status" },
+              "10002": { "name": "tank-XXX ullage at FC channel status", "channel": 10002, "value": "status" },
+              "10003": { "name": "tank-XXX level at FC channel status", "channel": 10003, "value": "status" }
+            },
+            "coils": {
+            },
+            "inputs": {
+              "10000": { "name": "tank-XXX ullage ref channel", "channel": 10000, "value": "value", "conv": { "a": 1.0, "b": 0.0 } },
+              "10001": { "name": "tank-XXX level at ref channel", "channel": 10001, "value": "value", "conv": { "a": 1.0, "b": 0.0 } },
+              "10002": { "name": "tank-XXX ullage at FC channel", "channel": 10002, "value": "value", "conv": { "a": 1.0, "b": 0.0 } },
+              "10003": { "name": "tank-XXX level at FC channel", "channel": 10003, "value": "value", "conv": { "a": 1.0, "b": 0.0 } }
+            },
+            "holdings": {
+            }
+          }
+        },
+        {
+          "type": "modbusTCPMaster",
+          "target": {
+            "host": "192.168.227.211",
+            "port": 10123
+          },
+          "delay": 50,
+          "reconnectTmr": 500,
+          "timeout": 2000,
+          "slaves": {
+            "8": {
+              "registers": {
+                "discretes": {},
+                "coils": {
+                  "2000": { "name": "test coil", "channel": 39000 }
+                },
+                "inputs": {
+                  "1000": { "name": "PORT-01 4-20mA Input", "channel": 30000, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1001": { "name": "PORT-02 4-20mA Input", "channel": 30001, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1002": { "name": "PORT-03 4-20mA Input", "channel": 30002, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1003": { "name": "PORT-04 4-20mA Input", "channel": 30003, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1004": { "name": "PORT-05 4-20mA Input", "channel": 30004, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1005": { "name": "PORT-06 4-20mA Input", "channel": 30005, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1006": { "name": "PORT-07 4-20mA Input", "channel": 30006, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1007": { "name": "PORT-08 4-20mA Input", "channel": 30007, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1008": { "name": "PORT-09 4-20mA Input", "channel": 30008, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1009": { "name": "PORT-10 4-20mA Input", "channel": 30009, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1010": { "name": "PORT-11 4-20mA Input", "channel": 30010, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1011": { "name": "PORT-12 4-20mA Input", "channel": 30011, "conv": { "a": 1.0, "b": 0.0 } }
+                },
+                "holdings": {
+                  "2000": { "name": "test holding", "channel": 38000, "conv": { "a": 1.0, "b": 0.0 } }
+                }
+              }
+            },
+            "9": {
+              "registers": {
+                "coils": {},
+                "discretes": {
+                  "1000": { "name": "PORT-01 Status", "channel": 30100 },
+                  "1001": { "name": "PORT-02 Status", "channel": 30101 },
+                  "1002": { "name": "PORT-03 Status", "channel": 30102 },
+                  "1003": { "name": "PORT-04 Status", "channel": 30103 },
+                  "1004": { "name": "PORT-05 Status", "channel": 30104 },
+                  "1005": { "name": "PORT-06 Status", "channel": 30105 },
+                  "1006": { "name": "PORT-07 Status", "channel": 30106 },
+                  "1007": { "name": "PORT-08 Status", "channel": 30107 },
+                  "1008": { "name": "PORT-09 Status", "channel": 30108 },
+                  "1009": { "name": "PORT-10 Status", "channel": 30109 },
+                  "1010": { "name": "PORT-11 Status", "channel": 30110 },
+                  "1011": { "name": "PORT-12 Status", "channel": 30111 }
+                },
+                "inputs": {
+                  "1000": { "name": "PORT-1 distance", "channel": 30200, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1001": { "name": "PORT-1 level", "channel": 30201, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1002": { "name": "PORT-1 4-20mA current feedback", "channel": 30202, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1003": { "name": "PORT-2 distance", "channel": 30203, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1004": { "name": "PORT-2 level", "channel": 30204, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1005": { "name": "PORT-2 4-20mA current feedback", "channel": 30205, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1006": { "name": "PORT-3 distance", "channel": 30206, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1007": { "name": "PORT-3 level", "channel": 30207, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1008": { "name": "PORT-3 4-20mA current feedback", "channel": 30208, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1009": { "name": "PORT-4 distance", "channel": 30209, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1010": { "name": "PORT-4 level", "channel": 30210, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1011": { "name": "PORT-4 4-20mA current feedback", "channel": 30211, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1012": { "name": "PORT-5 distance", "channel": 30212, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1013": { "name": "PORT-5 level", "channel": 30213, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1014": { "name": "PORT-5 4-20mA current feedback", "channel": 30214, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1015": { "name": "PORT-6 distance", "channel": 30215, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1016": { "name": "PORT-6 level", "channel": 30216, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1017": { "name": "PORT-6 4-20mA current feedback", "channel": 30217, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1018": { "name": "PORT-7 distance", "channel": 30218, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1019": { "name": "PORT-7 level", "channel": 30219, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1020": { "name": "PORT-7 4-20mA current feedback", "channel": 30220, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1021": { "name": "PORT-8 distance", "channel": 30221, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1022": { "name": "PORT-8 level", "channel": 30222, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1023": { "name": "PORT-8 4-20mA current feedback", "channel": 30223, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1024": { "name": "PORT-9 distance", "channel": 30224, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1025": { "name": "PORT-9 level", "channel": 30225, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1026": { "name": "PORT-9 4-20mA current feedback", "channel": 30226, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1027": { "name": "PORT-10 distance", "channel": 30227, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1028": { "name": "PORT-10 level", "channel": 30228, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1029": { "name": "PORT-10 4-20mA current feedback", "channel": 30229, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1030": { "name": "PORT-11 distance", "channel": 30230, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1031": { "name": "PORT-11 level", "channel": 30231, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1032": { "name": "PORT-11 4-20mA current feedback", "channel": 30232, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1033": { "name": "PORT-12 distance", "channel": 30233, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1034": { "name": "PORT-12 level", "channel": 30234, "conv": { "a": 1.0, "b": 0.0 } },
+                  "1035": { "name": "PORT-12 4-20mA current feedback", "channel": 30235, "conv": { "a": 1.0, "b": 0.0 } }
+                },
+                "holdings": {}
+              }
+            }
+          },
+          "schedules": [
+            { "slave": 8, "func": "read", "register": "inputs", "addr": 1000, "numRegs": 12 },
+            { "slave": 9, "func": "read", "register": "discretes", "addr": 1000, "numRegs": 12 },
+            { "slave": 9, "func": "read", "register": "inputs", "addr": 1000, "numRegs": 36 },
+            { "slave": 8, "func": "write", "register": "holdings", "addr": 2000, "numRegs": 1 },
+            { "slave": 8, "func": "write", "register": "coils", "addr": 2000, "numRegs": 1 }
+          ]
+        }
       ]
     },
     "tanks": [
@@ -69,23 +624,19 @@
         "level": {
           "ullageAtRef": {
             "channel": 10000,
-            "hiAlarm": 10000,
-            "loAlarm": 10001
+            "alarms": [ 10000, 10001 ]
           },
           "levelAtRef": {
             "channel": 10001,
-            "hiAlarm": 10002,
-            "loAlarm": 10003
+            "alarms": [ 10002, 10003 ]
           },
           "ullageAtFC": {
             "channel": 10002,
-            "hiAlarm": 10004,
-            "loAlarm": 10005
+            "alarms": [ 10004, 10005 ]
           },
           "levelAtFC": {
             "channel": 10003,
-            "hiAlarm": 10006,
-            "loAlarm": 10007
+            "alarms": [ 10006, 10007 ]
           },
           "tankLevelCfg": {
             "DVUllRefToUTI": 0,
@@ -93,8 +644,8 @@
           },
           "radars": [
             {
-              "channel": 10004,
-              "sensorAlarm": 1234,
+              "channel": 2000,
+              "sensorAlarm": 2000,
               "cfg": {
                 "cDLR": 0,
                 "cDTR": 0,
@@ -120,68 +671,647 @@
         "dir": "in",
         "type": "digital"
       },
+      "3": {
+        "name": "ZB485 Address-10 Comm Fault",
+        "dir": "in",
+        "type": "digital"
+      },
+      "4": {
+        "name": "ZB485 Address-10 Port-1 Comm Fault",
+        "dir": "in",
+        "type": "digital"
+      },
       "1000": {
         "name": "ZBANA Address-8 Port-1 Pressure Input",
         "dir": "in",
         "type": "analog",
-        "gain": 1.0,
-        "offset": 0.0
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
       },
       "1001": {
         "name": "ZBANA Address-8 Port-2 Pressure Input",
         "dir": "in",
         "type": "analog",
-        "gain": 1.0,
-        "offset": 0.0
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
       },
       "2000": {
         "name": "ZBHART Address-9 Port-1 Level Input",
         "dir": "in",
         "type": "analog",
-        "gain": 1.0,
-        "offset": 0.0
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
       },
       "2001": {
         "name": "ZBHART Address-9 Port-2 Level Input",
         "dir": "in",
         "type": "analog",
-        "gain": 1.0,
-        "offset": 0.0
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
       },
       "10000": {
         "name": "tank-XXX ullage ref channel",
         "dir": "out",
         "type": "analog",
-        "gain": 1.0,
-        "offset": 0.0
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
       },
       "10001": {
         "name": "tank-XXX level at ref channel",
         "dir": "out",
         "type": "analog",
-        "gain": 1.0,
-        "offset": 0.0
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
       },
       "10002": {
         "name": "tank-XXX ullage at FC channel",
         "dir": "out",
         "type": "analog",
-        "gain": 1.0,
-        "offset": 0.0
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
       },
       "10003": {
         "name": "tank-XXX level at FC channel",
         "dir": "out",
         "type": "analog",
-        "gain": 1.0,
-        "offset": 0.0
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
       },
       "10004": {
         "name": "tank-XXX radar input 0",
         "dir": "in",
         "type": "analog",
-        "gain": 1.0,
-        "offset": 0.0
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30000": {
+        "name": "Test 4-20mA Input 1",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30001": {
+        "name": "Test 4-20mA Input 2",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30002": {
+        "name": "Test 4-20mA Input 3",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30003": {
+        "name": "Test 4-20mA Input 4",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30004": {
+        "name": "Test 4-20mA Input 5",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30005": {
+        "name": "Test 4-20mA Input 6",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30006": {
+        "name": "Test 4-20mA Input 7",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30007": {
+        "name": "Test 4-20mA Input 8",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30008": {
+        "name": "Test 4-20mA Input 9",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30009": {
+        "name": "Test 4-20mA Input 10",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30010": {
+        "name": "Test 4-20mA Input 11",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30011": {
+        "name": "Test 4-20mA Input 12",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30100": {
+        "name": "Radar-1 Comm Status",
+        "dir": "in",
+        "type": "digital"
+      },
+      "30101": {
+        "name": "Radar-2 Comm Status",
+        "dir": "in",
+        "type": "digital"
+      },
+      "30102": {
+        "name": "Radar-3 Comm Status",
+        "dir": "in",
+        "type": "digital"
+      },
+      "30103": {
+        "name": "Radar-4 Comm Status",
+        "dir": "in",
+        "type": "digital"
+      },
+      "30104": {
+        "name": "Radar-5 Comm Status",
+        "dir": "in",
+        "type": "digital"
+      },
+      "30105": {
+        "name": "Radar-6 Comm Status",
+        "dir": "in",
+        "type": "digital"
+      },
+      "30106": {
+        "name": "Radar-7 Comm Status",
+        "dir": "in",
+        "type": "digital"
+      },
+      "30107": {
+        "name": "Radar-8 Comm Status",
+        "dir": "in",
+        "type": "digital"
+      },
+      "30108": {
+        "name": "Radar-9 Comm Status",
+        "dir": "in",
+        "type": "digital"
+      },
+      "30109": {
+        "name": "Radar-10 Comm Status",
+        "dir": "in",
+        "type": "digital"
+      },
+      "30110": {
+        "name": "Radar-11 Comm Status",
+        "dir": "in",
+        "type": "digital"
+      },
+      "30111": {
+        "name": "Radar-12 Comm Status",
+        "dir": "in",
+        "type": "digital"
+      },
+      "30200": {
+        "name": "Radar-1 distance",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30201": {
+        "name": "Radar-1 level",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30202": {
+        "name": "Radar-1 4-20mA current feedback",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30203": {
+        "name": "Radar-2 distance",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30204": {
+        "name": "Radar-2 level",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30205": {
+        "name": "Radar-2 4-20mA current feedback",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30206": {
+        "name": "Radar-3 distance",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30207": {
+        "name": "Radar-3 level",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30208": {
+        "name": "Radar-3 4-20mA current feedback",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30209": {
+        "name": "Radar-4 distance",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30210": {
+        "name": "Radar-4 level",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30211": {
+        "name": "Radar-4 4-20mA current feedback",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30212": {
+        "name": "Radar-5 distance",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30213": {
+        "name": "Radar-5 level",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30214": {
+        "name": "Radar-5 4-20mA current feedback",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30215": {
+        "name": "Radar-6 distance",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30216": {
+        "name": "Radar-6 level",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30217": {
+        "name": "Radar-6 4-20mA current feedback",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30218": {
+        "name": "Radar-7 distance",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30219": {
+        "name": "Radar-7 level",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30220": {
+        "name": "Radar-7 4-20mA current feedback",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30221": {
+        "name": "Radar-8 distance",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30222": {
+        "name": "Radar-8 level",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30223": {
+        "name": "Radar-8 4-20mA current feedback",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30224": {
+        "name": "Radar-9 distance",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30225": {
+        "name": "Radar-9 level",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30226": {
+        "name": "Radar-9 4-20mA current feedback",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30227": {
+        "name": "Radar-10 distance",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30228": {
+        "name": "Radar-10 level",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30229": {
+        "name": "Radar-10 4-20mA current feedback",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30230": {
+        "name": "Radar-11 distance",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30231": {
+        "name": "Radar-11 level",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30232": {
+        "name": "Radar-11 4-20mA current feedback",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30233": {
+        "name": "Radar-12 distance",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30234": {
+        "name": "Radar-12 level",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "30235": {
+        "name": "Radar-12 4-20mA current feedback",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "38000": {
+        "name": "test holding channel",
+        "dir": "out",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "39000": {
+        "name": "test coil channel",
+        "dir": "out",
+        "type": "digital"
+      },
+      "20000": {
+        "name": "temperature input 1",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "20001": {
+        "name": "temperature input 2",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "20002": {
+        "name": "temperature input 3",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "20003": {
+        "name": "temperature input 4",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "20004": {
+        "name": "temperature input 5",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
       }
     },
     "alarms": {
@@ -209,7 +1339,7 @@
       },
       "10001": {
         "type": "low",
-        "severity": "major",
+        "severity": "minor",
         "name": "tank-XXX ullage at ref low alarm",
         "set": 0.5,
         "delay": 0,
@@ -241,7 +1371,7 @@
       },
       "10005": {
         "type": "low",
-        "severity": "major",
+        "severity": "critical",
         "name": "tank-XXX ullage at FC low alarm",
         "set": 0.5,
         "delay": 0,
@@ -262,6 +1392,14 @@
         "set": 0.5,
         "delay": 0,
         "channel": 10003
+      },
+      "2000": {
+        "severity": "minor",
+        "type": "sensorFault", 
+        "name": "Radar 1 sensor fault",
+        "set": true,
+        "delay": 0,
+        "channel": 2000
       }
     }
   }
