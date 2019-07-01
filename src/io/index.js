@@ -64,4 +64,6 @@ module.exports = {
   zbMasters: zbmasterList,
   mbRTUSlaves: modbusRTUSlaveList,
   mbTCPSlaves: modbusTCPSlaveList,
+  mbTCPMasters: modbusTCPMasterList,
+  mbRTUMasters: modbusRTUMasterList,
 };

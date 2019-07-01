@@ -1,11 +1,12 @@
 const io = require('../io');
 
-function cmdHandlerMBRTUSlave(client) {
+function cmdHandlerMBSlave(client) {
   const rtuSlaves = io.mbRTUSlaves;
 
   rtuSlaves.forEach((rs) => {
     client.write('=======================================\r\n');
     client.write(`port ${rs.cfg.transport.serial.port}\r\n`);
+    client.write(`unitID ${rs.cfg.address}\r\n`);
     client.write(`numReq ${rs.modbus.numReq}\r\n`);
     client.write(`numRxTimeout ${rs.modbus.numRxTimeout}\r\n`);
     client.write(`numShortFrame ${rs.modbus.numShortFrame}\r\n`);
@@ -14,9 +15,7 @@ function cmdHandlerMBRTUSlave(client) {
     client.write(`numIllegalFunc ${rs.modbus.numIllegalFunc}\r\n`);
   });
   client.write('\r\n');
-}
 
-function cmdHandlerMBTCPSlave(client) {
   const tcpSlaves = io.mbTCPSlaves;
 
   tcpSlaves.forEach((ts) => {
@@ -31,14 +30,35 @@ function cmdHandlerMBTCPSlave(client) {
   client.write('\r\n');
 }
 
+function cmdHandlerMBMaster(client) {
+  const rtuMasters = io.mbRTUMasters;
+
+  rtuMasters.forEach((rm) => {
+    client.write('=======================================\r\n');
+    client.write(`port ${rm.cfg.transport.serial.port}\r\n`);
+  });
+  client.write('\r\n');
+
+  const tcpMasters = io.mbTCPMasters;
+
+  tcpMasters.forEach((tm) => {
+    client.write('=======================================\r\n');
+    client.write(`target ${tm.cfg.target.host}:${tm.cfg.target.port}\r\n`);
+    client.write(`delay ${tm.cfg.delay}\r\n`);
+    client.write(`reconnect timer ${tm.cfg.reconnectTmr}\r\n`);
+    client.write(`timeout ${tm.cfg.timeout}\r\n`);
+  });
+  client.write('\r\n');
+}
+
 const _commands = {
-  mbrtuslaves: {
-    desc: 'show modbus RTU slave stats',
-    handler: cmdHandlerMBRTUSlave,
+  mbslaves: {
+    desc: 'show modbus slave stats',
+    handler: cmdHandlerMBSlave,
   },
-  mbtcpslaves: {
-    desc: 'show modbus TCP slave stats',
-    handler: cmdHandlerMBTCPSlave,
+  mbmasters: {
+    desc: 'show modbus master stats',
+    handler: cmdHandlerMBMaster,
   },
 };
 
