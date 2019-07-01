@@ -9,11 +9,26 @@ const ZB485StateEnum = {
   ExecuteANSGCNV: 4,
 };
 
+const ZB485StateEnumStr = {
+  0: 'Init',
+  1: 'SensorTypeSetup',
+  2: 'PowerSetup',
+  3: 'ReadCommStatus',
+  4: 'ExecuteANSGCNV',
+};
+
 const ANSGCNVStateEnum = {
   Init: 0,
   ChannelSetup: 1,
   ChannelSetupCommit: 2,
   ReadStatusInput: 3,
+};
+
+const ANSGCNVStateEnumStr = {
+  0: 'Init',
+  1: 'ChannelSetup',
+  2: 'ChannelSetupCommit',
+  3: 'ReadStatusInput',
 };
 
 function ZB485(master, cfg) {
@@ -309,11 +324,13 @@ ZB485.prototype = {
     const board = this;
 
     client.write(`type        - ${board.cfg.type}\r\n`);
+    client.write(`state       - ${ZB485StateEnumStr[board.state]}\r\n`);
     client.write(`comm fault  - ${core.getChannel(board.cfg.commFault).engValue}\r\n`);
     board.slaves.forEach((slave, ndx) => {
       client.write(`port-${ndx + 1} use: ${slave.cfg.use}\r\n`);
       if (slave.cfg.use === true) {
         client.write(`    comm fault - ${core.getChannel(slave.cfg.commFault).engValue}\r\n`);
+        client.write(`    state      - ${ANSGCNVStateEnumStr[slave.state]}\r\n`);
         slave.channels.forEach((c, cndx) => {
           client.write(`    ch-${cndx} stat: ${c.stat} value: ${c.value}\r\n`);
         });
