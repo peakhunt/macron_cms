@@ -5,38 +5,7 @@
   </v-card-title>
   <v-card-text>
     <v-container fluid grid-list-lg>
-      <v-layout row wrap>
-        <v-flex xs6>
-          <v-text-field
-           readonly
-           label="Port"
-           v-model="io.cfg.transport.serial.port"/>
-        </v-flex>
-        <v-flex xs6>
-          <v-text-field
-           readonly
-           label="Baud Rate"
-           v-model="io.cfg.transport.serial.baud"/>
-        </v-flex>
-        <v-flex xs6>
-          <v-text-field
-           readonly
-           label="Data Bit"
-           v-model="io.cfg.transport.serial.dataBit"/>
-        </v-flex>
-        <v-flex xs6>
-          <v-text-field
-           readonly
-           label="Stop Bit"
-           v-model="io.cfg.transport.serial.stopBit"/>
-        </v-flex>
-        <v-flex xs6>
-          <v-text-field
-           readonly
-           label="Parity"
-           v-model="io.cfg.transport.serial.parity"/>
-        </v-flex>
-      </v-layout>
+      <IOSerialCfg :serial="io.cfg.transport.serial"/>
 
       <v-layout row wrap>
         <v-flex xs12 v-for="(board, index) in io.cfg.boards" :key="index">
@@ -51,11 +20,13 @@
 
 <script>
 import IOZBSerialSlave from './IOZBSerialSlave.vue';
+import IOSerialCfg from './IOSerialCfg.vue';
 
 export default {
   name: 'IOZBSerialMaster',
   components: {
     IOZBSerialSlave,
+    IOSerialCfg,
   },
   props: {
     io: { type: Object, default: null },

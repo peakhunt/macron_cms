@@ -27,7 +27,6 @@
      label="Timeout"
      v-model="board.timeout"/>
   </v-flex>
-
 </v-layout>
 </template>
 
