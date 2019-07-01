@@ -56,6 +56,9 @@ function cmdHandlerZBIO(client, cmd) {
   }
 
   board.printIO(client);
+  client.write(`comm stats  - Requests ${board.counters.numReq}`
+               + `, Success ${board.counters.numSuccess}`
+               + `, Fail ${board.counters.numFail}`);
   client.write('\r\n');
 }
 

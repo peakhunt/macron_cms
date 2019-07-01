@@ -199,7 +199,7 @@ function executeANSGCNV(zb485, modbus, resolve, reject) {
   const slave = pickNextSlave(self);
 
   if (slave === null) {
-    process.nextTick(() => resolve());
+    process.nextTick(() => resolve({ skip: true }));
     return;
   }
 

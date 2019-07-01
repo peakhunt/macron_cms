@@ -10,10 +10,20 @@ function pollZBBoard(zbmaster) {
 
   master.modbus.setTimeout(board.cfg.timeout);
 
-  board.executeSchedule(master.modbus).then(() => {
+  board.counters.numReq += 1;
+
+  board.executeSchedule(master.modbus).then((ret) => {
+    if (ret === undefined && ret.skip === false) {
+      board.counters.numSuccess += 1;
+    } else {
+      board.counters.numReq -= 1;
+    }
+
     master.pollNdx = (master.pollNdx + 1) % master.boards.length;
     pollZBBoard(master);
   }).catch(() => {
+    board.counters.numFail += 1;
+
     master.pollNdx = (master.pollNdx + 1) % master.boards.length;
     pollZBBoard(master);
   });
@@ -23,23 +33,34 @@ function ZBMaster(cfg) {
   this.cfg = cfg;
   this.boards = [];
   this.pollNdx = 0;
+  let board = null;
 
   cfg.boards.forEach((bCfg) => {
     switch (bCfg.type) {
       case 'zbana':
-        this.boards.push(zbana.createBoard(this, bCfg));
+        board = zbana.createBoard(this, bCfg);
         break;
 
       case 'zbhart':
-        this.boards.push(zbhart.createBoard(this, bCfg));
+        board = zbhart.createBoard(this, bCfg);
         break;
 
       case 'zb485':
-        this.boards.push(zb485.createBoard(this, bCfg));
+        board = zb485.createBoard(this, bCfg);
         break;
 
       default:
+        board = null;
         break;
+    }
+
+    if (board !== null) {
+      board.counters = {
+        numReq: 0,
+        numSuccess: 0,
+        numFail: 0,
+      };
+      this.boards.push(board);
     }
   });
 
