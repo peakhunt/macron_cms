@@ -24,6 +24,11 @@ export default new Router({
       component: () => import('./views/AlarmList.vue'),
     },
     {
+      path: '/IO',
+      name: 'IO',
+      component: () => import('./views/IO.vue'),
+    },
+    {
       path: '/CurrentAlarms',
       name: 'current alarms',
       component: () => import('./views/CurrentAlarms.vue'),

@@ -34,6 +34,7 @@ const actions = {
 
       context.dispatch('channelsInit', config.project.channels);
       context.dispatch('alarmsInit', config.project.alarms);
+      context.dispatch('ioInit', config.project.io);
 
       context.commit('PROJECT_CONFIG_LOADING_SET', false);
       context.commit('PROJECT_CONFIG_LOADED_SET', true);

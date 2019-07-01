@@ -111,6 +111,10 @@ export default {
         text: 'current-alarms',
         href: '/CurrentAlarms',
       },
+      {
+        text: 'IO',
+        href: '/IO',
+      },
     ],
     ecosystem: [
       {
