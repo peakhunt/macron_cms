@@ -58,6 +58,22 @@ function setLevelFC(tank, v) {
   core.getChannel(tank.cfg.level.levelAtFC.channel).engValue = vFixed;
 }
 
+function setTankPressure(tank, v) {
+  const t = tank;
+  const vFixed = common.toFloat(v, 2);
+
+  t.pressure = vFixed;
+  core.getChannel(tank.cfg.pressure.channel).engValue = vFixed;
+}
+
+function setTankTemperature(tank, v) {
+  const t = tank;
+  const vFixed = common.toFloat(v, 2);
+
+  t.temperature = vFixed;
+  core.getChannel(tank.cfg.temperature.channel).engValue = vFixed;
+}
+
 /**
  * update tank level
  * @param {number} ullageRadar - ullage from tank
@@ -122,6 +138,109 @@ function updateRadar(radar, ullageRadar) {
   updateTankLevel(tank);
 }
 
+function updateTankPressure(tank) {
+  let validSensors = 0;
+  let sum = 0.0;
+
+  tank.pressureSensors.forEach((pSensor) => {
+    if (pSensor.sensorFault === false) {
+      validSensors += 1;
+      sum += pSensor.pressure;
+    }
+  });
+
+  if (validSensors === 0) {
+    core.getChannel(tank.cfg.pressure.channel).sensorFault = true;
+    setTankPressure(tank, 0.0);
+    return;
+  }
+
+  core.getChannel(tank.cfg.pressure.channel).sensorFault = false;
+  setTankPressure(tank, sum / validSensors);
+}
+
+function updateTankTemperature(tank) {
+  let validSensors = 0;
+  let sum = 0.0;
+
+  if (tank.cfg.temperature.algorithm === 'average') {
+    tank.tempSensors.forEach((tSensor) => {
+      if (tSensor.sensorFault === false) {
+        validSensors += 1;
+        sum += tSensor.temperature;
+      }
+    });
+
+    if (validSensors === 0) {
+      core.getChannel(tank.cfg.temperature.channel).sensorFault = true;
+      setTankTemperature(tank, 0.0);
+      return;
+    }
+
+    core.getChannel(tank.cfg.temperature.channel).sensorFault = false;
+    setTankTemperature(tank, sum / validSensors);
+  } else {
+    const level = tank.levelFC;
+    let wetSum = 0.0;
+    let drySum = 0.0;
+    let wetCnt = 0;
+    let dryCnt = 0;
+    let bottomTemp = 0.0;
+    let bottomTempOK = false;
+    let hwFailCnt = 0;
+
+    tank.tempSensors.forEach((tSensor) => {
+      if (tSensor.sensorFault === true) {
+        hwFailCnt += 1;
+        return;
+      }
+
+      if (tSensor.cfg.installedHeight < 0.5) {
+        bottomTempOK = true;
+        bottomTemp = tSensor.temperature;
+      } else if (tSensor.cfg.installedHeight < level) {
+        wetSum += tSensor.temperature;
+        wetCnt += 1;
+      } else {
+        drySum += tSensor.temperature;
+        dryCnt += 1;
+      }
+    });
+
+    if (hwFailCnt === tank.tempSensors.length) {
+      // all sensors are abd
+      core.getChannel(tank.cfg.temperature.channel).sensorFault = true;
+      setTankTemperature(tank, 0.0);
+      return;
+    }
+
+    core.getChannel(tank.cfg.temperature.channel).sensorFault = false;
+
+    let tmpTemp = 0.0;
+
+    if (level > 0.0) {
+      if (wetCnt > 0) {
+        if ((wetCnt === 1) && bottomTempOK === true) {
+          tmpTemp = (3 * wetSum + bottomTemp) / 4; // get weighted sum
+        } else {
+          tmpTemp = wetSum / wetCnt;
+        }
+      } else if (bottomTempOK) {
+        tmpTemp = bottomTemp;
+      } else if (dryCnt > 1) {
+        tmpTemp = drySum / dryCnt;
+      }
+    } else if (bottomTempOK === true) {
+      // level is almost 0 and bottom sensor is ok
+      tmpTemp = bottomTemp;
+    } else {
+      // level is almost 0 and bottom sensor is not ok
+      tmpTemp = drySum / dryCnt;
+    }
+    setTankTemperature(tank, tmpTemp);
+  }
+}
+
 /**
  * create tank randar instance and returns the array of radars
  * @param {object} tank - tank object
@@ -184,6 +303,76 @@ function getRadarStat(tank) {
   return radarStat;
 }
 
+/**
+ * create tank pressure sensor instance and returns the array of
+ * pressure sensors
+ * @param {object} tank - tank object
+ * @param {object} cfg - tank configuration
+ * @return {array} array of tank pressure instance
+ */
+function createTankPressureInstance(tank, cfg) {
+  const pressureSensors = [];
+  let pSensor;
+
+  cfg.pressure.sensors.forEach((pCfg) => {
+    pSensor = {
+      tank,
+      sensorFault: false,
+      pressure: 0.0,
+    };
+    pSensor.cfg = pCfg;
+    pressureSensors.push(pSensor);
+
+    // listen on channel value event
+    core.listenOnChannelValue(pCfg.channel, (chnl) => {
+      pSensor.pressure = chnl.engValue;
+      updateTankPressure(tank);
+    });
+
+    // listen on channel sensor event
+    core.listenOnChannelFault(pCfg.channel, (chnl) => {
+      pSensor.sensorFault = chnl.sensorFault;
+      updateTankPressure(tank);
+    });
+  });
+  return pressureSensors;
+}
+
+/**
+ * create tank temperature sensor instance and returns the array of
+ * temperature sensors
+ * @param {object} tank - tank object
+ * @param {object} cfg - tank configuration
+ * @return {array} array of tank pressure instance
+ */
+function createTankTempratureInstance(tank, cfg) {
+  const tempSensors = [];
+  let tSensor;
+
+  cfg.temperature.sensors.forEach((tCfg) => {
+    tSensor = {
+      tank,
+      sensorFault: false,
+      temperature: 0.0,
+    };
+    tSensor.cfg = tCfg;
+    tempSensors.push(tSensor);
+
+    // listen on channel value event
+    core.listenOnChannelValue(tCfg.channel, (chnl) => {
+      tSensor.temperature = chnl.engValue;
+      updateTankTemperature(tank);
+    });
+
+    // listen on channel sensor event
+    core.listenOnChannelFault(tCfg.channel, (chnl) => {
+      tSensor.sensorFault = chnl.sensorFault;
+      updateTankTemperature(tank);
+    });
+  });
+  return tempSensors;
+}
+
 function getTankStatus() {
   const tank = this;
   const stat = {
@@ -194,6 +383,8 @@ function getTankStatus() {
       levelAtRef: tank.levelAtRef,
       levelFC: tank.levelFC,
     },
+    pressure: tank.pressure,
+    temperature: tank.temperature,
   };
 
   stat.level.radarStat = getRadarStat(tank);
@@ -207,6 +398,7 @@ function getTankStatus() {
  cfg: {
   name: 'XXX',
   level: {
+    use: true,
     ullageAtRef: { // average ullage at reference point
       channel: XXX,
       alarms: [ XXX, XXX ]
@@ -244,6 +436,41 @@ function getTankStatus() {
       ...
     ],
   },
+  pressure: {
+    use: true,
+    channel: XXX,
+    alarms: [ XXX, XXX],
+    sensors: [
+      {
+        "type": "gauge",
+        "channel": XXX,
+      },
+      {
+        "type": "absolute",
+        "channel": XXX,
+      }
+    ]
+  },
+  temperature: {
+    use: true,
+    channel: XXX,
+    algorithm: 'levelBased' | 'average',
+    alarms: [ XXX, XXX],
+    sensors: [
+      {
+        "installedHeight": 0,
+        "channel": XXX,
+      },
+      {
+        "installedHeight": 10,
+        "channel": XXX,
+      },
+      {
+        "installedHeight": 20,
+        "channel": XXX,
+      }
+    ]
+  }
  }
  * @return {object} tank object
  */
@@ -254,6 +481,8 @@ function createTank(cfg) {
     ullageFC: 0.0, // ullage at floatation center
     levelAtRef: 0.0, // level at reference point
     levelFC: 0.0, // level at floatation center
+    pressure: 0.0, // tank pressure
+    temperature: 0.0, // tank temperature
   };
 
   tank.radars = createTankRadarInstance(tank, cfg);
@@ -262,6 +491,10 @@ function createTank(cfg) {
   setLevelAtRef(tank, 0.0);
   setUllageFC(tank, 0.0);
   setLevelFC(tank, 0.0);
+
+  tank.pressureSensors = createTankPressureInstance(tank, cfg);
+
+  tank.tempSensors = createTankTempratureInstance(tank, cfg);
 
   tank.getTankStatus = getTankStatus;
 

@@ -11,7 +11,7 @@ const sampleChannels = {
     conv: {
       a: 1.0,
       b: 0.0,
-    }
+    },
   },
   2000: {
     name: 'level at ref',
@@ -20,7 +20,7 @@ const sampleChannels = {
     conv: {
       a: 1.0,
       b: 0.0,
-    }
+    },
   },
   3000: {
     name: 'ullage at fc',
@@ -29,7 +29,7 @@ const sampleChannels = {
     conv: {
       a: 1.0,
       b: 0.0,
-    }
+    },
   },
   4000: {
     name: 'level at fc',
@@ -38,7 +38,7 @@ const sampleChannels = {
     conv: {
       a: 1.0,
       b: 0.0,
-    }
+    },
   },
   10000: {
     name: 'radar input',
@@ -47,7 +47,7 @@ const sampleChannels = {
     conv: {
       a: 1.0,
       b: 0.0,
-    }
+    },
   },
 };
 

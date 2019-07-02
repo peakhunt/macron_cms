@@ -68,8 +68,10 @@ Channel.prototype = {
     return this._sensorFault;
   },
   set sensorFault(s) {
-    this._sensorFault = s;
-    this.emit('sensorFault', this);
+    if (s !== this._sensorFault) {
+      this._sensorFault = s;
+      this.emit('sensorFault', this);
+    }
   },
   getStatus() {
     return {

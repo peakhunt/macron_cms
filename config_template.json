@@ -27,6 +27,20 @@
         "numPerPoll": 256
       }
     },
+    "vessel": {
+      "absPressureSensors": [
+        {
+          "name": "blah blah blah 1",
+          "channel": 17000,
+          "type": "blah blah blah"
+        },
+        {
+          "name": "blah blah blah 2",
+          "channel": 18000,
+          "type": "blah blah blah"
+        }
+      ]
+    },
     "io": {
       "serial": [
         {
@@ -622,6 +636,7 @@
       {
         "name": "XXX",
         "level": {
+          "use": true,
           "ullageAtRef": {
             "channel": 10000,
             "alarms": [ 10000, 10001 ]
@@ -655,6 +670,41 @@
                 "DBotManMsrPnt": 0,
                 "DVManMsrPntToSns": 0
               }
+            }
+          ]
+        },
+        "pressure": {
+          "use": true,
+          "channel": 50000,
+          "alarms": [50000, 50001],
+          "sensors": [
+            {
+              "type": "gauge",
+              "channel": 19000
+            },
+            {
+              "type": "absolute",
+              "channel": 19001
+            }
+          ]
+        },
+        "temperature": {
+          "use": true,
+          "channel": 40000,
+          "algorithm": "average",
+          "alarms": [40000, 40001],
+          "sensors": [
+            {
+              "installedHeight": 0,
+              "channel": 40001
+            },
+            {
+              "installedHeight": 10,
+              "channel": 40002
+            },
+            {
+              "installedHeight": 20,
+              "channel": 40003
             }
           ]
         }
@@ -1312,6 +1362,87 @@
           "a": 1.0,
           "b": 0.0
         }
+      },
+      "17000": {
+        "name": "reference absolute pressure sensor 1 ",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "18000": {
+        "name": "reference absolute pressure sensor 2 ",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "50000": {
+        "name": "Tank XXX Pressure",
+        "dir": "out",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "19000": {
+        "name": "Tank XXX pressor sensor 1",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "19001": {
+        "name": "Tank XXX pressor sensor 2",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "40000": {
+        "name": "Tank XXX temperature",
+        "dir": "out",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "40001": {
+        "name": "Tank XXX temperature sensor 1",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "40002": {
+        "name": "Tank XXX temperature sensor 2",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "40003": {
+        "name": "Tank XXX temperature sensor 3",
+        "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
       }
     },
     "alarms": {
@@ -1400,6 +1531,38 @@
         "set": true,
         "delay": 0,
         "channel": 2000
+      },
+      "50000": {
+        "type": "low",
+        "severity": "minor",
+        "name": "tank-XXX pressure low alarm",
+        "set": 0.5,
+        "delay": 0,
+        "channel": 50000
+      },
+      "50001": {
+        "type": "low",
+        "severity": "minor",
+        "name": "tank-XXX pressure high alarm",
+        "set": 3.5,
+        "delay": 0,
+        "channel": 50000
+      },
+      "40000": {
+        "type": "low",
+        "severity": "minor",
+        "name": "tank-XXX temperature low alarm",
+        "set": 3.5,
+        "delay": 0,
+        "channel": 40000
+      },
+      "40001": {
+        "type": "low",
+        "severity": "minor",
+        "name": "tank-XXX temperature high alarm",
+        "set": 3.5,
+        "delay": 0,
+        "channel": 40000
       }
     }
   }
