@@ -61,6 +61,9 @@ const getters = {
   projectConfigLoading() {
     return state.projectConfigLoading;
   },
+  tanks() {
+    return state.projectConfig.project.tanks;
+  },
 };
 
 export default {

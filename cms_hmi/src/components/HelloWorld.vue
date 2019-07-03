@@ -115,6 +115,10 @@ export default {
         text: 'IO',
         href: '/IO',
       },
+      {
+        text: 'Tank List',
+        href: '/TankList',
+      },
     ],
     ecosystem: [
       {

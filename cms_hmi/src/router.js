@@ -34,6 +34,11 @@ export default new Router({
       component: () => import('./views/CurrentAlarms.vue'),
     },
     {
+      path: '/TankList',
+      name: 'tank list',
+      component: () => import('./views/TankList.vue'),
+    },
+    {
       path: '/about',
       name: 'about',
       // route level code-splitting
