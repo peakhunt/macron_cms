@@ -303,6 +303,46 @@ function getRadarStat(tank) {
   return radarStat;
 }
 
+function getPressureSensorStat(tank) {
+  const pSensorStat = {
+    sensors: [],
+    validCount: 0,
+  };
+
+  tank.pressureSensors.forEach((p) => {
+    if (p.sensorFault === false) {
+      pSensorStat.validCount += 1;
+    }
+
+    pSensorStat.sensors.push({
+      sensorFault: p.sensorFault,
+      pressure: p.pressure,
+    });
+  });
+
+  return pSensorStat;
+}
+
+function getTemperatureSensorStat(tank) {
+  const tSensorStat = {
+    sensors: [],
+    validCount: 0,
+  };
+
+  tank.tempSensors.forEach((t) => {
+    if (t.sensorFault === false) {
+      tSensorStat.validCount += 1;
+    }
+
+    tSensorStat.sensors.push({
+      sensorFault: t.sensorFault,
+      temperature: t.temperature,
+    });
+  });
+
+  return tSensorStat;
+}
+
 /**
  * create tank pressure sensor instance and returns the array of
  * pressure sensors
@@ -383,11 +423,17 @@ function getTankStatus() {
       levelAtRef: tank.levelAtRef,
       levelFC: tank.levelFC,
     },
-    pressure: tank.pressure,
-    temperature: tank.temperature,
+    pressure: {
+      value: tank.pressure,
+    },
+    temperature: {
+      value: tank.temperature,
+    },
   };
 
   stat.level.radarStat = getRadarStat(tank);
+  stat.pressure.sensorStat = getPressureSensorStat(tank);
+  stat.temperature.sensorStat = getTemperatureSensorStat(tank);
 
   return stat;
 }
