@@ -28,18 +28,27 @@
       }
     },
     "vessel": {
-      "absPressureSensors": [
-        {
-          "name": "blah blah blah 1",
-          "channel": 17000,
-          "type": "blah blah blah"
-        },
-        {
-          "name": "blah blah blah 2",
-          "channel": 18000,
-          "type": "blah blah blah"
-        }
-      ]
+      "trimList": {
+        "use": true,
+        "trim": 35000,
+        "list": 35001
+      },
+      "refAbsPressure": {
+        "use": true,
+        "channel": 25000,
+        "sensors": [
+          {
+            "name": "blah blah blah 1",
+            "channel": 17000,
+            "type": "blah blah blah"
+          },
+          {
+            "name": "blah blah blah 2",
+            "channel": 18000,
+            "type": "blah blah blah"
+          }
+        ]
+      }
     },
     "io": {
       "serial": [
@@ -1438,6 +1447,33 @@
       "40003": {
         "name": "Tank XXX temperature sensor 3",
         "dir": "in",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "25000": {
+        "name": "vessel abs reference pressure",
+        "dir": "out",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "35000": {
+        "name": "vessel trim",
+        "dir": "out",
+        "type": "analog",
+        "conv": {
+          "a": 1.0,
+          "b": 0.0
+        }
+      },
+      "35001": {
+        "name": "vessel list",
+        "dir": "out",
         "type": "analog",
         "conv": {
           "a": 1.0,

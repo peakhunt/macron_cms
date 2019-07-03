@@ -16,7 +16,7 @@ const tankList = [];
  }
  */
 function initCMS(cfg) {
-  vessel.reset();
+  vessel.init(cfg.vessel);
 
   cfg.tanks.forEach((tcfg) => {
     tankList.push(tank.createTank(tcfg));
