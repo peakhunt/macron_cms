@@ -6,8 +6,21 @@
 
   <v-container fluid grid-list-lg>
     <v-layout row wrap>
-      <v-flex xs12>
-        <WidgetLinearGauge :chnl="levelAtFC.channel" :options="linearGraphOption" />
+      <!-- left column -->
+      <v-flex d-flex xs5>
+        <WidgetLinearGauge :chnl="levelAtFC.channel" :options="levelGaugeOption" />
+      </v-flex>
+
+      <!-- right column -->
+      <v-flex d-flex xs7>
+        <v-layout row wrap>
+            <v-flex d-flex xs12 class="right-top">
+              <WidgetRadialGauge :chnl="temperature.channel" :options="tempGaugeOption" />
+            </v-flex>
+            <v-flex d-flex xs12 class="right-bottom">
+              <WidgetRadialGauge :chnl="pressure.channel" :options="pressureGaugeOption" />
+            </v-flex>
+        </v-layout>
       </v-flex>
     </v-layout>
   </v-container>
@@ -16,11 +29,13 @@
 
 <script>
 import WidgetLinearGauge from './widget/WidgetLinearGauge.vue';
+import WidgetRadialGauge from './widget/WidgetRadialGauge.vue';
 
 export default {
   name: 'Tank',
   components: {
     WidgetLinearGauge,
+    WidgetRadialGauge,
   },
   props: {
     tank: { type: Object, default: null },
@@ -38,14 +53,23 @@ export default {
     levelAtFC() {
       return this.tank.level.levelAtFC;
     },
-    linearGraphOption() {
+    temperature() {
+      return this.tank.temperature;
+    },
+    pressure() {
+      return this.tank.pressure;
+    },
+    levelGaugeOption() {
       return {
         units: 'Meter',
+        colorUnits: '#fff',
         title: 'Level at FC',
+        colorTitle: '#fff',
+        colorNumbers: '#fff',
         minValue: 0,
         maxValue: 320,
-        width: 130,
-        height: 360,
+        width: 180,
+        height: 410,
         strokeTicks: true,
         colorBar: 'white',
         colorBarProgress: 'blue',
@@ -67,17 +91,17 @@ export default {
         ],
         minorTicks: 10,
         majorTicks: [
-          '0',
-          '40',
-          '80',
-          '120',
-          '160',
-          '200',
-          '240',
-          '280',
-          '320',
+          0,
+          40,
+          80,
+          120,
+          160,
+          200,
+          240,
+          280,
+          320,
         ],
-        colorPlate: '#fff',
+        colorPlate: 'transparent',
         borderShadowWidth: 0,
         borders: false,
         needleType: 'arrow',
@@ -96,8 +120,148 @@ export default {
         valueTextShadow: true,
         valueDec: 1,
         barBeginCircle: 0,
-        fontNumbersSize: 28,
-        fontUnitsSize: 30,
+        fontTitleSize: 18,
+        fontNumbersSize: 18,
+        fontUnitsSize: 20,
+        fontValueSize: 30,
+        colorValueText: '#ffffff',
+        colorValueBoxBackground: '#000000',
+      };
+    },
+    tempGaugeOption() {
+      return {
+        units: '°C',
+        colorUnits: '#fff',
+        title: 'Temperature',
+        colorTitle: '#fff',
+        colorNumbers: '#fff',
+        minValue: 0,
+        maxValue: 320,
+        width: 320,
+        height: 200,
+        strokeTicks: true,
+        colorBar: 'transparent',
+        colorBarProgress: 'blue',
+        highlights: [
+          {
+            from: 0,
+            to: 100,
+            color: '#00E676',
+          },
+          {
+            from: 100,
+            to: 220,
+            color: '#FFFF8D',
+          },
+          {
+            from: 220,
+            to: 320,
+            color: '#FF3D00',
+          },
+        ],
+        minorTicks: 10,
+        majorTicks: [
+          0,
+          40,
+          80,
+          120,
+          160,
+          200,
+          240,
+          280,
+          320,
+        ],
+        colorPlate: 'transparent',
+        borderShadowWidth: 0,
+        borders: false,
+        needleType: 'arrow',
+        needleShadow: true,
+        needleWidth: 2,
+        needleCircleSize: 7,
+        needleCircleOuter: true,
+        needleCircleInner: false,
+        numberSide: 'left',
+        needleSide: 'left',
+        animationDuration: 25,
+        animationRule: 'linear',
+        barWidth: 0,
+        valueBox: true,
+        valueBoxStroke: 5,
+        valueTextShadow: true,
+        valueDec: 1,
+        barBeginCircle: 0,
+        fontTitleSize: 25,
+        fontNumbersSize: 18,
+        fontUnitsSize: 20,
+        fontValueSize: 30,
+        colorValueText: '#ffffff',
+        colorValueBoxBackground: '#000000',
+      };
+    },
+    pressureGaugeOption() {
+      return {
+        units: 'mBar',
+        colorUnits: '#fff',
+        title: 'Pressure',
+        colorTitle: '#fff',
+        colorNumbers: '#fff',
+        minValue: 0,
+        maxValue: 320,
+        width: 320,
+        height: 200,
+        strokeTicks: true,
+        barProgress: false,
+        highlights: [
+          {
+            from: 0,
+            to: 100,
+            color: '#00E676',
+          },
+          {
+            from: 100,
+            to: 220,
+            color: '#FFFF8D',
+          },
+          {
+            from: 220,
+            to: 320,
+            color: '#FF3D00',
+          },
+        ],
+        minorTicks: 10,
+        majorTicks: [
+          0,
+          40,
+          80,
+          120,
+          160,
+          200,
+          240,
+          280,
+          320,
+        ],
+        colorPlate: 'transparent',
+        borderShadowWidth: 0,
+        borders: false,
+        needleType: 'arrow',
+        needleShadow: false,
+        needleWidth: 0,
+        needleCircleSize: 7,
+        needleCircleOuter: true,
+        needleCircleInner: false,
+        numberSide: 'left',
+        needleSide: 'left',
+        animationDuration: 25,
+        animationRule: 'linear',
+        barWidth: 0,
+        valueBox: true,
+        valueBoxStroke: 5,
+        valueTextShadow: true,
+        valueDec: 1,
+        barBeginCircle: 0,
+        fontTitleSize: 25,
+        fontNumbersSize: 18,
+        fontUnitsSize: 20,
         fontValueSize: 30,
         colorValueText: '#ffffff',
         colorValueBoxBackground: '#000000',
@@ -108,4 +272,10 @@ export default {
 </script>
 
 <style>
+.right-top {
+  height: 50%;
+}
+.right-bottom {
+  height: 50%;
+}
 </style>
