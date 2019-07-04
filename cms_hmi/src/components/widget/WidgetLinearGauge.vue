@@ -25,6 +25,7 @@ export default {
     },
     alarmState() {
       let severity = 'normal';
+      let s = 0;
 
       this.alarms.forEach((alarmNum) => {
         const alarm = this.alarmByNum(alarmNum);
@@ -37,20 +38,33 @@ export default {
         // alarm state
         // get highest alarm severity
         severity = util.getBiggerAlarmSeverity(severity, alarm.alarmCfg.severity);
+        s = alarm.state;
       });
 
-      return severity;
+      return {
+        severity,
+        state: s,
+      };
     },
     alarmColor() {
-      const severity = this.alarmState;
+      const s = this.alarmState;
 
-      if (severity === 'normal') {
+      if (s.severity === 'normal') {
         return {
           colorValueText: util.alarmTextColor.normal.text,
           colorValueBoxBackground: util.alarmTextColor.normal.back,
         };
       }
 
+      if (s.state === 3) {
+        // acked. steady color
+        return {
+          colorValueText: util.alarmTextColor[s.severity].text,
+          colorValueBoxBackground: util.alarmTextColor[s.severity].back,
+        };
+      }
+
+      // not acked. blinking color
       if (this.halfSecBlink === true) {
         return {
           colorValueText: util.alarmTextColor.normal.text,
@@ -59,8 +73,8 @@ export default {
       }
 
       return {
-        colorValueText: util.alarmTextColor[severity].text,
-        colorValueBoxBackground: util.alarmTextColor[severity].back,
+        colorValueText: util.alarmTextColor[s.severity].text,
+        colorValueBoxBackground: util.alarmTextColor[s.severity].back,
       };
     },
   },
