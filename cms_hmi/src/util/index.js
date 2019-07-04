@@ -25,6 +25,32 @@ const alarmColors = {
   critical: 'red',
 };
 
+const alarmSeverityNum = {
+  normal: -1,
+  minor: 0,
+  major: 1,
+  critical: 2,
+};
+
+const alarmTextColor = {
+  normal: {
+    text: '#ffffff',
+    back: '#000000',
+  },
+  minor: {
+    text: '#000000',
+    back: '#ffff00',
+  },
+  major: {
+    text: '#ffffff',
+    back: '#ffa500',
+  },
+  critical: {
+    text: '#ffffff',
+    back: '#ff0000',
+  },
+};
+
 /**
  * @param arg {object}
  * {
@@ -95,8 +121,8 @@ function createRadialGaugeOption(arg) {
     fontNumbersSize: 18,
     fontUnitsSize: 20,
     fontValueSize: 30,
-    colorValueText: '#ffffff',
-    colorValueBoxBackground: '#000000',
+    colorValueText: alarmTextColor.normal.text,
+    colorValueBoxBackground: alarmTextColor.normal.back,
   };
 
   opt.highlights = JSON.parse(JSON.stringify(arg.highlights));
@@ -162,8 +188,8 @@ function createLinearGaugeOption(arg) {
     fontNumbersSize: 18,
     fontUnitsSize: 20,
     fontValueSize: 30,
-    colorValueText: '#ffffff',
-    colorValueBoxBackground: '#000000',
+    colorValueText: alarmTextColor.normal.text,
+    colorValueBoxBackground: alarmTextColor.normal.back,
   };
 
   opt.highlights = JSON.parse(JSON.stringify(arg.highlights));
@@ -175,10 +201,19 @@ function createLinearGaugeOption(arg) {
   return opt;
 }
 
+function getBiggerAlarmSeverity(a, b) {
+  const an = alarmSeverityNum[a];
+  const bn = alarmSeverityNum[b];
+
+  return an > bn ? a : b;
+}
+
 module.exports = {
   getAlarmStateStr,
   getAlarmTime,
   alarmColors,
   createRadialGaugeOption,
   createLinearGaugeOption,
+  getBiggerAlarmSeverity,
+  alarmTextColor,
 };

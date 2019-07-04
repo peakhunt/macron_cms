@@ -10,7 +10,8 @@
       <v-flex d-flex xs12 md5 lg5>
         <v-layout row wrap>
           <v-flex d-flex xs12>
-            <WidgetLinearGauge :chnl="levelCfg.channel" :options="levelGaugeOpt" />
+            <WidgetLinearGauge :chnl="levelCfg.channel" :alarms="levelCfg.alarms"
+             :options="levelGaugeOpt" />
           </v-flex>
           <v-flex d-flex>
             <v-btn flat icon color="white" @click="onLevelLeftClick">
