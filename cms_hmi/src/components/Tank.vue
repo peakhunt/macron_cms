@@ -7,18 +7,30 @@
   <v-container fluid grid-list-lg>
     <v-layout row wrap>
       <!-- left column -->
-      <v-flex d-flex xs5>
-        <WidgetLinearGauge :chnl="levelAtFC.channel" :options="levelGaugeOption" />
+      <v-flex d-flex xs12 md5 lg5>
+        <v-layout row wrap>
+          <v-flex d-flex xs12>
+            <WidgetLinearGauge :chnl="levelCfg.channel" :options="levelGaugeOpt" />
+          </v-flex>
+          <v-flex d-flex>
+            <v-btn flat icon color="white" @click="onLevelLeftClick">
+              <v-icon>arrow_back_ios</v-icon>
+            </v-btn>
+            <v-btn flat icon color="white" @click="onLevelRightClick">
+              <v-icon>arrow_forward_ios</v-icon>
+            </v-btn>
+          </v-flex>
+        </v-layout>
       </v-flex>
 
       <!-- right column -->
-      <v-flex d-flex xs7>
+      <v-flex d-flex xs12 md7 lg7>
         <v-layout row wrap>
-            <v-flex d-flex xs12 class="right-top">
-              <WidgetRadialGauge :chnl="temperature.channel" :options="tempGaugeOption" />
+            <v-flex d-flex xs12>
+              <WidgetRadialGauge :chnl="temperature.channel" :options="tempGaugeOpt" />
             </v-flex>
-            <v-flex d-flex xs12 class="right-bottom">
-              <WidgetRadialGauge :chnl="pressure.channel" :options="pressureGaugeOption" />
+            <v-flex d-flex xs12>
+              <WidgetRadialGauge :chnl="pressure.channel" :options="pressureGaugeOpt" />
             </v-flex>
         </v-layout>
       </v-flex>
@@ -30,6 +42,14 @@
 <script>
 import WidgetLinearGauge from './widget/WidgetLinearGauge.vue';
 import WidgetRadialGauge from './widget/WidgetRadialGauge.vue';
+import util from '../util';
+
+const levelNames = [
+  'Ullage at Ref',
+  'Level at Ref',
+  'Ullage at FC',
+  'Level at FC',
+];
 
 export default {
   name: 'Tank',
@@ -59,20 +79,28 @@ export default {
     pressure() {
       return this.tank.pressure;
     },
-    levelGaugeOption() {
-      return {
-        units: 'Meter',
-        colorUnits: '#fff',
-        title: 'Level at FC',
-        colorTitle: '#fff',
-        colorNumbers: '#fff',
-        minValue: 0,
-        maxValue: 320,
+    levelCfg() {
+      switch (this.levelNdx) {
+        case 0:
+          return this.ullageAtRefCfg;
+        case 1:
+          return this.levelAtRef;
+        case 2:
+          return this.ullageAtFC;
+        default:
+          return this.levelAtFC;
+      }
+    },
+    levelGaugeOpt() {
+      const defLinearGateOpt = {
+        unit: 'Meter',
+        title: 'Level At FC',
+        min: 0,
+        max: 320,
         width: 180,
         height: 410,
-        strokeTicks: true,
-        colorBar: 'white',
-        colorBarProgress: 'blue',
+        minTicks: 10,
+        majorTicksInterval: 40,
         highlights: [
           {
             from: 0,
@@ -89,59 +117,23 @@ export default {
             color: '#FF3D00',
           },
         ],
-        minorTicks: 10,
-        majorTicks: [
-          0,
-          40,
-          80,
-          120,
-          160,
-          200,
-          240,
-          280,
-          320,
-        ],
-        colorPlate: 'transparent',
-        borderShadowWidth: 0,
-        borders: false,
-        needleType: 'arrow',
-        needleShadow: true,
-        needleWidth: 0,
-        needleCircleSize: 7,
-        needleCircleOuter: true,
-        needleCircleInner: false,
-        numberSide: 'left',
-        needleSide: 'left',
-        animationDuration: 25,
-        animationRule: 'linear',
-        barWidth: 15,
-        valueBox: true,
-        valueBoxStroke: 5,
-        valueTextShadow: true,
-        valueDec: 1,
-        barBeginCircle: 0,
-        fontTitleSize: 18,
-        fontNumbersSize: 18,
-        fontUnitsSize: 20,
-        fontValueSize: 30,
-        colorValueText: '#ffffff',
-        colorValueBoxBackground: '#000000',
       };
+
+      const opt = util.createLinearGaugeOption(defLinearGateOpt);
+
+      opt.title = levelNames[this.levelNdx];
+      return opt;
     },
-    tempGaugeOption() {
-      return {
-        units: '°C',
-        colorUnits: '#fff',
+    tempGaugeOpt() {
+      const defTempGaugeOpt = {
+        unit: '°C',
         title: 'Temperature',
-        colorTitle: '#fff',
-        colorNumbers: '#fff',
-        minValue: 0,
-        maxValue: 320,
+        min: 0,
+        max: 320,
         width: 320,
         height: 200,
-        strokeTicks: true,
-        colorBar: 'transparent',
-        colorBarProgress: 'blue',
+        minTicks: 10,
+        majorTicksInterval: 40,
         highlights: [
           {
             from: 0,
@@ -159,58 +151,22 @@ export default {
             color: '#FF3D00',
           },
         ],
-        minorTicks: 10,
-        majorTicks: [
-          0,
-          40,
-          80,
-          120,
-          160,
-          200,
-          240,
-          280,
-          320,
-        ],
-        colorPlate: 'transparent',
-        borderShadowWidth: 0,
-        borders: false,
-        needleType: 'arrow',
-        needleShadow: true,
-        needleWidth: 2,
-        needleCircleSize: 7,
-        needleCircleOuter: true,
-        needleCircleInner: false,
-        numberSide: 'left',
-        needleSide: 'left',
-        animationDuration: 25,
-        animationRule: 'linear',
-        barWidth: 0,
-        valueBox: true,
-        valueBoxStroke: 5,
-        valueTextShadow: true,
-        valueDec: 1,
-        barBeginCircle: 0,
-        fontTitleSize: 25,
-        fontNumbersSize: 18,
-        fontUnitsSize: 20,
-        fontValueSize: 30,
-        colorValueText: '#ffffff',
-        colorValueBoxBackground: '#000000',
       };
+
+      const opt = util.createRadialGaugeOption(defTempGaugeOpt);
+
+      return opt;
     },
-    pressureGaugeOption() {
-      return {
-        units: 'mBar',
-        colorUnits: '#fff',
+    pressureGaugeOpt() {
+      const defPressureGaugeOpt = {
+        unit: 'mBar',
         title: 'Pressure',
-        colorTitle: '#fff',
-        colorNumbers: '#fff',
-        minValue: 0,
-        maxValue: 320,
+        min: 0,
+        max: 320,
         width: 320,
         height: 200,
-        strokeTicks: true,
-        barProgress: false,
+        minTicks: 10,
+        majorTicksInterval: 40,
         highlights: [
           {
             from: 0,
@@ -228,54 +184,36 @@ export default {
             color: '#FF3D00',
           },
         ],
-        minorTicks: 10,
-        majorTicks: [
-          0,
-          40,
-          80,
-          120,
-          160,
-          200,
-          240,
-          280,
-          320,
-        ],
-        colorPlate: 'transparent',
-        borderShadowWidth: 0,
-        borders: false,
-        needleType: 'arrow',
-        needleShadow: false,
-        needleWidth: 0,
-        needleCircleSize: 7,
-        needleCircleOuter: true,
-        needleCircleInner: false,
-        numberSide: 'left',
-        needleSide: 'left',
-        animationDuration: 25,
-        animationRule: 'linear',
-        barWidth: 0,
-        valueBox: true,
-        valueBoxStroke: 5,
-        valueTextShadow: true,
-        valueDec: 1,
-        barBeginCircle: 0,
-        fontTitleSize: 25,
-        fontNumbersSize: 18,
-        fontUnitsSize: 20,
-        fontValueSize: 30,
-        colorValueText: '#ffffff',
-        colorValueBoxBackground: '#000000',
       };
+
+      const opt = util.createRadialGaugeOption(defPressureGaugeOpt);
+
+      return opt;
     },
+  },
+  methods: {
+    onLevelLeftClick() {
+      this.levelNdx = this.levelNdx - 1;
+
+      if (this.levelNdx < 0) {
+        this.levelNdx = levelNames.length - 1;
+      }
+    },
+    onLevelRightClick() {
+      this.levelNdx = this.levelNdx + 1;
+
+      if (this.levelNdx >= levelNames.length) {
+        this.levelNdx = 0;
+      }
+    },
+  },
+  data() {
+    return {
+      levelNdx: 0,
+    };
   },
 };
 </script>
 
 <style>
-.right-top {
-  height: 50%;
-}
-.right-bottom {
-  height: 50%;
-}
 </style>

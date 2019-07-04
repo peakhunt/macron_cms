@@ -1,10 +1,10 @@
 <template>
 <v-container fluid grid-list-lg>
   <v-layout row wrap>
-    <v-flex xs6 v-for="(tank, index) in tanks" :key="'tl1' + index">
+    <v-flex xs12 md6 lg6 v-for="(tank, index) in tanks" :key="'tl1' + index">
       <Tank :tank="tank"/>
     </v-flex>
-    <v-flex xs6 v-for="(tank, index) in tanks" :key="'tl2' + index">
+    <v-flex xs12 md6 lg6 v-for="(tank, index) in tanks" :key="'tl2' + index">
       <Tank :tank="tank"/>
     </v-flex>
   </v-layout>
