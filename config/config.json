@@ -1577,7 +1577,7 @@
         "channel": 50000
       },
       "50001": {
-        "type": "low",
+        "type": "high",
         "severity": "minor",
         "name": "tank-XXX pressure high alarm",
         "set": 3.5,
@@ -1593,10 +1593,10 @@
         "channel": 40000
       },
       "40001": {
-        "type": "low",
+        "type": "high",
         "severity": "minor",
         "name": "tank-XXX temperature high alarm",
-        "set": 3.5,
+        "set": 112.5,
         "delay": 0,
         "channel": 40000
       }

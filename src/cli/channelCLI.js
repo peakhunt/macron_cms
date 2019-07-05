@@ -48,7 +48,7 @@ function cmdHandlerChannelValue(client, cmd) {
   if (chnl.cfg.type === 'digital') {
     v = (cmd[2] === 'true');
   } else {
-    v = parseInt(cmd[2], 10);
+    v = parseFloat(cmd[2]);
   }
   chnl.engValue = v;
 }

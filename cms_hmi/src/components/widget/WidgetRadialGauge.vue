@@ -5,9 +5,11 @@
 <script>
 import { mapGetters } from 'vuex';
 import RadialGauge from 'vue2-canvas-gauges/src/RadialGauge.vue';
+import WidgetCommon from './WidgetCommon.vue';
 
 export default {
   name: 'WidgetRadialGauge',
+  mixins: [WidgetCommon],
   components: {
     RadialGauge,
   },
@@ -21,9 +23,14 @@ export default {
       return chnl.value;
     },
   },
+  methods: {
+    updateAlarmColor() {
+      const c = this.alarmColor;
+      this.$children[0].chart.update(c);
+    },
+  },
   props: {
     chnl: { type: Number },
-    options: { type: Object },
   },
 };
 

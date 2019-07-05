@@ -38,10 +38,16 @@
       <v-flex d-flex xs12 md7 lg7>
         <v-layout row wrap>
             <v-flex d-flex xs12>
-              <WidgetRadialGauge :chnl="temperature.channel" :options="tempGaugeOpt" />
+              <WidgetRadialGauge :chnl="temperature.channel"
+               :options="tempGaugeOpt"
+               :alarms="temperature.alarms"
+               key="tempGauge"/>
             </v-flex>
             <v-flex d-flex xs12>
-              <WidgetRadialGauge :chnl="pressure.channel" :options="pressureGaugeOpt" />
+              <WidgetRadialGauge :chnl="pressure.channel"
+               :options="pressureGaugeOpt"
+               :alarms="pressure.alarms"
+               key="pressGauge"/>
             </v-flex>
         </v-layout>
       </v-flex>
