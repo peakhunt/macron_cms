@@ -37,4 +37,14 @@ module.exports = {
     return undefined;
   },
   vessel,
+  startSimulate() {
+    tankList.forEach((t) => {
+      t.startSimulate();
+    });
+  },
+  stopSimulate() {
+    tankList.forEach((t) => {
+      t.stopSimulate();
+    });
+  },
 };

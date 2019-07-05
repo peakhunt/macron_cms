@@ -438,6 +438,33 @@ function getTankStatus() {
   return stat;
 }
 
+let simTimer = null;
+
+function startSimulate() {
+  if (simTimer !== null) {
+    return;
+  }
+
+  const tank = this;
+
+  simTimer = setInterval(() => {
+    setUllageAtRef(tank, common.getRandom(0, 320));
+    setLevelAtRef(tank, common.getRandom(0, 320));
+    setUllageFC(tank, common.getRandom(0, 320));
+    setLevelFC(tank, common.getRandom(0, 320));
+
+    setTankPressure(tank, common.getRandom(0, 320));
+    setTankTemperature(tank, common.getRandom(0, 320));
+  }, 1000);
+}
+
+function stopSimulate() {
+  if (simTimer !== null) {
+    clearInterval(simTimer);
+    simTimer = null;
+  }
+}
+
 /**
  * create tank object
  * @param {object} cfg - tank configuration object with the following structure
@@ -539,10 +566,14 @@ function createTank(cfg) {
   setLevelFC(tank, 0.0);
 
   tank.pressureSensors = createTankPressureInstance(tank, cfg);
+  setTankPressure(tank, 0.0);
 
   tank.tempSensors = createTankTempratureInstance(tank, cfg);
+  setTankTemperature(tank, 0.0);
 
   tank.getTankStatus = getTankStatus;
+  tank.startSimulate = startSimulate;
+  tank.stopSimulate = stopSimulate;
 
   return tank;
 }

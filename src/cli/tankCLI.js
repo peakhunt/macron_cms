@@ -52,6 +52,22 @@ const _commands = {
     desc: 'show tank status by name',
     handler: cmdHandlerTankByName,
   },
+  startsim: {
+    desc: 'start tank simulation',
+    handler: (client) => {
+      client.write('starting tank simulation\r\n');
+      cms.startSimulate();
+      client.write('\r\n');
+    },
+  },
+  stopsim: {
+    desc: 'stop tank simulation',
+    handler: (client) => {
+      client.write('stopping tank simulation\r\n');
+      cms.stopSimulate();
+      client.write('\r\n');
+    },
+  },
 };
 
 module.exports = {
