@@ -39,6 +39,11 @@ export default new Router({
       component: () => import('./views/TankList.vue'),
     },
     {
+      path: '/Vessel',
+      name: 'Vessel',
+      component: () => import('./views/Vessel.vue'),
+    },
+    {
       path: '/about',
       name: 'about',
       // route level code-splitting

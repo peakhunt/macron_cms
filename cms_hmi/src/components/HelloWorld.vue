@@ -119,6 +119,10 @@ export default {
         text: 'Tank List',
         href: '/TankList',
       },
+      {
+        text: 'Vessel',
+        href: '/Vessel',
+      },
     ],
     ecosystem: [
       {

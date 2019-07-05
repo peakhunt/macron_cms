@@ -64,6 +64,9 @@ const getters = {
   tanks() {
     return state.projectConfig.project.tanks;
   },
+  vessel() {
+    return state.projectConfig.project.vessel;
+  },
 };
 
 export default {
