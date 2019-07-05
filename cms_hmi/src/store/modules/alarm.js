@@ -21,7 +21,7 @@ function udpateActiveAlarms(alarm) {
     // alarm clear or no alarm at all
     if (state.activeAlarmsHash[alarm.alarmNum] !== undefined) {
       // delete alarm from active alarms
-      n = state.activeAlarmList[alarm];
+      n = state.activeAlarmList.indexOf(alarm);
 
       delete state.activeAlarmsHash[alarm.alarmNum];
       state.activeAlarmList.splice(n, 1);
