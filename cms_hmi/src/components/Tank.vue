@@ -10,9 +10,19 @@
       <v-flex d-flex xs12 md5 lg5>
         <v-layout row wrap>
           <v-flex d-flex xs12>
-            <WidgetLinearGauge :chnl="levelCfg.channel" :alarms="levelCfg.alarms"
-             :options="levelGaugeOpt" />
+            <WidgetLinearGauge :chnl="ullageAtRef.channel" :alarms="ullageAtRef.alarms"
+             :options="levelGageOptions[0]" v-if="levelNdx === 0" key="level0"/>
+
+            <WidgetLinearGauge :chnl="levelAtRef.channel" :alarms="levelAtRef.alarms"
+             :options="levelGageOptions[1]" v-if="levelNdx === 1" key="level1"/>
+
+            <WidgetLinearGauge :chnl="ullageAtFC.channel" :alarms="ullageAtFC.alarms"
+             :options="levelGageOptions[2]" v-if="levelNdx === 2" key="level2"/>
+
+            <WidgetLinearGauge :chnl="levelAtFC.channel" :alarms="levelAtFC.alarms"
+             :options="levelGageOptions[3]" v-if="levelNdx === 3" key="level3"/>
           </v-flex>
+
           <v-flex d-flex>
             <v-btn flat icon color="white" @click="onLevelLeftClick">
               <v-icon>arrow_back_ios</v-icon>
@@ -62,7 +72,7 @@ export default {
     tank: { type: Object, default: null },
   },
   computed: {
-    ullageAtRefCfg() {
+    ullageAtRef() {
       return this.tank.level.ullageAtRef;
     },
     levelAtRef() {
@@ -79,51 +89,6 @@ export default {
     },
     pressure() {
       return this.tank.pressure;
-    },
-    levelCfg() {
-      switch (this.levelNdx) {
-        case 0:
-          return this.ullageAtRefCfg;
-        case 1:
-          return this.levelAtRef;
-        case 2:
-          return this.ullageAtFC;
-        default:
-          return this.levelAtFC;
-      }
-    },
-    levelGaugeOpt() {
-      const defLinearGateOpt = {
-        unit: 'Meter',
-        title: 'Level At FC',
-        min: 0,
-        max: 320,
-        width: 180,
-        height: 410,
-        minTicks: 10,
-        majorTicksInterval: 40,
-        highlights: [
-          {
-            from: 0,
-            to: 100,
-            color: '#00E676',
-          },
-          {
-            from: 100,
-            to: 220,
-            color: '#FFFF8D',
-          }, {
-            from: 220,
-            to: 320,
-            color: '#FF3D00',
-          },
-        ],
-      };
-
-      const opt = util.createLinearGaugeOption(defLinearGateOpt);
-
-      opt.title = levelNames[this.levelNdx];
-      return opt;
     },
     tempGaugeOpt() {
       const defTempGaugeOpt = {
@@ -207,10 +172,47 @@ export default {
         this.levelNdx = 0;
       }
     },
+    createLevelGaugeOpt(title) {
+      const defLinearGateOpt = {
+        unit: 'Meter',
+        title,
+        min: 0,
+        max: 320,
+        width: 180,
+        height: 410,
+        minTicks: 10,
+        majorTicksInterval: 40,
+        highlights: [
+          {
+            from: 0,
+            to: 100,
+            color: '#00E676',
+          },
+          {
+            from: 100,
+            to: 220,
+            color: '#FFFF8D',
+          }, {
+            from: 220,
+            to: 320,
+            color: '#FF3D00',
+          },
+        ],
+      };
+
+      const opt = util.createLinearGaugeOption(defLinearGateOpt);
+      return opt;
+    },
   },
   data() {
     return {
       levelNdx: 0,
+      levelGageOptions: [
+        this.createLevelGaugeOpt(levelNames[0]),
+        this.createLevelGaugeOpt(levelNames[1]),
+        this.createLevelGaugeOpt(levelNames[2]),
+        this.createLevelGaugeOpt(levelNames[3]),
+      ],
     };
   },
 };

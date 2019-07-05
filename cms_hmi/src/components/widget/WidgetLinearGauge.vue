@@ -80,12 +80,8 @@ export default {
   },
   methods: {
     updateAlarmColor() {
-      const c = this.getAlarmColor();
-      const obj = {
-        colorValueText: c.textColor,
-        colorValueBoxBackground: c.backgroundColor,
-      };
-      this.$children[0].chart.update(obj);
+      const c = this.alarmColor;
+      this.$children[0].chart.update(c);
     },
   },
   props: {
@@ -97,6 +93,16 @@ export default {
     alarmColor(c) {
       this.$children[0].chart.update(c);
     },
+  },
+  mounted() {
+    const self = this;
+
+    self.updateAlarmColor();
+    /*
+    self.$nextTick(() => {
+      self.updateAlarmColor();
+    });
+    */
   },
 };
 </script>
