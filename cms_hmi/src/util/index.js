@@ -181,7 +181,7 @@ function createLinearGaugeOption(arg) {
     animationRule: 'linear',
     barWidth: 15,
     valueBox: true,
-    valueBoxStroke: 5,
+    valueBoxStroke: 3,
     valueInt: 2,
     valueDec: 3,
     valueTextShadow: true,
