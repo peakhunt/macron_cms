@@ -1464,7 +1464,7 @@
       },
       "35000": {
         "name": "vessel trim",
-        "dir": "out",
+        "dir": "in",
         "type": "analog",
         "conv": {
           "a": 1.0,
@@ -1473,7 +1473,7 @@
       },
       "35001": {
         "name": "vessel list",
-        "dir": "out",
+        "dir": "in",
         "type": "analog",
         "conv": {
           "a": 1.0,
