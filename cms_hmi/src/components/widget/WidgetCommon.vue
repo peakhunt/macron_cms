@@ -77,14 +77,18 @@ export default {
       this.updateAlarmColor();
     },
   },
+  methods: {
+    invokeUpdate() {
+    },
+  },
   mounted() {
     const self = this;
 
     self.updateAlarmColor();
     /*
-    self.$nextTick(() => {
-      self.updateAlarmColor();
-    });
+      self.$nextTick(() => {
+        self.updateAlarmColor();
+      });
     */
   },
 };
