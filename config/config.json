@@ -669,7 +669,6 @@
           "radars": [
             {
               "channel": 2000,
-              "sensorAlarm": 2000,
               "cfg": {
                 "cDLR": 0,
                 "cDTR": 0,

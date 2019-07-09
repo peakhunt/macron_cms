@@ -495,7 +495,6 @@ function stopSimulate() {
     radars: [
       {
         channel: XXX,
-        sensorAlarm: XXX,
         cfg: {
           cDLR,
           cDTR,
