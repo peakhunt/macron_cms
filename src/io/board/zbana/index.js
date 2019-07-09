@@ -313,8 +313,22 @@ function setSensorFault(chnlNum, status) {
   core.getChannel(chnlNum).sensorFault = status;
 }
 
-function setCommStatus(chnlNum, status) {
-  core.getChannel(chnlNum).sensorValue = status;
+function setCommStatus(zbana, status) {
+  const chnlNum = zbana.cfg.commFault;
+
+  if (chnlNum !== -1) {
+    core.getChannel(chnlNum).engValue = status;
+  }
+
+  /* let's not do this for now
+  if (status === true) {
+    zbana.cfg.ports.forEach((pcfg) => {
+      if (pcfg.use === true) {
+        setSensorFault(pcfg.channel, true);
+      }
+    });
+  }
+  */
 }
 
 function ZBANA(master, cfg) {
@@ -332,7 +346,7 @@ function ZBANA(master, cfg) {
 
 function read420mAInput(zbana, modbus, resolve, reject) {
   modbus.readInputRegisters(1000, 12).then((b) => {
-    setCommStatus(zbana.cfg.commFault, false);
+    setCommStatus(zbana, false);
     for (let i = 0; i < b.data.length; i += 1) {
       const v = b.data[i];
       const addr = 1000 + i;
@@ -342,21 +356,18 @@ function read420mAInput(zbana, modbus, resolve, reject) {
       reg.value = v / 1000.0;
 
       if (reg.channel !== -1) {
-        setSensorFault(reg.channel, false);
-        core.getChannel(reg.channel).sensorValue = reg.value;
+        if (reg.value < 3.5 || reg.value > 20.5) {
+          setSensorFault(reg.channel, true);
+        } else {
+          setSensorFault(reg.channel, false);
+          core.getChannel(reg.channel).sensorValue = reg.value;
+        }
       }
     }
     resolve();
   }).catch((err) => {
     // a. communication failure
-    setCommStatus(zbana.cfg.commFault, true);
-
-    // b. sensor fault
-    zbana.cfg.ports.forEach((pcfg) => {
-      if (pcfg.use === true) {
-        setSensorFault(pcfg.channel, true);
-      }
-    });
+    setCommStatus(zbana, true);
 
     logger.info(`zbana ${zbana.cfg.address} error ${err}`);
     reject();

@@ -68,6 +68,34 @@ function ZB485(master, cfg) {
   });
 }
 
+function setCommStatus(zb485, status) {
+  const chnlNum = zb485.cfg.commFault;
+
+  if (chnlNum !== -1) {
+    core.getChannel(chnlNum).engValue = status;
+  }
+
+  /* let's not do this for now
+  if (status === true) {
+    // FIXME sensor fault for all the channels
+  }
+  */
+}
+
+function setSlaveCommStatus(slave, status) {
+  const chnlNum = slave.cfg.commFault;
+
+  if (chnlNum !== -1) {
+    core.getChannel(chnlNum).engValue = status;
+  }
+
+  /* let's not do this for now
+  if (status === true) {
+    // FIXME sensor fault for all the channels
+  }
+  */
+}
+
 function setZB456State(zb485, state) {
   const self = zb485;
 
@@ -75,13 +103,11 @@ function setZB456State(zb485, state) {
 
   if (self.state >= ZB485StateEnum.PowerSetup) {
     // communication ok
-    core.getChannel(self.cfg.commFault).sensorValue = false;
+    setCommStatus(zb485, false);
   } else {
     // communication fail
     logger.info(`zb485 comm fault ${self.cfg.address} ${self.cfg.commFault}`);
-    core.getChannel(self.cfg.commFault).sensorValue = true;
-
-    // FIXME make all slaves comm fault???
+    setCommStatus(zb485, true);
   }
 }
 
@@ -92,11 +118,11 @@ function setSlaveState(zb485, slave, state) {
 
   if (s.state >= ANSGCNVStateEnum.ChannelSetupCommit) {
     // communication ok
-    core.getChannel(s.cfg.commFault).sensorValue = false;
+    setSlaveCommStatus(s, false);
   } else {
     // communication fail
     logger.info(`zb485 slave comm fault ${zb485.cfg.address}:${slave.port}`);
-    core.getChannel(s.cfg.commFault).sensorValue = true;
+    setSlaveCommStatus(s, true);
   }
 }
 

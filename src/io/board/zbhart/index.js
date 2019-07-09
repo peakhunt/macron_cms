@@ -263,8 +263,22 @@ function setSensorFault(chnlNum, status) {
   core.getChannel(chnlNum).sensorFault = status;
 }
 
-function setCommStatus(chnlNum, status) {
-  core.getChannel(chnlNum).sensorValue = status;
+function setCommStatus(zbhart, status) {
+  const chnlNum = zbhart.cfg.commFault;
+
+  if (chnlNum === -1) {
+    core.getChannel(chnlNum).engValue = status;
+  }
+
+  /* let's not do this for now
+  if (status === true) {
+    zbhart.cfg.ports.forEach((pcfg) => {
+      if (pcfg.use === true) {
+        setSensorFault(pcfg.channel, true);
+      }
+    });
+  }
+  */
 }
 
 function ZBHART(master, cfg) {
@@ -283,7 +297,7 @@ function ZBHART(master, cfg) {
 
 function readPortStatus(zbhart, modbus, resolve, reject) {
   modbus.readDiscreteInputs(1000, 12).then((b) => {
-    setCommStatus(zbhart.cfg.commFault, false);
+    setCommStatus(zbhart, false);
 
     for (let i = 0; i < 12; i += 1) {
       const status = b.data[i];
@@ -296,14 +310,7 @@ function readPortStatus(zbhart, modbus, resolve, reject) {
     resolve();
   }).catch((err) => {
     // a. communication failure
-    setCommStatus(zbhart.cfg.commFault, true);
-    //
-    // b. sensor fault
-    zbhart.cfg.ports.forEach((pcfg) => {
-      if (pcfg.use === true) {
-        setSensorFault(pcfg.channel, true);
-      }
-    });
+    setCommStatus(zbhart, true);
 
     logger.info(`zbhart readPortStatus ${zbhart.cfg.address} error ${err}`);
     reject();
@@ -312,7 +319,7 @@ function readPortStatus(zbhart, modbus, resolve, reject) {
 
 function readDistanceLevelFeedback(zbhart, modbus, resolve, reject) {
   modbus.readInputRegisters(1000, 36).then((b) => {
-    setCommStatus(zbhart.cfg.commFault, false);
+    setCommStatus(zbhart, false);
     for (let i = 0; i < b.data.length; i += 3) {
       const dist = b.data[i];
       // const level = b.data[i + 1];
@@ -328,16 +335,7 @@ function readDistanceLevelFeedback(zbhart, modbus, resolve, reject) {
 
     readPortStatus(zbhart, modbus, resolve, reject);
   }).catch((err) => {
-    // a. communication failure
-    setCommStatus(zbhart.cfg.commFault, true);
-
-    // b. sensor fault
-    zbhart.cfg.ports.forEach((pcfg) => {
-      if (pcfg.use === true) {
-        setSensorFault(pcfg.channel, true);
-      }
-    });
-
+    setCommStatus(zbhart, true);
     logger.info(`zbhart readDistanceLevelFeedback ${zbhart.cfg.address} error ${err}`);
     reject();
   });
