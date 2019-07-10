@@ -648,19 +648,19 @@
           "use": true,
           "ullageAtRef": {
             "channel": 10000,
-            "alarms": [ 10000, 10001 ]
+            "alarms": [ 10100, 10000, 10001 ]
           },
           "levelAtRef": {
             "channel": 10001,
-            "alarms": [ 10002, 10003 ]
+            "alarms": [ 10101, 10002, 10003 ]
           },
           "ullageAtFC": {
             "channel": 10002,
-            "alarms": [ 10004, 10005 ]
+            "alarms": [ 10102, 10004, 10005 ]
           },
           "levelAtFC": {
             "channel": 10003,
-            "alarms": [ 10006, 10007 ]
+            "alarms": [ 10103, 10006, 10007 ]
           },
           "tankLevelCfg": {
             "DVUllRefToUTI": 0,
@@ -684,7 +684,7 @@
         "pressure": {
           "use": true,
           "channel": 50000,
-          "alarms": [50000, 50001],
+          "alarms": [50100, 50000, 50001],
           "sensors": [
             {
               "type": "gauge",
@@ -700,7 +700,7 @@
           "use": true,
           "channel": 40000,
           "algorithm": "average",
-          "alarms": [40000, 40001],
+          "alarms": [40100, 40000, 40001],
           "sensors": [
             {
               "installedHeight": 0,
@@ -1596,6 +1596,54 @@
         "severity": "minor",
         "name": "tank-XXX temperature high alarm",
         "set": 112.5,
+        "delay": 0,
+        "channel": 40000
+      },
+      "10100": {
+        "severity": "major",
+        "type": "sensorFault", 
+        "name": "Tank XXX ullage at ref sensor fault",
+        "set": true,
+        "delay": 0,
+        "channel": 10000
+      },
+      "10101": {
+        "severity": "major",
+        "type": "sensorFault", 
+        "name": "Tank XXX level at ref sensor fault",
+        "set": true,
+        "delay": 0,
+        "channel": 10001
+      },
+      "10102": {
+        "severity": "major",
+        "type": "sensorFault", 
+        "name": "Tank XXX ullage at FC sensor fault",
+        "set": true,
+        "delay": 0,
+        "channel": 10002
+      },
+      "10103": {
+        "severity": "major",
+        "type": "sensorFault", 
+        "name": "Tank XXX level at FC sensor fault",
+        "set": true,
+        "delay": 0,
+        "channel": 10003
+      },
+      "50100": {
+        "severity": "major",
+        "type": "sensorFault", 
+        "name": "Tank XXX pressure sensor fault",
+        "set": true,
+        "delay": 0,
+        "channel": 50000
+      },
+      "40100": {
+        "severity": "major",
+        "type": "sensorFault", 
+        "name": "Tank XXX temperature sensor fault",
+        "set": true,
         "delay": 0,
         "channel": 40000
       }

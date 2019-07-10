@@ -33,6 +33,7 @@ const alarmSeverityNum = {
 };
 
 const alarmTextColor = {
+  /*
   normal: {
     text: '#ffffff',
     back: '#000000',
@@ -48,6 +49,23 @@ const alarmTextColor = {
   critical: {
     text: '#ffffff',
     back: '#ff0000',
+  },
+  */
+  normal: {
+    text: '#ffffff',
+    back: '#000000',
+  },
+  minor: {
+    text: '#000000',
+    back: alarmColors.minor,
+  },
+  major: {
+    text: '#ffffff',
+    back: alarmColors.major,
+  },
+  critical: {
+    text: '#ffffff',
+    back: alarmColors.critical,
   },
 };
 
@@ -203,11 +221,11 @@ function createLinearGaugeOption(arg) {
   return opt;
 }
 
-function getBiggerAlarmSeverity(a, b) {
+function isAlarmSeverityBigger(a, b) {
   const an = alarmSeverityNum[a];
   const bn = alarmSeverityNum[b];
 
-  return an > bn ? a : b;
+  return an >= bn;
 }
 
 module.exports = {
@@ -216,6 +234,6 @@ module.exports = {
   alarmColors,
   createRadialGaugeOption,
   createLinearGaugeOption,
-  getBiggerAlarmSeverity,
+  isAlarmSeverityBigger,
   alarmTextColor,
 };

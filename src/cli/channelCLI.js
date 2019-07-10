@@ -53,6 +53,27 @@ function cmdHandlerChannelValue(client, cmd) {
   chnl.engValue = v;
 }
 
+function cmdHandlerChannelSensor(client, cmd) {
+  if (cmd.length !== 3) {
+    client.write('invalid command\r\n');
+    client.write(`${cmd[0]} channel-number true|false\r\n`);
+    client.write('\r\n');
+    return;
+  }
+
+  const channelNum = parseInt(cmd[1], 10);
+  const chnl = core.getChannel(channelNum);
+
+  if (chnl === undefined) {
+    client.write(`no channel ${channelNum}\r\n`);
+    client.write('\r\n');
+    return;
+  }
+
+  const v = (cmd[2] === 'true');
+  chnl.sensorFault = v;
+}
+
 const _commands = {
   channel: {
     desc: 'show channel info',
@@ -61,6 +82,10 @@ const _commands = {
   channel_value: {
     desc: 'set channel value',
     handler: cmdHandlerChannelValue,
+  },
+  channel_sensor: {
+    desc: 'set channel sensor fault status',
+    handler: cmdHandlerChannelSensor,
   },
 };
 

@@ -31,8 +31,10 @@ export default {
 
         // alarm state
         // get highest alarm severity
-        severity = util.getBiggerAlarmSeverity(severity, alarm.alarmCfg.severity);
-        s = alarm.state;
+        if (util.isAlarmSeverityBigger(alarm.alarmCfg.severity, severity)) {
+          ({ severity } = alarm.alarmCfg);
+          s = alarm.state;
+        }
       });
 
       return {
